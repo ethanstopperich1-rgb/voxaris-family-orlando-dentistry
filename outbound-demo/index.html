@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>V·OUTBOUND Reactivation Demo — Orlando Family Dentistry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ───────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --void: #07080a;
+      --void-light: #0d0f12;
+      --void-card: #111318;
+      --void-card-hover: #16181e;
+      --gold: #d4a843;
+      --gold-dim: #b08e3a;
+      --gold-glow: rgba(212, 168, 67, .12);
+      --gold-glow-strong: rgba(212, 168, 67, .22);
+      --dental-blue: #1678d4;
+      --dental-teal: #0ea5a4;
+      --emerald: #10b981;
+      --white: #f0ede8;
+      --white-dim: #a39e94;
+      --white-muted: #6b6660;
+      --radius: 20px;
+      --radius-lg: 28px;
+      --font-heading: 'Instrument Sans', system-ui, sans-serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--void);
+      color: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────────── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header Bar ─────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(212,168,67,.08);
+    }
+    .logo {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .logo span { color: var(--white-dim); font-weight: 400; }
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-glow);
+      border: 1px solid rgba(212,168,67,.15);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .top-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 6px var(--emerald);
+      animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+
+    /* ── Hero Section ───────────────────────────────── */
+    .hero {
+      padding: 72px 0 48px;
+      text-align: center;
+    }
+    .hero-label {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold-glow), rgba(212,168,67,.06));
+      border: 1px solid rgba(212,168,67,.12);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -.02em;
+      color: var(--white);
+      max-width: 780px;
+      margin: 0 auto 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--gold), #e8c96e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--white-dim);
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Scenario Selector ──────────────────────────── */
+    .scenario-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 48px 0 40px;
+    }
+    .scenario-btn {
+      position: relative;
+      border: 1px solid rgba(212,168,67,.12);
+      background: var(--void-card);
+      color: var(--white-dim);
+      border-radius: 999px;
+      padding: 14px 28px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s ease;
+    }
+    .scenario-btn:hover {
+      border-color: rgba(212,168,67,.25);
+      color: var(--white);
+      background: var(--void-card-hover);
+    }
+    .scenario-btn.active {
+      background: linear-gradient(135deg, rgba(212,168,67,.14), rgba(212,168,67,.06));
+      border-color: var(--gold-dim);
+      color: var(--gold);
+      box-shadow: 0 0 24px rgba(212,168,67,.08);
+    }
+    .scenario-btn .icon { margin-right: 8px; font-size: 16px; }
+
+    /* ── Main Demo Grid ─────────────────────────────── */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    /* ── Call Simulation Card ────────────────────────── */
+    .call-card {
+      background: var(--void-card);
+      border: 1px solid rgba(212,168,67,.08);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .call-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .call-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .caller-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--dental-blue), var(--dental-teal));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .caller-info strong {
+      display: block;
+      font-size: 14px;
+      color: var(--white);
+    }
+    .caller-info small {
+      font-size: 12px;
+      color: var(--white-muted);
+    }
+    .call-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--emerald);
+    }
+    .call-status .live-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: pulse-dot 1.5s ease infinite;
+    }
+    .call-timer {
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      color: var(--white-muted);
+      font-weight: 500;
+    }
+
+    /* Chat log */
+    .chat-log {
+      height: 440px;
+      overflow-y: auto;
+      padding: 20px 24px;
+      scroll-behavior: smooth;
+    }
+    .chat-log::-webkit-scrollbar { width: 4px; }
+    .chat-log::-webkit-scrollbar-track { background: transparent; }
+    .chat-log::-webkit-scrollbar-thumb { background: rgba(212,168,67,.15); border-radius: 99px; }
+
+    .msg {
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: msg-in .4s ease forwards;
+    }
+    .msg-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .msg.agent .msg-label { color: var(--gold); }
+    .msg.patient .msg-label { color: var(--dental-teal); }
+    .msg-bubble {
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 92%;
+    }
+    .msg.agent .msg-bubble {
+      background: linear-gradient(135deg, rgba(212,168,67,.08), rgba(212,168,67,.03));
+      border: 1px solid rgba(212,168,67,.1);
+      color: var(--white);
+    }
+    .msg.patient .msg-bubble {
+      background: rgba(14,165,164,.08);
+      border: 1px solid rgba(14,165,164,.1);
+      color: var(--white);
+      margin-left: auto;
+    }
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--white-muted);
+    }
+    .msg-meta .stage-tag {
+      background: rgba(212,168,67,.1);
+      color: var(--gold-dim);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    @keyframes msg-in {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Call controls */
+    .call-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 18px 24px;
+      border-top: 1px solid rgba(255,255,255,.04);
+    }
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      color: var(--void);
+      border: none;
+      border-radius: 999px;
+      padding: 14px 32px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .25s ease;
+    }
+    .play-btn:hover {
+      box-shadow: 0 4px 24px rgba(212,168,67,.3);
+      transform: translateY(-1px);
+    }
+    .play-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .reset-btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--white-dim);
+      border-radius: 999px;
+      padding: 14px 24px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .reset-btn:hover { border-color: rgba(255,255,255,.15); color: var(--white); }
+
+    /* ── Right Panel: Flow + Metrics ────────────────── */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Flow Visualization */
+    .flow-card {
+      background: var(--void-card);
+      border: 1px solid rgba(212,168,67,.08);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .flow-card h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .flow-card h3 .accent { color: var(--gold); }
+
+    .flow-steps { position: relative; }
+    .flow-steps::before {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), rgba(212,168,67,.1));
+    }
+    .flow-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 12px 0;
+      position: relative;
+    }
+    .flow-step .node {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--void-card);
+      border: 2px solid rgba(212,168,67,.2);
+      color: var(--white-muted);
+      z-index: 1;
+      transition: all .4s ease;
+    }
+    .flow-step.active .node {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      border-color: var(--gold);
+      color: var(--void);
+      box-shadow: 0 0 16px rgba(212,168,67,.3);
+    }
+    .flow-step.completed .node {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(16,185,129,.2);
+    }
+    .flow-step-content h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2px;
+    }
+    .flow-step-content p {
+      font-size: 12px;
+      color: var(--white-muted);
+      line-height: 1.5;
+    }
+    .flow-step.active .flow-step-content h4 { color: var(--gold); }
+
+    /* ── Metrics Card ───────────────────────────────── */
+    .metrics-card {
+      background: var(--void-card);
+      border: 1px solid rgba(212,168,67,.08);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .metrics-card h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .metric-tile {
+      background: linear-gradient(135deg, rgba(212,168,67,.06), rgba(212,168,67,.02));
+      border: 1px solid rgba(212,168,67,.08);
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      transition: all .3s ease;
+    }
+    .metric-tile:hover {
+      border-color: rgba(212,168,67,.18);
+      box-shadow: 0 4px 20px rgba(212,168,67,.06);
+    }
+    .metric-value {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .metric-value.gold { color: var(--gold); }
+    .metric-value.emerald { color: var(--emerald); }
+    .metric-value.blue { color: var(--dental-blue); }
+    .metric-value.teal { color: var(--dental-teal); }
+    .metric-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--white-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .metric-sub {
+      font-size: 11px;
+      color: var(--white-muted);
+      margin-top: 4px;
+      opacity: .7;
+    }
+
+    /* ── Reactivation Flow Visual ───────────────────── */
+    .reactivation-section {
+      margin-bottom: 72px;
+    }
+    .reactivation-section h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .reactivation-section h2 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .reactivation-section > p {
+      text-align: center;
+      color: var(--white-dim);
+      max-width: 560px;
+      margin: 0 auto 48px;
+      font-size: 15px;
+    }
+
+    .react-flow-visual {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(212,168,67,.08);
+      background: var(--void-card);
+    }
+    .react-flow-stage {
+      flex: 1;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      border-right: 1px solid rgba(255,255,255,.04);
+      transition: background .3s ease;
+    }
+    .react-flow-stage:last-child { border-right: none; }
+    .react-flow-stage:hover { background: rgba(212,168,67,.03); }
+
+    .react-flow-stage .stage-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: var(--font-heading);
+    }
+    .react-flow-stage:nth-child(1) .stage-num { background: rgba(212,168,67,.15); color: var(--gold); }
+    .react-flow-stage:nth-child(2) .stage-num { background: rgba(22,120,212,.15); color: var(--dental-blue); }
+    .react-flow-stage:nth-child(3) .stage-num { background: rgba(14,165,164,.15); color: var(--dental-teal); }
+    .react-flow-stage:nth-child(4) .stage-num { background: rgba(16,185,129,.15); color: var(--emerald); }
+    .react-flow-stage:nth-child(5) .stage-num { background: rgba(212,168,67,.2); color: var(--gold); }
+
+    .react-flow-stage h4 {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .react-flow-stage p {
+      font-size: 12px;
+      color: var(--white-muted);
+      line-height: 1.5;
+    }
+    .react-flow-stage .arrow {
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      color: var(--gold-dim);
+      font-size: 16px;
+    }
+
+    /* ── Opportunity Section ─────────────────────────── */
+    .opportunity-section {
+      margin-bottom: 72px;
+    }
+    .opportunity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .opp-card {
+      background: var(--void-card);
+      border: 1px solid rgba(212,168,67,.08);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      transition: all .3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .opp-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, var(--gold-glow), transparent 60%);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+    .opp-card:hover::before { opacity: 1; }
+    .opp-card:hover { border-color: rgba(212,168,67,.18); transform: translateY(-2px); }
+    .opp-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .opp-card:nth-child(1) .opp-icon { background: rgba(212,168,67,.1); }
+    .opp-card:nth-child(2) .opp-icon { background: rgba(22,120,212,.1); }
+    .opp-card:nth-child(3) .opp-icon { background: rgba(16,185,129,.1); }
+    .opp-card h4 {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .opp-card p {
+      font-size: 13px;
+      color: var(--white-muted);
+      line-height: 1.6;
+      position: relative;
+    }
+    .opp-stat {
+      font-family: var(--font-heading);
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      position: relative;
+    }
+    .opp-card:nth-child(1) .opp-stat { color: var(--gold); }
+    .opp-card:nth-child(2) .opp-stat { color: var(--dental-blue); }
+    .opp-card:nth-child(3) .opp-stat { color: var(--emerald); }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .demo-footer {
+      text-align: center;
+      padding: 40px 0 48px;
+      border-top: 1px solid rgba(212,168,67,.06);
+    }
+    .demo-footer p {
+      font-size: 12px;
+      color: var(--white-muted);
+    }
+    .demo-footer .brand {
+      font-weight: 700;
+      color: var(--gold-dim);
+      letter-spacing: .06em;
+    }
+
+    /* ── Responsive ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      .demo-grid { grid-template-columns: 1fr; }
+      .opportunity-grid { grid-template-columns: 1fr; }
+      .react-flow-visual { flex-direction: column; }
+      .react-flow-stage { border-right: none; border-bottom: 1px solid rgba(255,255,255,.04); }
+      .react-flow-stage:last-child { border-bottom: none; }
+      .react-flow-stage .arrow { display: none; }
+      .scenario-nav { flex-direction: column; align-items: center; }
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ── Top Bar ──────────────────────────────────── -->
+    <header class="top-bar">
+      <div class="logo">VOXARIS <span>/ Orlando Family Dentistry</span></div>
+      <div class="top-badge"><span class="dot"></span> V&middot;OUTBOUND Demo</div>
+    </header>
+
+    <!-- ── Hero ────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-label">Outbound Reactivation Engine</div>
+      <h1>Turn dormant patients into <em>booked chair time</em></h1>
+      <p>V&middot;OUTBOUND runs structured recall, reactivation, and treatment follow-up campaigns so your practice stops waiting for patients to call back on their own.</p>
+    </section>
+
+    <!-- ── Scenario Selector ───────────────────────── -->
+    <nav class="scenario-nav">
+      <button class="scenario-btn active" data-scenario="cleaning" onclick="switchScenario('cleaning')">
+        <span class="icon">&#128166;</span> Lapsed Cleaning Patient
+      </button>
+      <button class="scenario-btn" data-scenario="invisalign" onclick="switchScenario('invisalign')">
+        <span class="icon">&#10024;</span> Invisalign Follow-Up
+      </button>
+    </nav>
+
+    <!-- ── Main Demo Grid ──────────────────────────── -->
+    <div class="demo-grid">
+
+      <!-- Left: Call Simulation -->
+      <div class="call-card">
+        <div class="call-header">
+          <div class="call-header-left">
+            <div class="caller-avatar" id="avatar-initial">A</div>
+            <div class="caller-info">
+              <strong id="caller-name">Ava &mdash; V&middot;OUTBOUND</strong>
+              <small id="caller-sub">Reactivation Campaign Call</small>
+            </div>
+          </div>
+          <div>
+            <div class="call-status" id="call-status">
+              <span class="live-dot" id="live-dot" style="display:none"></span>
+              <span id="status-text">Ready</span>
+            </div>
+            <div class="call-timer" id="call-timer">0:00</div>
+          </div>
+        </div>
+
+        <div class="chat-log" id="chat-log">
+          <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--white-muted);font-size:14px;text-align:center;padding:40px;">
+            Select a scenario above and press <strong style="color:var(--gold);margin:0 6px;">Play Call</strong> to begin the outbound simulation.
+          </div>
+        </div>
+
+        <div class="call-controls">
+          <button class="play-btn" id="play-btn" onclick="playCall()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg>
+            Play Call
+          </button>
+          <button class="reset-btn" onclick="resetCall()">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right: Flow + Metrics -->
+      <div class="right-panel">
+
+        <!-- Call Flow Stages -->
+        <div class="flow-card">
+          <h3><span class="accent">&#9670;</span> Call Flow Progression</h3>
+          <div class="flow-steps" id="flow-steps">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics-card">
+          <h3>Reactivation Benchmarks</h3>
+          <div class="metrics-grid">
+            <div class="metric-tile">
+              <div class="metric-value gold">15&ndash;25%</div>
+              <div class="metric-label">Recovery Rate</div>
+              <div class="metric-sub">Strong campaign benchmark</div>
+            </div>
+            <div class="metric-tile">
+              <div class="metric-value emerald">35&ndash;40%</div>
+              <div class="metric-label">9&ndash;24 Mo Absent</div>
+              <div class="metric-sub">Return when directly contacted</div>
+            </div>
+            <div class="metric-tile">
+              <div class="metric-value blue">6&ndash;18 mo</div>
+              <div class="metric-label">Best Segment</div>
+              <div class="metric-sub">Recently overdue patients first</div>
+            </div>
+            <div class="metric-tile">
+              <div class="metric-value teal">90 Days</div>
+              <div class="metric-label">Measurement Window</div>
+              <div class="metric-sub">Booked hygiene &amp; consults</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Reactivation Flow Visual ────────────────── -->
+    <section class="reactivation-section">
+      <h2>How <em>V&middot;OUTBOUND</em> Reactivation Works</h2>
+      <p>A five-stage automated pipeline that turns dormant patient records into confirmed appointments without manual front-desk effort.</p>
+
+      <div class="react-flow-visual">
+        <div class="react-flow-stage">
+          <div class="stage-num">1</div>
+          <h4>Segment</h4>
+          <p>Database scanned for overdue hygiene, lapsed treatments, and unscheduled high-value follow-ups (Invisalign, implants, whitening).</p>
+          <span class="arrow">&#8594;</span>
+        </div>
+        <div class="react-flow-stage">
+          <div class="stage-num">2</div>
+          <h4>Prioritize</h4>
+          <p>Patients ranked by recency (6&ndash;18 mo first), treatment value, and likelihood to re-engage based on history.</p>
+          <span class="arrow">&#8594;</span>
+        </div>
+        <div class="react-flow-stage">
+          <div class="stage-num">3</div>
+          <h4>Outreach</h4>
+          <p>V&middot;OUTBOUND agent calls with a warm, personalized script. Voicemail detection handles non-answers with follow-up SMS.</p>
+          <span class="arrow">&#8594;</span>
+        </div>
+        <div class="react-flow-stage">
+          <div class="stage-num">4</div>
+          <h4>Qualify</h4>
+          <p>Capture interest level, time preference, and service intent. Tag as warm lead for scheduling or flag for future follow-up.</p>
+          <span class="arrow">&#8594;</span>
+        </div>
+        <div class="react-flow-stage">
+          <div class="stage-num">5</div>
+          <h4>Convert</h4>
+          <p>Warm leads routed into scheduling queue with full context. No repeated intake. Practice follows up with the best available slot.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Opportunity Section ──────────────────────── -->
+    <section class="opportunity-section">
+      <h2 style="font-family:var(--font-heading);font-size:clamp(28px,3.5vw,40px);font-weight:700;text-align:center;margin-bottom:12px;">The <em style="font-style:normal;color:var(--gold);">Dormant Database</em> Opportunity</h2>
+      <p style="text-align:center;color:var(--white-dim);max-width:560px;margin:0 auto;font-size:15px;">Family Orlando Dentistry has no meaningful outbound database revival motion today. Every inactive patient is unrealized revenue sitting in the system.</p>
+
+      <div class="opportunity-grid">
+        <div class="opp-card">
+          <div class="opp-icon">&#128137;</div>
+          <div class="opp-stat">$800+</div>
+          <h4>Avg Hygiene LTV / Year</h4>
+          <p>Two cleanings, exams, and X-rays per year. Each lapsed patient is a compounding loss to the practice.</p>
+        </div>
+        <div class="opp-card">
+          <div class="opp-icon">&#129463;</div>
+          <div class="opp-stat">$3,500+</div>
+          <h4>Invisalign Case Value</h4>
+          <p>High-margin elective service with a free consultation already promoted on the site. Warm leads just need the follow-up call.</p>
+        </div>
+        <div class="opp-card">
+          <div class="opp-icon">&#128200;</div>
+          <div class="opp-stat">ROI in 30 Days</div>
+          <h4>Measurable Recovery</h4>
+          <p>Industry benchmarks show practices see measurable returns in the first 30&ndash;90 days of structured reactivation campaigns.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Footer ──────────────────────────────────── -->
+    <footer class="demo-footer">
+      <p><span class="brand">VOXARIS</span> &middot; V&middot;OUTBOUND Reactivation Demo &middot; Built for Orlando Family Dentistry</p>
+    </footer>
+  </div>
+
+  <script>
+    /* ──────────────────────────────────────────────────
+       SCENARIO DATA
+    ────────────────────────────────────────────────── */
+    const scenarios = {
+      cleaning: {
+        name: 'Lapsed Cleaning Patient',
+        callerName: 'Ava — V·OUTBOUND',
+        callerSub: 'Overdue Hygiene Reactivation',
+        avatarInit: 'A',
+        flowSteps: [
+          { label: 'Warm Greeting', desc: 'Friendly follow-up, identify as Orlando Family Dentistry' },
+          { label: 'Need Confirmation', desc: 'Acknowledge they are overdue, normalize the gap' },
+          { label: 'Preference Capture', desc: 'Ask time preference — morning or afternoon' },
+          { label: 'Interest Tagged', desc: 'Mark as interested, afternoon preference recorded' },
+          { label: 'Queue & Follow-Up', desc: 'Request routed to schedule queue with context' }
+        ],
+        messages: [
+          {
+            type: 'agent',
+            text: 'Hi, this is Ava with Orlando Family Dentistry calling with a friendly follow-up. You\'re due for a hygiene visit, and we wanted to make it easy to get back on the schedule.',
+            stage: 'Warm Greeting',
+            stepIndex: 0
+          },
+          {
+            type: 'patient',
+            text: 'Oh wow, yes, I know I\'m overdue.',
+            stage: null,
+            stepIndex: null
+          },
+          {
+            type: 'agent',
+            text: 'No problem at all. That happens to a lot of people. We\'re just reaching out to help you get back on track. Would you like a quick cleaning-focused appointment option in the next two to four weeks?',
+            stage: 'Need Confirmed',
+            stepIndex: 1
+          },
+          {
+            type: 'patient',
+            text: 'Maybe. I need to check my schedule.',
+            stage: null,
+            stepIndex: null
+          },
+          {
+            type: 'agent',
+            text: 'Absolutely. I can mark you as interested and send a follow-up option. Before I do that, are mornings or afternoons usually easier for you?',
+            stage: 'Preference Capture',
+            stepIndex: 2
+          },
+          {
+            type: 'patient',
+            text: 'Afternoons.',
+            stage: null,
+            stepIndex: null
+          },
+          {
+            type: 'agent',
+            text: 'Perfect. I\'ve marked afternoon preference and overdue hygiene reactivation interest. Next step is to send your request into the schedule queue and follow up with the best available options.',
+            stage: 'Queued',
+            stepIndex: 4
+          }
+        ]
+      },
+      invisalign: {
+        name: 'Invisalign Follow-Up Lead',
+        callerName: 'Ava — V·OUTBOUND',
+        callerSub: 'Invisalign Consultation Follow-Up',
+        avatarInit: 'A',
+        flowSteps: [
+          { label: 'Warm Re-Engage', desc: 'Reference prior Invisalign interest, re-open conversation' },
+          { label: 'Interest Check', desc: 'Confirm still considering, gauge intent level' },
+          { label: 'Value Framing', desc: 'Mention free consultation offer and fit criteria' },
+          { label: 'Intent Classification', desc: 'Research mode vs. ready to act — classify lead temp' },
+          { label: 'Warm Tag & Route', desc: 'Tag as warm follow-up, request earliest consult slot' }
+        ],
+        messages: [
+          {
+            type: 'agent',
+            text: 'Hi, this is Ava with Orlando Family Dentistry. I\'m following up because you previously showed interest in Invisalign, and I wanted to see whether you\'re still considering a smile consultation.',
+            stage: 'Re-Engage',
+            stepIndex: 0
+          },
+          {
+            type: 'patient',
+            text: 'I actually might be.',
+            stage: null,
+            stepIndex: null
+          },
+          {
+            type: 'agent',
+            text: 'Great. The office promotes a free Invisalign consultation, and this is a good fit for patients exploring crowding, spacing, or a general smile refresh. Are you still in research mode, or are you hoping to take the next step soon?',
+            stage: 'Value + Qualify',
+            stepIndex: 2
+          },
+          {
+            type: 'patient',
+            text: 'Soon.',
+            stage: null,
+            stepIndex: null
+          },
+          {
+            type: 'agent',
+            text: 'Excellent. I\'ll tag this as a warm Invisalign follow-up. Would you prefer an afternoon consultation request and a short summary of what to expect at the visit?',
+            stage: 'Warm Lead Tagged',
+            stepIndex: 4
+          }
+        ]
+      }
+    };
+
+    /* ──────────────────────────────────────────────────
+       STATE
+    ────────────────────────────────────────────────── */
+    let currentScenario = 'cleaning';
+    let isPlaying = false;
+    let timeouts = [];
+    let timerInterval = null;
+    let timerSeconds = 0;
+
+    /* ──────────────────────────────────────────────────
+       SCENARIO SWITCHING
+    ────────────────────────────────────────────────── */
+    function switchScenario(name) {
+      if (isPlaying) return;
+      currentScenario = name;
+      document.querySelectorAll('.scenario-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.scenario === name);
+      });
+      resetCall();
+    }
+
+    /* ──────────────────────────────────────────────────
+       FLOW STEPS RENDER
+    ────────────────────────────────────────────────── */
+    function renderFlowSteps(steps) {
+      const container = document.getElementById('flow-steps');
+      container.innerHTML = steps.map((s, i) => `
+        <div class="flow-step" id="flow-step-${i}">
+          <div class="node">${i + 1}</div>
+          <div class="flow-step-content">
+            <h4>${s.label}</h4>
+            <p>${s.desc}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ──────────────────────────────────────────────────
+       PLAY CALL
+    ────────────────────────────────────────────────── */
+    function playCall() {
+      if (isPlaying) return;
+      isPlaying = true;
+
+      const scenario = scenarios[currentScenario];
+      const log = document.getElementById('chat-log');
+      const playBtn = document.getElementById('play-btn');
+      const statusText = document.getElementById('status-text');
+      const liveDot = document.getElementById('live-dot');
+
+      log.innerHTML = '';
+      renderFlowSteps(scenario.flowSteps);
+      playBtn.disabled = true;
+
+      // Start timer
+      timerSeconds = 0;
+      updateTimer();
+      timerInterval = setInterval(() => { timerSeconds++; updateTimer(); }, 1000);
+
+      statusText.textContent = 'In Call';
+      statusText.style.color = 'var(--emerald)';
+      liveDot.style.display = 'block';
+
+      let highestStep = -1;
+
+      scenario.messages.forEach((msg, i) => {
+        const delay = i === 0 ? 600 : 600 + i * 1800;
+        const t = setTimeout(() => {
+          // Add message
+          const div = document.createElement('div');
+          div.className = `msg ${msg.type}`;
+          div.style.animationDelay = '0s';
+          div.innerHTML = `
+            <div class="msg-label">${msg.type === 'agent' ? 'V·OUTBOUND Agent' : 'Patient'}</div>
+            <div class="msg-bubble">${msg.text}</div>
+            ${msg.stage ? `<div class="msg-meta"><span class="stage-tag">${msg.stage}</span></div>` : ''}
+          `;
+          log.appendChild(div);
+          log.scrollTop = log.scrollHeight;
+
+          // Update flow step
+          if (msg.stepIndex !== null && msg.stepIndex > highestStep) {
+            // Mark all up to and including this step
+            for (let s = highestStep + 1; s <= msg.stepIndex; s++) {
+              const stepEl = document.getElementById(`flow-step-${s}`);
+              if (stepEl) {
+                if (s < msg.stepIndex) {
+                  stepEl.classList.remove('active');
+                  stepEl.classList.add('completed');
+                } else {
+                  stepEl.classList.add('active');
+                }
+              }
+            }
+            // Mark previous active as completed
+            if (highestStep >= 0) {
+              const prevEl = document.getElementById(`flow-step-${highestStep}`);
+              if (prevEl) {
+                prevEl.classList.remove('active');
+                prevEl.classList.add('completed');
+              }
+            }
+            highestStep = msg.stepIndex;
+          }
+
+          // End of call
+          if (i === scenario.messages.length - 1) {
+            setTimeout(() => {
+              statusText.textContent = 'Call Complete';
+              statusText.style.color = 'var(--gold)';
+              liveDot.style.display = 'none';
+              clearInterval(timerInterval);
+              playBtn.disabled = false;
+              isPlaying = false;
+
+              // Mark last step as completed
+              const lastEl = document.getElementById(`flow-step-${highestStep}`);
+              if (lastEl) {
+                lastEl.classList.remove('active');
+                lastEl.classList.add('completed');
+              }
+
+              // Add outcome summary
+              const summary = document.createElement('div');
+              summary.className = 'msg agent';
+              summary.innerHTML = `
+                <div class="msg-label" style="color:var(--emerald);">Outcome</div>
+                <div class="msg-bubble" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.12);">
+                  ${currentScenario === 'cleaning'
+                    ? '<strong>Patient tagged:</strong> Overdue hygiene reactivation &middot; Afternoon preference &middot; Routed to schedule queue for best available slot.'
+                    : '<strong>Patient tagged:</strong> Warm Invisalign follow-up &middot; Ready to act &middot; Free consultation request routed for earliest availability.'}
+                </div>
+              `;
+              log.appendChild(summary);
+              log.scrollTop = log.scrollHeight;
+            }, 800);
+          }
+        }, delay);
+        timeouts.push(t);
+      });
+    }
+
+    /* ──────────────────────────────────────────────────
+       RESET
+    ────────────────────────────────────────────────── */
+    function resetCall() {
+      timeouts.forEach(clearTimeout);
+      timeouts = [];
+      clearInterval(timerInterval);
+      isPlaying = false;
+      timerSeconds = 0;
+      updateTimer();
+
+      const scenario = scenarios[currentScenario];
+      document.getElementById('caller-name').textContent = scenario.callerName;
+      document.getElementById('caller-sub').textContent = scenario.callerSub;
+      document.getElementById('avatar-initial').textContent = scenario.avatarInit;
+      document.getElementById('status-text').textContent = 'Ready';
+      document.getElementById('status-text').style.color = 'var(--white-muted)';
+      document.getElementById('live-dot').style.display = 'none';
+      document.getElementById('play-btn').disabled = false;
+
+      document.getElementById('chat-log').innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--white-muted);font-size:14px;text-align:center;padding:40px;">
+          Select a scenario above and press <strong style="color:var(--gold);margin:0 6px;">Play Call</strong> to begin the outbound simulation.
+        </div>
+      `;
+      renderFlowSteps(scenario.flowSteps);
+    }
+
+    /* ──────────────────────────────────────────────────
+       TIMER
+    ────────────────────────────────────────────────── */
+    function updateTimer() {
+      const m = Math.floor(timerSeconds / 60);
+      const s = timerSeconds % 60;
+      document.getElementById('call-timer').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    /* ── Init ───────────────────────────────────────── */
+    renderFlowSteps(scenarios.cleaning.flowSteps);
+  </script>
+</body>
+</html>

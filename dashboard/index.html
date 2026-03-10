@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voxaris Command — Family Orlando Dentistry</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ─── */
+    :root {
+      --bg:        #07080a;
+      --surface:   #0e1117;
+      --surface-2: #141920;
+      --surface-3: #1a2030;
+      --border:    rgba(212, 168, 67, .10);
+      --border-s:  rgba(255,255,255, .06);
+      --gold:      #d4a843;
+      --gold-dim:  rgba(212, 168, 67, .15);
+      --gold-glow: rgba(212, 168, 67, .08);
+      --emerald:   #34d399;
+      --emerald-d: rgba(52, 211, 153, .12);
+      --blue:      #60a5fa;
+      --blue-d:    rgba(96, 165, 250, .12);
+      --purple:    #a78bfa;
+      --purple-d:  rgba(167, 139, 250, .12);
+      --amber:     #fbbf24;
+      --amber-d:   rgba(251, 191, 36, .12);
+      --rose:      #fb7185;
+      --rose-d:    rgba(251, 113, 133, .12);
+      --text:      #f0f2f5;
+      --text-2:    #94a3b8;
+      --text-3:    #64748b;
+      --radius:    20px;
+      --radius-sm: 14px;
+      --font:      'Instrument Sans', 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'DM Sans', monospace;
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── LAYOUT ─── */
+    .app {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #b8912e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #07080a;
+      flex-shrink: 0;
+    }
+    .brand-text {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+    .brand-text span { color: var(--gold); }
+    .client-label {
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin: 4px 0 28px 48px;
+    }
+
+    .nav { display: flex; flex-direction: column; gap: 4px; }
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-2);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all .2s;
+    }
+    .nav a:hover { background: rgba(255,255,255,.04); color: var(--text); }
+    .nav a.active {
+      background: var(--gold-dim);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .nav .sep {
+      height: 1px;
+      background: var(--border-s);
+      margin: 12px 0;
+    }
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-s);
+    }
+    .sidebar-footer .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--emerald);
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+
+    /* ─── MAIN CONTENT ─── */
+    .main {
+      padding: 28px 32px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 1200px;
+    }
+
+    /* ─── PANELS ─── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: center;
+      padding: 32px;
+      background: linear-gradient(135deg, var(--surface), var(--surface-2));
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--gold-dim);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: var(--text-2);
+      line-height: 1.7;
+      font-size: 14px;
+      max-width: 520px;
+    }
+    .hero-snapshot {
+      padding: 22px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(212,168,67,.08), rgba(212,168,67,.03));
+      border: 1px solid var(--border);
+    }
+    .snapshot-label {
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 10px;
+    }
+    .snapshot-value {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .snapshot-sub {
+      font-size: 13px;
+      color: var(--emerald);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .snapshot-mini {
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--border-s);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .snapshot-mini span {
+      font-size: 11px;
+      color: var(--text-3);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .snapshot-mini strong {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* ─── KPI CARDS ─── */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .kpi {
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 3px;
+    }
+    .kpi:nth-child(1)::after { background: var(--blue); }
+    .kpi:nth-child(2)::after { background: var(--emerald); }
+    .kpi:nth-child(3)::after { background: var(--gold); }
+    .kpi:nth-child(4)::after { background: var(--purple); }
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 12px;
+    }
+    .kpi-value {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .kpi:nth-child(1) .kpi-value { color: var(--blue); }
+    .kpi:nth-child(2) .kpi-value { color: var(--emerald); }
+    .kpi:nth-child(3) .kpi-value { color: var(--gold); }
+    .kpi:nth-child(4) .kpi-value { color: var(--purple); }
+    .kpi-delta {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .kpi-delta.good { color: var(--emerald); }
+    .kpi-delta.warn { color: var(--amber); }
+
+    /* ─── CHART ROWS ─── */
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 16px;
+    }
+    .chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 22px 0;
+    }
+    .chart-head h2 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .chart-head .tag {
+      font-size: 11px;
+      color: var(--text-3);
+      background: rgba(255,255,255,.04);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .chart-body {
+      padding: 14px 22px 22px;
+    }
+
+    /* ─── TABLE ─── */
+    .table-wrap { padding: 22px; }
+    .table-wrap h2 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      text-align: left;
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-s);
+    }
+    td {
+      padding: 14px 12px;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,.03);
+    }
+    tr:last-child td { border-bottom: none; }
+    .service-name {
+      font-weight: 600;
+    }
+    .bar-cell {
+      position: relative;
+    }
+    .bar-fill {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--gold);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* ─── NOTES PANEL ─── */
+    .notes-list {
+      padding: 22px;
+    }
+    .notes-list h2 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .notes-list ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .notes-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.65;
+    }
+    .notes-list .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* ─── ROI CALCULATOR ─── */
+    .roi-section {
+      padding: 28px;
+    }
+    .roi-section h2 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .roi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .roi-sliders {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .slider-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 8px;
+    }
+    .slider-group label strong {
+      color: var(--gold);
+      font-weight: 700;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--surface-3);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 12px rgba(212,168,67,.3);
+    }
+    .roi-output {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+    .roi-result {
+      text-align: center;
+    }
+    .roi-result .roi-label {
+      font-size: 12px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 6px;
+    }
+    .roi-result .roi-value {
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .roi-result .roi-sub {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 4px;
+    }
+    .roi-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .roi-mini {
+      background: rgba(0,0,0,.3);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .roi-mini span {
+      font-size: 11px;
+      color: var(--text-3);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .roi-mini strong {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px 20px;
+        align-items: center;
+      }
+      .nav { flex-direction: row; flex-wrap: wrap; }
+      .nav .sep { display: none; }
+      .client-label { margin: 0 0 0 0; }
+      .sidebar-footer { margin-top: 0; border-top: none; padding: 0; }
+      .main { padding: 20px 16px 40px; }
+      .hero { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .row-2 { grid-template-columns: 1fr; }
+      .roi-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .kpis { grid-template-columns: 1fr; }
+      .snapshot-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 26px; }
+      .snapshot-value { font-size: 34px; }
+      .roi-breakdown { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">V</div>
+      <div class="brand-text">VOX<span>ARIS</span></div>
+    </div>
+    <div class="client-label">Family Orlando Dentistry</div>
+
+    <nav class="nav">
+      <a class="active" href="#">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="7" height="7" rx="2"/><rect x="10" y="1" width="7" height="7" rx="2"/><rect x="1" y="10" width="7" height="7" rx="2"/><rect x="10" y="10" width="7" height="7" rx="2"/></svg>
+        Overview
+      </a>
+      <a href="#">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9h3l2-5 3 10 2-5h4"/></svg>
+        Inbound
+      </a>
+      <a href="#">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2v14M2 9l7-7 7 7"/></svg>
+        Outbound
+      </a>
+      <a href="#">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M2 16c0-3 3-5 7-5s7 2 7 5"/></svg>
+        V&middot;FACE
+      </a>
+      <div class="sep"></div>
+      <a href="#">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l4-4 3 3 7-7"/></svg>
+        Revenue Lift
+      </a>
+      <a href="#">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 6v3l2 2"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status"><span class="status-dot"></span> Agents live — 24/7</div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main">
+
+    <!-- HERO -->
+    <section class="panel hero">
+      <div>
+        <div class="hero-pill">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="4"/></svg>
+          Demo View &mdash; Illustrative Projections
+        </div>
+        <h1>24/7 patient response for a phone&#8209;first family&nbsp;practice.</h1>
+        <p>This portal shows how Voxaris consolidates inbound capture, after-hours recovery, high-value treatment qualification, and dormant-patient reactivation for Orlando Family Dentistry.</p>
+      </div>
+      <div class="hero-snapshot">
+        <div class="snapshot-label">Projected 90-Day Snapshot</div>
+        <div class="snapshot-value" id="heroRevenue"></div>
+        <div class="snapshot-sub">Illustrative production influenced</div>
+        <div class="snapshot-grid">
+          <div class="snapshot-mini"><span>After-hours captured</span><strong id="heroAfterHours"></strong></div>
+          <div class="snapshot-mini"><span>Consults requested</span><strong id="heroConsults"></strong></div>
+          <div class="snapshot-mini"><span>Urgent cases routed</span><strong id="heroUrgent"></strong></div>
+          <div class="snapshot-mini"><span>Reactivations</span><strong id="heroReactivations"></strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI CARDS -->
+    <section class="kpis">
+      <div class="panel kpi">
+        <div class="kpi-label">Calls Answered</div>
+        <div class="kpi-value" id="kpiCalls"></div>
+        <div class="kpi-delta good" id="kpiCallsDelta"></div>
+      </div>
+      <div class="panel kpi">
+        <div class="kpi-label">Appointments Booked</div>
+        <div class="kpi-value" id="kpiAppts"></div>
+        <div class="kpi-delta good" id="kpiApptsDelta"></div>
+      </div>
+      <div class="panel kpi">
+        <div class="kpi-label">Revenue Lift</div>
+        <div class="kpi-value" id="kpiRevenue"></div>
+        <div class="kpi-delta good" id="kpiRevenueDelta"></div>
+      </div>
+      <div class="panel kpi">
+        <div class="kpi-label">Missed-Call Recovery</div>
+        <div class="kpi-value" id="kpiRecovery"></div>
+        <div class="kpi-delta warn" id="kpiRecoveryDelta"></div>
+      </div>
+    </section>
+
+    <!-- CHARTS ROW -->
+    <section class="row-2">
+      <div class="panel">
+        <div class="chart-head">
+          <h2>Weekly Conversion Mix</h2>
+          <span class="tag">Last 4 Weeks</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="lineChart" height="110"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="chart-head">
+          <h2>Inbound Source Breakdown</h2>
+          <span class="tag">By Channel</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="barChart" height="110"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLE + NOTES ROW -->
+    <section class="row-2">
+      <div class="panel">
+        <div class="table-wrap">
+          <h2>Service-Line Pipeline</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Service Line</th>
+                <th>Leads</th>
+                <th>Qualified</th>
+                <th>Booked</th>
+                <th>Conversion</th>
+              </tr>
+            </thead>
+            <tbody id="pipelineBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="notes-list">
+          <h2>What the Owner Sees Instantly</h2>
+          <ul>
+            <li>
+              <span class="dot" style="background:var(--blue)"></span>
+              How many calls Voxaris answered that staff would likely have missed or delayed.
+            </li>
+            <li>
+              <span class="dot" style="background:var(--gold)"></span>
+              How many high-value opportunities came from Invisalign, emergencies, whitening, implants, and same-day crowns.
+            </li>
+            <li>
+              <span class="dot" style="background:var(--emerald)"></span>
+              How many overdue patients re-entered the schedule through V&middot;OUTBOUND.
+            </li>
+            <li>
+              <span class="dot" style="background:var(--purple)"></span>
+              How much personal-cell and voicemail burden was removed from doctors and staff.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- DONUT + FUNNEL ROW -->
+    <section class="row-2">
+      <div class="panel">
+        <div class="chart-head">
+          <h2>Pipeline by Service Line</h2>
+          <span class="tag">Booked Distribution</span>
+        </div>
+        <div class="chart-body" style="max-width:340px;margin:0 auto;">
+          <canvas id="donutChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="chart-head">
+          <h2>Reactivation Funnel</h2>
+          <span class="tag">V&middot;OUTBOUND</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="funnelChart" height="160"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROI CALCULATOR -->
+    <section class="panel">
+      <div class="roi-section">
+        <h2>Interactive ROI Estimator</h2>
+        <div class="roi-grid">
+          <div class="roi-sliders">
+            <div class="slider-group">
+              <label>Missed calls / month <strong id="sliderMissedVal"></strong></label>
+              <input type="range" id="sliderMissed" min="20" max="200" step="5">
+            </div>
+            <div class="slider-group">
+              <label>Recovery rate <strong id="sliderRecoveryVal"></strong></label>
+              <input type="range" id="sliderRecovery" min="30" max="95" step="5">
+            </div>
+            <div class="slider-group">
+              <label>Avg appointment value <strong id="sliderApptVal"></strong></label>
+              <input type="range" id="sliderAppt" min="100" max="800" step="25">
+            </div>
+            <div class="slider-group">
+              <label>Dormant patients contacted <strong id="sliderDormantVal"></strong></label>
+              <input type="range" id="sliderDormant" min="20" max="300" step="10">
+            </div>
+            <div class="slider-group">
+              <label>Reactivation rate <strong id="sliderReactVal"></strong></label>
+              <input type="range" id="sliderReact" min="5" max="40" step="1">
+            </div>
+          </div>
+          <div class="roi-output">
+            <div class="roi-result">
+              <div class="roi-label">Estimated Monthly Revenue Lift</div>
+              <div class="roi-value" id="roiTotal"></div>
+              <div class="roi-sub">Based on projected inbound + reactivation recovery</div>
+            </div>
+            <div class="roi-breakdown">
+              <div class="roi-mini"><span>Recovered appointments</span><strong id="roiAppts"></strong></div>
+              <div class="roi-mini"><span>Reactivated patients</span><strong id="roiReact"></strong></div>
+              <div class="roi-mini"><span>Inbound revenue</span><strong id="roiInbound"></strong></div>
+              <div class="roi-mini"><span>Reactivation revenue</span><strong id="roiReactRev"></strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="text-align:center;padding:20px 0 0;font-size:12px;color:var(--text-3);">
+      Voxaris Command &mdash; Client Portal Demo &mdash; Figures are illustrative projections for presentation purposes.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// EDITABLE CONFIG — All dashboard numbers live here.
+// Change any value below and the entire dashboard updates.
+// ══════════════════════════════════════════════════════════════
+const CONFIG = {
+
+  // ─── Practice info ───
+  practiceName: "Family Orlando Dentistry",
+  practiceLocation: "Ocoee, FL",
+
+  // ─── Hero: 90-day snapshot ───
+  projectedRevenue90Day: 59550,
+  afterHoursCaptured: 128,
+  consultsRequested: 41,
+  urgentCasesRouted: 19,
+  reactivations: 34,
+
+  // ─── KPI cards ───
+  callsAnswered: 287,
+  callsDelta: "+78% recovered coverage",
+  appointmentsBooked: 43,
+  appointmentsDelta: "New + reactivated combined",
+  revenueLift: 19900,
+  revenueDelta: "Illustrative monthly impact",
+  missedCallRecovery: 78,
+  recoveryDelta: "Tracked across closed-hour demand",
+
+  // ─── Weekly conversion chart (4 weeks) ───
+  weeklyCalls:        [58, 69, 77, 83],
+  weeklyAppointments: [8,  10, 12, 13],
+
+  // ─── Inbound source breakdown ───
+  sourceLabels: ["After-hours", "Website leads", "Emergency", "Reactivation"],
+  sourceValues: [92, 54, 21, 34],
+
+  // ─── Service-line pipeline ───
+  pipeline: [
+    { service: "Invisalign consults",          leads: 18,  qualified: 14, booked: 11 },
+    { service: "Emergency calls",              leads: 21,  qualified: 21, booked: 19 },
+    { service: "Whitening / cosmetic",         leads: 11,  qualified: 8,  booked: 6  },
+    { service: "Implants / restorative",       leads: 9,   qualified: 7,  booked: 5  },
+    { service: "Overdue hygiene reactivation", leads: 96,  qualified: 34, booked: 17 }
+  ],
+
+  // ─── ROI calculator defaults ───
+  roiDefaults: {
+    missedCalls: 80,
+    recoveryRate: 70,
+    avgAppointmentValue: 350,
+    dormantContacted: 96,
+    reactivationRate: 18
+  }
+};
+
+// ══════════════════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ══════════════════════════════════════════════════════════════
+
+function fmt(n) {
+  return n >= 1000 ? '$' + (n / 1000).toFixed(1) + 'k' : '$' + n.toLocaleString();
+}
+function fmtFull(n) {
+  return '$' + n.toLocaleString();
+}
+
+// ─── Hero ───
+document.getElementById('heroRevenue').textContent = fmtFull(CONFIG.projectedRevenue90Day);
+document.getElementById('heroAfterHours').textContent = CONFIG.afterHoursCaptured;
+document.getElementById('heroConsults').textContent = CONFIG.consultsRequested;
+document.getElementById('heroUrgent').textContent = CONFIG.urgentCasesRouted;
+document.getElementById('heroReactivations').textContent = CONFIG.reactivations;
+
+// ─── KPI Cards ───
+document.getElementById('kpiCalls').textContent = CONFIG.callsAnswered;
+document.getElementById('kpiCallsDelta').textContent = CONFIG.callsDelta;
+document.getElementById('kpiAppts').textContent = CONFIG.appointmentsBooked;
+document.getElementById('kpiApptsDelta').textContent = CONFIG.appointmentsDelta;
+document.getElementById('kpiRevenue').textContent = fmt(CONFIG.revenueLift);
+document.getElementById('kpiRevenueDelta').textContent = CONFIG.revenueDelta;
+document.getElementById('kpiRecovery').textContent = CONFIG.missedCallRecovery + '%';
+document.getElementById('kpiRecoveryDelta').textContent = CONFIG.recoveryDelta;
+
+// ─── Pipeline Table ───
+const tbody = document.getElementById('pipelineBody');
+const maxLeads = Math.max(...CONFIG.pipeline.map(r => r.leads));
+CONFIG.pipeline.forEach(row => {
+  const rate = row.leads > 0 ? Math.round((row.booked / row.leads) * 100) : 0;
+  const barWidth = Math.round((row.leads / maxLeads) * 100);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="service-name">${row.service}</td>
+    <td>${row.leads}</td>
+    <td>${row.qualified}</td>
+    <td>${row.booked}</td>
+    <td class="bar-cell">
+      ${rate}%
+      <span class="bar-fill" style="width:${barWidth}%"></span>
+    </td>`;
+  tbody.appendChild(tr);
+});
+
+// ─── Chart: shared options ───
+const chartFont = { family: "'Instrument Sans', 'DM Sans', system-ui, sans-serif" };
+const gridColor = 'rgba(255,255,255,.05)';
+const tickColor = '#64748b';
+Chart.defaults.font.family = chartFont.family;
+
+// ─── Line Chart ───
+new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    datasets: [
+      {
+        label: 'Calls Answered',
+        data: CONFIG.weeklyCalls,
+        borderColor: '#60a5fa',
+        backgroundColor: 'rgba(96,165,250,.12)',
+        tension: .4,
+        fill: true,
+        borderWidth: 2.5,
+        pointBackgroundColor: '#60a5fa',
+        pointRadius: 4,
+        pointHoverRadius: 6
+      },
+      {
+        label: 'Appointments Booked',
+        data: CONFIG.weeklyAppointments,
+        borderColor: '#34d399',
+        backgroundColor: 'rgba(52,211,153,.08)',
+        tension: .4,
+        fill: true,
+        borderWidth: 2.5,
+        pointBackgroundColor: '#34d399',
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#94a3b8', padding: 20, usePointStyle: true, pointStyleWidth: 10 } }
+    },
+    scales: {
+      x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+      y: { ticks: { color: tickColor }, grid: { color: gridColor }, beginAtZero: true }
+    }
+  }
+});
+
+// ─── Bar Chart ───
+const sourceColors = ['#60a5fa', '#a78bfa', '#fbbf24', '#34d399'];
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: CONFIG.sourceLabels,
+    datasets: [{
+      label: 'Lead Volume',
+      data: CONFIG.sourceValues,
+      backgroundColor: sourceColors,
+      borderRadius: 8,
+      barPercentage: .65
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: tickColor }, grid: { display: false } },
+      y: { ticks: { color: tickColor }, grid: { color: gridColor }, beginAtZero: true }
+    }
+  }
+});
+
+// ─── Donut Chart ───
+const donutLabels = CONFIG.pipeline.map(r => r.service);
+const donutData = CONFIG.pipeline.map(r => r.booked);
+const donutColors = ['#d4a843', '#60a5fa', '#a78bfa', '#34d399', '#fb7185'];
+new Chart(document.getElementById('donutChart'), {
+  type: 'doughnut',
+  data: {
+    labels: donutLabels,
+    datasets: [{
+      data: donutData,
+      backgroundColor: donutColors,
+      borderWidth: 0,
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '62%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#94a3b8', padding: 14, usePointStyle: true, pointStyleWidth: 10, font: { size: 11 } }
+      }
+    }
+  }
+});
+
+// ─── Funnel Chart (horizontal bar) ───
+const reactivation = CONFIG.pipeline.find(r => r.service.toLowerCase().includes('reactivation')) || { leads: 96, qualified: 34, booked: 17 };
+new Chart(document.getElementById('funnelChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Contacted', 'Responsive', 'Booked'],
+    datasets: [{
+      data: [reactivation.leads, reactivation.qualified, reactivation.booked],
+      backgroundColor: ['rgba(212,168,67,.25)', 'rgba(212,168,67,.50)', 'rgba(212,168,67,.85)'],
+      borderColor: ['#d4a843', '#d4a843', '#d4a843'],
+      borderWidth: 1,
+      borderRadius: 8,
+      barPercentage: .55
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: tickColor }, grid: { color: gridColor }, beginAtZero: true },
+      y: { ticks: { color: '#e9f2fb', font: { weight: 600 } }, grid: { display: false } }
+    }
+  }
+});
+
+// ══════════════════════════════════════════════════════════════
+// ROI CALCULATOR
+// ══════════════════════════════════════════════════════════════
+
+const sliders = {
+  missed:   document.getElementById('sliderMissed'),
+  recovery: document.getElementById('sliderRecovery'),
+  appt:     document.getElementById('sliderAppt'),
+  dormant:  document.getElementById('sliderDormant'),
+  react:    document.getElementById('sliderReact')
+};
+
+// Set defaults from config
+sliders.missed.value   = CONFIG.roiDefaults.missedCalls;
+sliders.recovery.value = CONFIG.roiDefaults.recoveryRate;
+sliders.appt.value     = CONFIG.roiDefaults.avgAppointmentValue;
+sliders.dormant.value  = CONFIG.roiDefaults.dormantContacted;
+sliders.react.value    = CONFIG.roiDefaults.reactivationRate;
+
+function updateROI() {
+  const missed   = +sliders.missed.value;
+  const recovery = +sliders.recovery.value / 100;
+  const apptVal  = +sliders.appt.value;
+  const dormant  = +sliders.dormant.value;
+  const react    = +sliders.react.value / 100;
+
+  const recoveredAppts = Math.round(missed * recovery);
+  const reactivated    = Math.round(dormant * react);
+  const inboundRev     = recoveredAppts * apptVal;
+  const reactRev       = reactivated * apptVal;
+  const total          = inboundRev + reactRev;
+
+  document.getElementById('sliderMissedVal').textContent   = missed;
+  document.getElementById('sliderRecoveryVal').textContent = Math.round(recovery * 100) + '%';
+  document.getElementById('sliderApptVal').textContent     = '$' + apptVal;
+  document.getElementById('sliderDormantVal').textContent  = dormant;
+  document.getElementById('sliderReactVal').textContent    = Math.round(react * 100) + '%';
+
+  document.getElementById('roiTotal').textContent    = fmtFull(total);
+  document.getElementById('roiAppts').textContent    = recoveredAppts;
+  document.getElementById('roiReact').textContent    = reactivated;
+  document.getElementById('roiInbound').textContent  = fmtFull(inboundRev);
+  document.getElementById('roiReactRev').textContent = fmtFull(reactRev);
+}
+
+Object.values(sliders).forEach(s => s.addEventListener('input', updateROI));
+updateROI();
+</script>
+
+</body>
+</html>

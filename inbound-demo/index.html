@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voxaris Inbound Demo — Family Orlando Dentistry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Tokens ─── */
+    :root {
+      --void: #07080a;
+      --void-light: #0d0f13;
+      --void-card: #111318;
+      --void-card-hover: #161921;
+      --gold: #d4a843;
+      --gold-dim: rgba(212, 168, 67, .12);
+      --gold-glow: rgba(212, 168, 67, .06);
+      --dental-blue: #1678d4;
+      --dental-teal: #0ea5a4;
+      --dental-light: #eef6ff;
+      --white: #f0ece4;
+      --white-dim: rgba(240, 236, 228, .55);
+      --white-muted: rgba(240, 236, 228, .35);
+      --border: rgba(240, 236, 228, .06);
+      --border-active: rgba(212, 168, 67, .25);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --radius-xs: 10px;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --font-heading: 'Instrument Sans', system-ui, sans-serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--void);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Ambient BG ─── */
+    .ambient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22,120,212,.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212,168,67,.04) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(14,165,164,.03) 0%, transparent 60%);
+    }
+
+    /* ─── Layout ─── */
+    .page { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    /* ─── Header ─── */
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold) 0%, #b8922e 100%);
+      display: grid; place-items: center;
+      font-family: var(--font-heading); font-weight: 700; font-size: 16px; color: var(--void);
+    }
+    .brand-text { font-family: var(--font-heading); font-weight: 700; font-size: 18px; letter-spacing: .02em; }
+    .brand-text span { color: var(--gold); }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gold-dim); color: var(--gold);
+      padding: 8px 14px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(.7); }
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      display: grid; grid-template-columns: 1fr 380px; gap: 28px;
+      align-items: start; margin-bottom: 32px;
+    }
+    .hero-content {
+      background: var(--void-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow);
+    }
+    .hero-content h1 {
+      font-family: var(--font-heading); font-size: 38px; line-height: 1.1;
+      font-weight: 700; margin-bottom: 14px;
+    }
+    .hero-content h1 em { font-style: normal; color: var(--gold); }
+    .hero-content p { color: var(--white-dim); line-height: 1.65; font-size: 15px; margin-bottom: 24px; }
+    .practice-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--white-muted); margin-bottom: 18px;
+    }
+    .practice-tag .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dental-teal); }
+
+    /* ─── Scenario Buttons ─── */
+    .scenario-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .scenario-btn {
+      position: relative; border: 1px solid var(--border); background: transparent;
+      color: var(--white-dim); border-radius: var(--radius-sm);
+      padding: 14px 20px; font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all .25s ease; display: flex; flex-direction: column; gap: 4px;
+      min-width: 180px;
+    }
+    .scenario-btn .label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--white-muted); }
+    .scenario-btn:hover { border-color: var(--border-active); background: var(--gold-glow); color: var(--white); }
+    .scenario-btn.active {
+      border-color: var(--gold); background: var(--gold-dim); color: var(--gold);
+      box-shadow: 0 0 20px rgba(212,168,67,.08);
+    }
+    .scenario-btn.active .label { color: var(--gold); }
+
+    /* ─── Play / Reset ─── */
+    .action-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-play {
+      border: none; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--gold), #c9982e);
+      color: var(--void); padding: 14px 28px;
+      font-family: var(--font-body); font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all .2s ease; letter-spacing: .02em;
+    }
+    .btn-play:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-play:active { transform: translateY(0); }
+    .btn-reset {
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: transparent; color: var(--white-muted);
+      padding: 14px 20px; font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all .2s ease;
+    }
+    .btn-reset:hover { border-color: var(--border-active); color: var(--white-dim); }
+
+    /* ─── Avatar Panel ─── */
+    .avatar-panel {
+      background: var(--void-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+    }
+    .avatar-visual {
+      aspect-ratio: 3/4; position: relative; overflow: hidden;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 20%, rgba(22,120,212,.2) 0%, transparent 60%),
+        linear-gradient(160deg, #0a1929 0%, #102a48 40%, #1a5a8f 80%, #3ca0e8 100%);
+    }
+    .avatar-visual .ring {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 200px; height: 200px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.06);
+      animation: ring-breathe 4s ease-in-out infinite;
+    }
+    .avatar-visual .ring:nth-child(2) { width: 260px; height: 260px; animation-delay: .6s; }
+    .avatar-visual .ring:nth-child(3) { width: 320px; height: 320px; animation-delay: 1.2s; }
+    @keyframes ring-breathe {
+      0%, 100% { opacity: .3; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: .8; transform: translate(-50%, -50%) scale(1.04); }
+    }
+    .avatar-visual .silhouette {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 180px; height: 260px;
+      border-radius: 100px 100px 16px 16px;
+      background: linear-gradient(180deg, #f0dcc8 0%, #e4c4a8 30%, #102a48 32%, #0f2740 100%);
+      box-shadow: 0 -10px 40px rgba(22,120,212,.2);
+    }
+    .avatar-visual .vface-tag {
+      position: absolute; top: 16px; left: 16px;
+      background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: rgba(255,255,255,.7);
+    }
+    .avatar-visual .status-indicator {
+      position: absolute; top: 16px; right: 16px;
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,.6);
+    }
+    .status-indicator .dot-live {
+      width: 6px; height: 6px; border-radius: 50%; background: #1dd1a1;
+      animation: pulse-dot 1.5s ease infinite;
+    }
+    .avatar-caption {
+      padding: 16px; border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--white-muted); line-height: 1.55; text-align: center;
+    }
+    .avatar-caption strong { color: var(--white-dim); }
+
+    /* ─── Main Grid ─── */
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    /* ─── Chat Panel ─── */
+    .chat-panel {
+      background: var(--void-card); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+    }
+    .panel-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-title {
+      font-family: var(--font-heading); font-weight: 700; font-size: 15px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-title .icon { font-size: 16px; opacity: .5; }
+    .msg-count { font-size: 11px; color: var(--white-muted); }
+
+    .chat-body { padding: 20px 24px; min-height: 480px; max-height: 480px; overflow-y: auto; }
+    .chat-body::-webkit-scrollbar { width: 4px; }
+    .chat-body::-webkit-scrollbar-track { background: transparent; }
+    .chat-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 4px; }
+
+    .chat-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; min-height: 400px; text-align: center; color: var(--white-muted);
+    }
+    .chat-empty .icon-big { font-size: 48px; opacity: .2; margin-bottom: 16px; }
+    .chat-empty p { font-size: 14px; max-width: 260px; line-height: 1.6; }
+
+    /* ─── Messages ─── */
+    .msg {
+      margin-bottom: 16px; max-width: 88%;
+      animation: msg-in .4s cubic-bezier(.22, 1, .36, 1);
+    }
+    .msg.bot { margin-right: auto; }
+    .msg.user { margin-left: auto; }
+
+    .msg-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; margin-bottom: 6px;
+    }
+    .msg.bot .msg-label { color: var(--dental-blue); }
+    .msg.user .msg-label { color: var(--white-muted); justify-content: flex-end; }
+
+    .msg-label .agent-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+    }
+    .agent-receptionist { background: var(--dental-blue); }
+    .agent-qualifier { background: var(--dental-teal); }
+    .agent-specialist { background: #7c5cff; }
+    .agent-closer { background: var(--gold); }
+    .agent-emergency { background: #ef4444; }
+
+    .msg-bubble {
+      padding: 14px 18px; border-radius: 18px;
+      font-size: 14px; line-height: 1.6;
+    }
+    .msg.bot .msg-bubble {
+      background: rgba(22,120,212,.08); border: 1px solid rgba(22,120,212,.1);
+      color: var(--white); border-bottom-left-radius: 6px;
+    }
+    .msg.user .msg-bubble {
+      background: rgba(240,236,228,.06); border: 1px solid rgba(240,236,228,.06);
+      color: var(--white-dim); border-bottom-right-radius: 6px;
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex; gap: 4px; padding: 14px 18px;
+      background: rgba(22,120,212,.06); border: 1px solid rgba(22,120,212,.08);
+      border-radius: 18px; border-bottom-left-radius: 6px;
+      width: fit-content; margin-bottom: 16px;
+    }
+    .typing-indicator span {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--dental-blue); opacity: .4;
+      animation: typing-bounce .8s ease infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: .15s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .3s; }
+    @keyframes typing-bounce {
+      0%, 100% { opacity: .3; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-4px); }
+    }
+
+    @keyframes msg-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Flow Panel ─── */
+    .flow-panel {
+      background: var(--void-card); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+    }
+    .flow-body { padding: 20px 24px; }
+
+    .flow-step {
+      position: relative; padding: 16px 18px; padding-left: 42px;
+      border-radius: var(--radius-sm); margin-bottom: 12px;
+      background: rgba(255,255,255,.02); border: 1px solid var(--border);
+      transition: all .35s ease; opacity: .4;
+    }
+    .flow-step.active {
+      opacity: 1; border-color: var(--border-active);
+      background: var(--gold-glow);
+    }
+    .flow-step.completed {
+      opacity: .7; border-color: rgba(14,165,164,.15);
+    }
+
+    /* Step number */
+    .flow-step::before {
+      content: attr(data-step);
+      position: absolute; left: 14px; top: 18px;
+      width: 20px; height: 20px; border-radius: 6px;
+      background: var(--border); color: var(--white-muted);
+      display: grid; place-items: center;
+      font-size: 10px; font-weight: 700;
+      transition: all .35s ease;
+    }
+    .flow-step.active::before { background: var(--gold-dim); color: var(--gold); }
+    .flow-step.completed::before { background: rgba(14,165,164,.15); color: var(--dental-teal); content: '\2713'; }
+
+    /* Connector line */
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute; left: 23px; bottom: -13px;
+      width: 1px; height: 12px;
+      background: var(--border); transition: background .35s ease;
+    }
+    .flow-step.completed:not(:last-child)::after { background: rgba(14,165,164,.2); }
+
+    .flow-step-title {
+      font-family: var(--font-heading); font-weight: 700; font-size: 13px;
+      margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+    }
+    .flow-step-title .agent-tag {
+      font-size: 9px; padding: 2px 8px; border-radius: 6px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    }
+    .tag-receptionist { background: rgba(22,120,212,.12); color: var(--dental-blue); }
+    .tag-qualifier { background: rgba(14,165,164,.12); color: var(--dental-teal); }
+    .tag-specialist { background: rgba(124,92,255,.12); color: #7c5cff; }
+    .tag-closer { background: var(--gold-dim); color: var(--gold); }
+    .tag-emergency { background: rgba(239,68,68,.12); color: #ef4444; }
+
+    .flow-step-desc { font-size: 12px; color: var(--white-muted); line-height: 1.5; }
+
+    /* ─── Context Strip ─── */
+    .context-strip {
+      margin-top: 20px; padding: 14px 18px;
+      background: rgba(255,255,255,.02); border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .context-strip-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--white-muted); margin-bottom: 10px;
+    }
+    .context-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .context-tag {
+      font-size: 11px; padding: 4px 10px; border-radius: 8px;
+      background: rgba(255,255,255,.04); color: var(--white-muted); border: 1px solid var(--border);
+      transition: all .3s ease; opacity: 0; transform: translateY(4px);
+    }
+    .context-tag.visible { opacity: 1; transform: translateY(0); }
+    .context-tag.highlight { border-color: var(--border-active); color: var(--gold); background: var(--gold-glow); }
+
+    /* ─── Footer ─── */
+    .footer {
+      margin-top: 48px; text-align: center; padding: 24px;
+      border-top: 1px solid var(--border); color: var(--white-muted); font-size: 12px;
+    }
+    .footer a { color: var(--gold); text-decoration: none; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .avatar-panel { max-width: 380px; }
+      .main-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .page { padding: 20px 16px 60px; }
+      .hero-content { padding: 24px; }
+      .hero-content h1 { font-size: 28px; }
+      .scenario-btn { min-width: 140px; }
+      .chat-body { min-height: 360px; max-height: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="page">
+
+  <!-- ─── Header ─── -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div class="brand-text"><span>Voxaris</span> Inbound Demo</div>
+    </div>
+    <div class="badge">Live Simulation</div>
+  </header>
+
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="practice-tag">
+        <span class="dot"></span>
+        Orlando Family Dentistry &mdash; Ocoee, FL
+      </div>
+      <h1>V&middot;TEAMS <em>Inbound</em> Experience</h1>
+      <p>See how Voxaris answers instantly, qualifies correctly, routes intelligently, and books or escalates &mdash; without making the patient repeat themselves. Choose a scenario below.</p>
+
+      <div class="scenario-group">
+        <button class="scenario-btn active" data-scenario="invisalign" onclick="setScenario('invisalign')">
+          <span class="label">Scenario 1</span>
+          Invisalign Lead
+        </button>
+        <button class="scenario-btn" data-scenario="emergency" onclick="setScenario('emergency')">
+          <span class="label">Scenario 2</span>
+          Emergency Call
+        </button>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-play" onclick="playScenario()">&#9654;&ensp;Play Demo</button>
+        <button class="btn-reset" onclick="resetAll()">Reset</button>
+      </div>
+    </div>
+
+    <div class="avatar-panel">
+      <div class="avatar-visual">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="silhouette"></div>
+        <div class="vface-tag">V&middot;FACE</div>
+        <div class="status-indicator"><span class="dot-live"></span> Online</div>
+      </div>
+      <div class="avatar-caption">
+        <strong>Virtual Dental Concierge</strong><br />
+        Photorealistic AI receptionist for Family Orlando Dentistry.
+        Handles Invisalign, emergencies, whitening, and appointment routing 24/7.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Main Grid ─── -->
+  <section class="main-grid">
+
+    <!-- Chat -->
+    <div class="chat-panel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="icon">&#128172;</span> Conversation</div>
+        <div class="msg-count" id="msgCount">0 messages</div>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-empty">
+          <div class="icon-big">&#9758;</div>
+          <p>Select a scenario and press <strong>Play Demo</strong> to watch the V&middot;TEAMS flow in action.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow -->
+    <div class="flow-panel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="icon">&#9881;</span> V&middot;TEAMS Flow</div>
+        <div class="msg-count" id="flowLabel">Receptionist &rarr; Qualifier &rarr; Specialist &rarr; Closer</div>
+      </div>
+      <div class="flow-body" id="flowBody"></div>
+
+      <div style="padding: 0 24px 20px;">
+        <div class="context-strip">
+          <div class="context-strip-title">Accumulated Context (no repeat)</div>
+          <div class="context-tags" id="contextTags"></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    Voxaris &middot; V&middot;TEAMS Inbound Demo for <a href="https://familyorlandodentistry.com/" target="_blank" rel="noopener">Orlando Family Dentistry</a><br/>
+    Dr. Nadine Nitisusanta DMD &amp; Dr. Jonathan Nitisusanta DDS &mdash; (407) 877-9003
+  </footer>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   SCENARIO DATA
+   ═══════════════════════════════════════════════════ */
+
+const scenarios = {
+  invisalign: {
+    flowLabel: 'Receptionist &rarr; Qualifier &rarr; Specialist &rarr; Closer',
+    steps: [
+      {
+        title: 'V&middot;FACE Receptionist',
+        tag: 'receptionist',
+        desc: 'Greets instantly, confirms the practice offers Invisalign, and frames the free consultation offer.',
+      },
+      {
+        title: 'V&middot;TEAMS Qualifier',
+        tag: 'qualifier',
+        desc: 'Identifies cosmetic intent, urgency, prior ortho history, and start window to score lead quality.',
+      },
+      {
+        title: 'V&middot;TEAMS Specialist',
+        tag: 'specialist',
+        desc: 'Answers common fit questions and explains what to expect at the Invisalign consultation.',
+      },
+      {
+        title: 'V&middot;TEAMS Closer',
+        tag: 'closer',
+        desc: 'Captures scheduling preference, tags lead as high-intent, and initiates consultation booking.',
+      },
+    ],
+    context: [
+      'Invisalign interest',
+      'Crowding + smile refresh',
+      'No prior ortho',
+      'High intent',
+      '30-day start window',
+      'Afternoon preference',
+      'Free consult eligible',
+    ],
+    messages: [
+      { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
+        text: 'Hi, welcome to Orlando Family Dentistry. I\'m the Voxaris virtual concierge for the practice. I can help you with appointments, questions, Invisalign consultations, or urgent dental concerns. What brings you in today?' },
+      { type: 'user', agent: 'Patient', step: 0,
+        text: 'I\'m interested in Invisalign. I\'ve been thinking about straightening my teeth.' },
+      { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
+        text: 'Absolutely. Orlando Family Dentistry offers Invisalign and currently promotes a free consultation, so you\'re in the right place. Let me ask a couple of quick questions so I can guide you to the best next step. Is this mostly for crowding, spacing, bite concerns, or a smile refresh?',
+        contextAdd: [0] },
+      { type: 'user', agent: 'Patient', step: 0,
+        text: 'Mostly crowding and a smile refresh.' },
+      { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
+        text: 'Got it. Have you ever had braces or clear aligners before?',
+        contextAdd: [1] },
+      { type: 'user', agent: 'Patient', step: 0,
+        text: 'No.' },
+      { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
+        text: 'Perfect. And are you mainly looking for the soonest consultation, or do you want to learn a little more about cost, treatment length, and whether you\'re a good candidate first?',
+        contextAdd: [2] },
+      { type: 'user', agent: 'Patient', step: 1,
+        text: 'I\'d like to know if I\'m a good candidate and how it works.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Qualifier', agentClass: 'qualifier', step: 1,
+        text: 'Great. Invisalign is typically a strong option for mild to moderate crowding, spacing, and many bite issues, but the doctor would confirm that after an exam and scan. This office also emphasizes visual results preview during the consultation, which helps patients understand what their smile could look like. Are you hoping to start in the next 30 days, the next few months, or are you just researching for now?',
+        contextAdd: [6] },
+      { type: 'user', agent: 'Patient', step: 1,
+        text: 'Probably the next 30 days.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Qualifier', agentClass: 'qualifier', step: 1,
+        text: 'That\'s helpful. You sound like a strong high-intent lead. I can do one of two things: help you request the earliest Invisalign consultation, or connect you to the Invisalign specialist flow to answer common questions first. Which would you prefer?',
+        contextAdd: [3, 4] },
+      { type: 'user', agent: 'Patient', step: 2,
+        text: 'Let\'s book the consultation.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Specialist', agentClass: 'specialist', step: 2,
+        text: 'Excellent. I\'ll mark this as a high-intent Invisalign consult request and pass along that your priorities are crowding improvement, smile aesthetics, and a near-term start window. Would you prefer a morning or afternoon visit?' },
+      { type: 'user', agent: 'Patient', step: 3,
+        text: 'Afternoon.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Closer', agentClass: 'closer', step: 3,
+        text: 'Perfect. I\'ve captured afternoon preference, first-time Invisalign interest, and a likely 30-day start window. Next step: confirm an appointment offer and send preparation details. If you want, I can also send a quick summary of what to expect at the consult.',
+        contextAdd: [5] },
+    ],
+  },
+
+  emergency: {
+    flowLabel: 'Receptionist &rarr; Emergency Qualifier &rarr; Specialist &rarr; Closer',
+    steps: [
+      {
+        title: 'V&middot;FACE Receptionist',
+        tag: 'receptionist',
+        desc: 'Detects an urgent dental issue immediately and moves into triage mode.',
+      },
+      {
+        title: 'V&middot;TEAMS Emergency Qualifier',
+        tag: 'emergency',
+        desc: 'Collects pain level, swelling status, trauma vs. eating, and onset timing.',
+      },
+      {
+        title: 'V&middot;TEAMS Specialist',
+        tag: 'specialist',
+        desc: 'Packages the case for same-day or first-available emergency review with full context.',
+      },
+      {
+        title: 'V&middot;TEAMS Closer',
+        tag: 'closer',
+        desc: 'Sends to priority scheduling with all notes preserved. Provides safety guidance if office is closed.',
+      },
+    ],
+    context: [
+      'Cracked tooth',
+      'Pain level: 8/10',
+      'No bleeding',
+      'No swelling/fever',
+      'Onset: while eating',
+      'Onset: today',
+      'Priority: emergency',
+    ],
+    messages: [
+      { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
+        text: 'Hi, welcome to Orlando Family Dentistry. I can help with appointments, questions, or urgent dental issues. What\'s going on today?' },
+      { type: 'user', agent: 'Patient', step: 0,
+        text: 'I think I cracked a tooth and it really hurts.' },
+      { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
+        text: 'I\'m sorry you\'re dealing with that. Let\'s get you to the right place quickly. Is there swelling, bleeding, trauma, fever, or severe pain right now?',
+        contextAdd: [0] },
+      { type: 'user', agent: 'Patient', step: 1,
+        text: 'Severe pain, no bleeding.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Emergency Qualifier', agentClass: 'emergency', step: 1,
+        text: 'Thank you. Orlando Family Dentistry publicly lists emergency care, root canals, extractions, and related treatment pathways, so this is absolutely within the practice\'s service scope. On a scale from 1 to 10, how strong is the pain?',
+        contextAdd: [2, 3] },
+      { type: 'user', agent: 'Patient', step: 1,
+        text: 'An 8.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Emergency Qualifier', agentClass: 'emergency', step: 1,
+        text: 'Understood. I\'m flagging this as a priority urgent call. Is the tooth broken from an injury today, or did it crack while eating?',
+        contextAdd: [1, 6] },
+      { type: 'user', agent: 'Patient', step: 2,
+        text: 'It cracked while eating.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Specialist', agentClass: 'specialist', step: 2,
+        text: 'Thanks. I\'m passing the context forward so you do not have to repeat yourself: possible cracked tooth, pain level 8, no active bleeding, onset today while eating. The recommended next step is the earliest emergency evaluation request.',
+        contextAdd: [4, 5] },
+      { type: 'user', agent: 'Patient', step: 3,
+        text: 'Okay.' },
+      { type: 'bot', agent: 'V&middot;TEAMS Closer', agentClass: 'closer', step: 3,
+        text: 'You\'re marked for emergency scheduling priority. If the office is open, this routes immediately for same-day triage. If the office is closed, this is captured as a high-priority urgent case for first-available follow-up, with all details preserved for the team. If swelling, fever, or facial spreading develops, seek urgent medical help right away.' },
+    ],
+  },
+};
+
+
+/* ═══════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════ */
+
+let current = 'invisalign';
+let playing = false;
+let timers = [];
+let msgIdx = 0;
+
+/* ═══════════════════════════════════════════════════
+   SCENARIO SWITCH
+   ═══════════════════════════════════════════════════ */
+
+function setScenario(name) {
+  if (playing) return;
+  current = name;
+  document.querySelectorAll('.scenario-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.scenario === name);
+  });
+  resetAll();
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET
+   ═══════════════════════════════════════════════════ */
+
+function resetAll() {
+  timers.forEach(t => clearTimeout(t));
+  timers = [];
+  playing = false;
+  msgIdx = 0;
+
+  // Chat
+  const chatBody = document.getElementById('chatBody');
+  chatBody.innerHTML = `
+    <div class="chat-empty">
+      <div class="icon-big">&#9758;</div>
+      <p>Select a scenario and press <strong>Play Demo</strong> to watch the V&middot;TEAMS flow in action.</p>
+    </div>`;
+  document.getElementById('msgCount').textContent = '0 messages';
+
+  // Flow
+  renderFlow();
+  renderContext();
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER FLOW STEPS
+   ═══════════════════════════════════════════════════ */
+
+function renderFlow() {
+  const s = scenarios[current];
+  document.getElementById('flowLabel').innerHTML = s.flowLabel;
+  const body = document.getElementById('flowBody');
+  body.innerHTML = '';
+  s.steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'flow-step';
+    div.dataset.step = i + 1;
+    div.id = `flow-step-${i}`;
+    div.innerHTML = `
+      <div class="flow-step-title">
+        ${step.title}
+        <span class="agent-tag tag-${step.tag}">${step.tag}</span>
+      </div>
+      <div class="flow-step-desc">${step.desc}</div>`;
+    body.appendChild(div);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER CONTEXT TAGS
+   ═══════════════════════════════════════════════════ */
+
+function renderContext() {
+  const tags = document.getElementById('contextTags');
+  tags.innerHTML = '';
+  scenarios[current].context.forEach((label, i) => {
+    const span = document.createElement('span');
+    span.className = 'context-tag';
+    span.id = `ctx-${i}`;
+    span.textContent = label;
+    tags.appendChild(span);
+  });
+}
+
+function revealContext(indices) {
+  if (!indices) return;
+  indices.forEach(i => {
+    const el = document.getElementById(`ctx-${i}`);
+    if (el) {
+      el.classList.add('visible');
+      el.classList.add('highlight');
+      setTimeout(() => el.classList.remove('highlight'), 1800);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   ACTIVATE FLOW STEP
+   ═══════════════════════════════════════════════════ */
+
+function activateStep(stepIdx) {
+  scenarios[current].steps.forEach((_, i) => {
+    const el = document.getElementById(`flow-step-${i}`);
+    if (!el) return;
+    el.classList.remove('active', 'completed');
+    if (i < stepIdx) el.classList.add('completed');
+    else if (i === stepIdx) el.classList.add('active');
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   PLAY
+   ═══════════════════════════════════════════════════ */
+
+function playScenario() {
+  if (playing) return;
+  playing = true;
+  resetAll();
+  playing = true; // resetAll sets it to false
+
+  const chatBody = document.getElementById('chatBody');
+  chatBody.innerHTML = '';
+  const messages = scenarios[current].messages;
+  let count = 0;
+  let lastStep = -1;
+
+  messages.forEach((msg, i) => {
+    // Typing indicator before bot messages
+    const delay = i * 1600;
+
+    if (msg.type === 'bot') {
+      timers.push(setTimeout(() => {
+        // Show typing
+        const typing = document.createElement('div');
+        typing.className = 'typing-indicator';
+        typing.id = 'typing';
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        chatBody.appendChild(typing);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }, delay));
+
+      timers.push(setTimeout(() => {
+        // Remove typing
+        const t = document.getElementById('typing');
+        if (t) t.remove();
+
+        // Add message
+        appendMessage(chatBody, msg);
+        count++;
+        document.getElementById('msgCount').textContent = `${count} message${count !== 1 ? 's' : ''}`;
+
+        // Activate step
+        if (msg.step !== lastStep) {
+          activateStep(msg.step);
+          lastStep = msg.step;
+        }
+
+        // Reveal context
+        revealContext(msg.contextAdd);
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }, delay + 600));
+    } else {
+      timers.push(setTimeout(() => {
+        appendMessage(chatBody, msg);
+        count++;
+        document.getElementById('msgCount').textContent = `${count} message${count !== 1 ? 's' : ''}`;
+
+        if (msg.step !== lastStep) {
+          activateStep(msg.step);
+          lastStep = msg.step;
+        }
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }, delay));
+    }
+  });
+
+  // Mark complete
+  timers.push(setTimeout(() => {
+    playing = false;
+    // Mark last step completed
+    scenarios[current].steps.forEach((_, i) => {
+      const el = document.getElementById(`flow-step-${i}`);
+      if (el) { el.classList.remove('active'); el.classList.add('completed'); }
+    });
+  }, messages.length * 1600 + 800));
+}
+
+/* ═══════════════════════════════════════════════════
+   APPEND MESSAGE
+   ═══════════════════════════════════════════════════ */
+
+function appendMessage(container, msg) {
+  const div = document.createElement('div');
+  div.className = `msg ${msg.type}`;
+
+  const dotClass = msg.agentClass ? `agent-${msg.agentClass}` : '';
+
+  div.innerHTML = `
+    <div class="msg-label">
+      ${msg.type === 'bot' ? `<span class="agent-dot ${dotClass}"></span>` : ''}
+      ${msg.agent}
+    </div>
+    <div class="msg-bubble">${msg.text}</div>`;
+  container.appendChild(div);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════ */
+
+renderFlow();
+renderContext();
+</script>
+
+</body>
+</html>

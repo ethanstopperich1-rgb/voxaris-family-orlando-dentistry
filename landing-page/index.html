@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family Orlando Dentistry x Voxaris | 24/7 AI Front Desk</title>
+  <meta name="description" content="See how Voxaris gives Family Orlando Dentistry a 24/7 digital front desk that answers, qualifies, and converts patient demand around the clock." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            dental: {
+              blue: '#1678d4',
+              navy: '#0f2740',
+              sky: '#dff2ff',
+              mint: '#dcfff4',
+              deep: '#081a2e',
+            },
+            vox: {
+              teal: '#0ea5a4',
+              green: '#10b981',
+              purple: '#7c5cff',
+              amber: '#f6b94a',
+            }
+          },
+          boxShadow: {
+            soft: '0 4px 24px rgba(15,39,64,.06)',
+            card: '0 12px 48px rgba(15,39,64,.10)',
+            hero: '0 25px 80px rgba(15,39,64,.14)',
+            glow: '0 0 60px rgba(22,120,212,.15)',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.6s ease forwards',
+            'fade-in': 'fadeIn 0.5s ease forwards',
+            'slide-in-right': 'slideInRight 0.6s ease forwards',
+            'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'counter': 'counter 1.5s ease forwards',
+          },
+          keyframes: {
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(24px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideInRight: {
+              '0%': { opacity: '0', transform: 'translateX(32px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            pulseSoft: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.7' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(22,120,212,0.2); border-radius: 99px; }
+
+    /* Scroll-driven reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* Range slider custom styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 99px;
+      background: linear-gradient(to right, #1678d4 0%, #1678d4 var(--progress, 50%), #e2e8f0 var(--progress, 50%), #e2e8f0 100%);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #1678d4;
+      box-shadow: 0 2px 8px rgba(22,120,212,0.25);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 16px rgba(22,120,212,0.35);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #1678d4;
+      box-shadow: 0 2px 8px rgba(22,120,212,0.25);
+      cursor: pointer;
+    }
+
+    /* Animated counter */
+    .counter-value {
+      display: inline-block;
+      min-width: 2ch;
+    }
+
+    /* Glass morphism */
+    .glass {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .glass-dark {
+      background: rgba(15,39,64,0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    /* Nav link hover underline */
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #1678d4;
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* V-FACE avatar glow ring */
+    .avatar-ring {
+      position: relative;
+    }
+    .avatar-ring::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: inherit;
+      background: conic-gradient(from 0deg, #1678d4, #0ea5a4, #7c5cff, #1678d4);
+      opacity: 0.5;
+      z-index: -1;
+      animation: spin 8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Stat card hover */
+    .stat-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(15,39,64,0.12);
+    }
+
+    /* Pain card icon animation */
+    .pain-icon {
+      transition: transform 0.3s ease;
+    }
+    .pain-card:hover .pain-icon {
+      transform: scale(1.1);
+    }
+
+    /* CTA button shimmer */
+    .btn-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .mobile-menu.open {
+      max-height: 300px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased font-sans">
+
+  <!-- ═══════════════════════════════════════════
+       HEADER / NAVIGATION
+  ═══════════════════════════════════════════ -->
+  <header id="header" class="sticky top-0 z-50 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl transition-all duration-300">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 lg:px-10">
+      <!-- Brand -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-dental-blue text-xl font-black text-white transition-transform group-hover:scale-105">V</div>
+        <div class="hidden sm:block">
+          <div class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">Custom Demo</div>
+          <div class="text-sm font-semibold text-dental-navy">Voxaris <span class="text-slate-400 font-normal">for</span> Family Orlando Dentistry</div>
+        </div>
+      </a>
+      <!-- Desktop Nav -->
+      <nav class="hidden gap-8 text-sm font-medium text-slate-500 lg:flex">
+        <a href="#why" class="nav-link hover:text-dental-navy transition-colors">Why Now</a>
+        <a href="#solutions" class="nav-link hover:text-dental-navy transition-colors">Solutions</a>
+        <a href="#vface" class="nav-link hover:text-dental-navy transition-colors">V&middot;FACE</a>
+        <a href="#roi" class="nav-link hover:text-dental-navy transition-colors">ROI</a>
+        <a href="#demo" class="nav-link hover:text-dental-navy transition-colors">Demo</a>
+      </nav>
+      <!-- CTA -->
+      <div class="flex items-center gap-3">
+        <a href="#book" class="btn-shimmer rounded-full bg-dental-blue px-5 py-2.5 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card">Book Demo</a>
+        <!-- Mobile burger -->
+        <button id="mobileMenuBtn" class="lg:hidden flex flex-col gap-1.5 p-2" aria-label="Menu">
+          <span class="block w-5 h-0.5 bg-slate-600 rounded transition-all" id="burger1"></span>
+          <span class="block w-5 h-0.5 bg-slate-600 rounded transition-all" id="burger2"></span>
+          <span class="block w-3.5 h-0.5 bg-slate-600 rounded transition-all" id="burger3"></span>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Nav -->
+    <div id="mobileMenu" class="mobile-menu lg:hidden border-t border-slate-100">
+      <div class="flex flex-col gap-1 px-5 py-4">
+        <a href="#why" class="py-2.5 text-sm font-medium text-slate-600 hover:text-dental-blue transition-colors">Why Now</a>
+        <a href="#solutions" class="py-2.5 text-sm font-medium text-slate-600 hover:text-dental-blue transition-colors">Solutions</a>
+        <a href="#vface" class="py-2.5 text-sm font-medium text-slate-600 hover:text-dental-blue transition-colors">V&middot;FACE</a>
+        <a href="#roi" class="py-2.5 text-sm font-medium text-slate-600 hover:text-dental-blue transition-colors">ROI</a>
+        <a href="#demo" class="py-2.5 text-sm font-medium text-slate-600 hover:text-dental-blue transition-colors">Demo</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ═══════════════════════════════════════════
+         HERO SECTION
+    ═══════════════════════════════════════════ -->
+    <section class="relative overflow-hidden">
+      <!-- Background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-[#f0f7ff] via-white to-[#ecfbff]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(22,120,212,0.08),transparent_40%),radial-gradient(circle_at_85%_80%,rgba(14,165,164,0.06),transparent_35%)]"></div>
+      <!-- Decorative orbs -->
+      <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-dental-blue/5 blur-3xl animate-pulse-soft"></div>
+      <div class="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-vox-teal/5 blur-3xl animate-pulse-soft" style="animation-delay: 1.5s;"></div>
+
+      <div class="relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:px-10 lg:py-24">
+        <!-- Left: copy -->
+        <div class="animate-fade-up">
+          <span class="inline-flex items-center gap-2 rounded-full bg-dental-blue/8 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-dental-blue">
+            <span class="h-1.5 w-1.5 rounded-full bg-dental-blue animate-pulse-soft"></span>
+            Built for Family Orlando Dentistry
+          </span>
+          <h1 class="mt-6 max-w-2xl text-4xl font-extrabold leading-[1.08] tracking-tight text-dental-navy sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+            The front desk your practice needs
+            <span class="bg-gradient-to-r from-dental-blue to-vox-teal bg-clip-text text-transparent"> when the office is closed.</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-base leading-7 text-slate-500 sm:text-lg sm:leading-8">
+            Family Orlando Dentistry already offers the right services. Voxaris makes sure Invisalign, emergency, whitening, implant, and same-day crown demand is answered, qualified, and converted 24/7.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#demo" class="btn-shimmer inline-flex items-center gap-2 rounded-full bg-dental-blue px-6 py-3.5 text-sm font-bold text-white shadow-hero transition-all hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-glow">
+              <span>See the live demo</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="#roi" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-dental-navy transition-all hover:border-dental-blue hover:text-dental-blue hover:shadow-soft">
+              Estimate monthly lift
+            </a>
+          </div>
+          <!-- Stat row -->
+          <div class="mt-10 grid grid-cols-3 gap-3 sm:gap-4">
+            <div class="stat-card rounded-2xl border border-white/80 bg-white/90 p-4 shadow-card sm:p-5">
+              <div class="text-2xl font-extrabold text-dental-navy sm:text-3xl">24/7</div>
+              <div class="mt-1.5 text-xs leading-5 text-slate-500 sm:text-sm">Coverage beyond weekdays, Wednesdays, and weekends</div>
+            </div>
+            <div class="stat-card rounded-2xl border border-white/80 bg-white/90 p-4 shadow-card sm:p-5">
+              <div class="text-2xl font-extrabold text-dental-navy sm:text-3xl">V&middot;TEAMS</div>
+              <div class="mt-1.5 text-xs leading-5 text-slate-500 sm:text-sm">Receptionist to qualifier to specialist to closer</div>
+            </div>
+            <div class="stat-card rounded-2xl border border-white/80 bg-white/90 p-4 shadow-card sm:p-5">
+              <div class="text-2xl font-extrabold text-dental-navy sm:text-3xl">V&middot;FACE</div>
+              <div class="mt-1.5 text-xs leading-5 text-slate-500 sm:text-sm">Photorealistic digital concierge for higher conversion</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Hero visual card -->
+        <div class="animate-slide-in-right" style="animation-delay: 0.2s;">
+          <div class="rounded-[28px] border border-white/60 bg-white/60 p-3 shadow-hero backdrop-blur-xl sm:p-4">
+            <div class="rounded-[24px] bg-gradient-to-br from-dental-navy via-[#114979] to-dental-blue p-5 text-white sm:p-6">
+              <div class="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+                <!-- Avatar placeholder -->
+                <div class="rounded-[20px] bg-white/8 p-3 backdrop-blur">
+                  <div class="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-gradient-to-b from-[#183652] via-[#2b6ca3] to-[#5ec8ff]">
+                    <!-- Decorative circle -->
+                    <div class="absolute -top-6 -right-6 h-32 w-32 rounded-full bg-white/8 blur-sm"></div>
+                    <!-- Avatar silhouette placeholder -->
+                    <div class="flex h-full items-end justify-center">
+                      <div class="relative w-[65%] rounded-t-[100px] bg-gradient-to-b from-[#f5e4d6] via-[#efcdb8_32%] to-[#11263e_33%] shadow-2xl" style="height: 82%;">
+                        <!-- SWAP: Replace this div with an <img> or <video> of the V-FACE avatar -->
+                        <!-- Example: <img src="./assets/family-orlando-vface-poster.jpg" class="w-full h-full object-cover rounded-t-[100px]" alt="V-FACE Avatar" /> -->
+                      </div>
+                    </div>
+                    <!-- V-FACE badge -->
+                    <div class="absolute left-3 top-3 rounded-full bg-white/12 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-sky-100 backdrop-blur-sm">V&middot;FACE</div>
+                    <!-- Live indicator -->
+                    <div class="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-2.5 py-1 text-[10px] font-bold text-emerald-200 backdrop-blur-sm">
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse-soft"></span>
+                      Live
+                    </div>
+                  </div>
+                </div>
+                <!-- Opening text & features -->
+                <div class="flex flex-col justify-between rounded-[20px] bg-white/8 p-4 backdrop-blur sm:p-5">
+                  <div>
+                    <div class="text-[10px] font-bold uppercase tracking-[0.22em] text-sky-200">Sample opening</div>
+                    <p class="mt-3 text-sm leading-7 text-slate-100 sm:text-base sm:leading-8">
+                      "Hi, welcome to Orlando Family Dentistry. I can help with Invisalign consultations, emergency dental concerns, same-day crown questions, or scheduling a visit."
+                    </p>
+                  </div>
+                  <div class="mt-4 grid gap-2 text-xs text-slate-200 sm:text-sm">
+                    <div class="flex items-center gap-2.5 rounded-xl bg-white/8 p-3">
+                      <svg class="w-4 h-4 text-sky-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      Qualifies high-value treatment interest
+                    </div>
+                    <div class="flex items-center gap-2.5 rounded-xl bg-white/8 p-3">
+                      <svg class="w-4 h-4 text-sky-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      Captures after-hours demand automatically
+                    </div>
+                    <div class="flex items-center gap-2.5 rounded-xl bg-white/8 p-3">
+                      <svg class="w-4 h-4 text-sky-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                      Routes emergencies with full context
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SOCIAL PROOF BAR
+    ═══════════════════════════════════════════ -->
+    <section class="border-y border-slate-100 bg-white py-6">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-5 text-center lg:px-10">
+        <div class="flex items-center gap-2 text-sm text-slate-400">
+          <svg class="w-5 h-5 text-dental-blue" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span>85% of dental appointments are still phone-driven</span>
+        </div>
+        <div class="hidden sm:block w-px h-5 bg-slate-200"></div>
+        <div class="flex items-center gap-2 text-sm text-slate-400">
+          <svg class="w-5 h-5 text-vox-teal" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span>47% of bookings happen outside business hours</span>
+        </div>
+        <div class="hidden sm:block w-px h-5 bg-slate-200"></div>
+        <div class="flex items-center gap-2 text-sm text-slate-400">
+          <svg class="w-5 h-5 text-vox-purple" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span>15&ndash;25% reactivation rate achievable</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         WHY THIS PRACTICE IS SUCH A FIT
+    ═══════════════════════════════════════════ -->
+    <section id="why" class="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-24">
+      <div class="max-w-3xl reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-dental-blue">Why this practice is such a fit</span>
+        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-dental-navy sm:text-4xl lg:text-5xl">
+          Their services are modern.<br class="hidden sm:block" />
+          Their conversion system is not.
+        </h2>
+        <p class="mt-4 max-w-2xl text-base leading-7 text-slate-500 lg:text-lg">
+          Family Orlando Dentistry has already done the hard part. The problem is not clinical quality. The problem is access.
+        </p>
+      </div>
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Card 1 -->
+        <div class="pain-card group reveal reveal-delay-1 rounded-[24px] border border-slate-100 bg-white p-7 shadow-soft transition-all hover:shadow-card hover:border-dental-blue/20">
+          <div class="pain-icon flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-dental-navy">Phone-only booking</h3>
+          <p class="mt-3 text-sm leading-7 text-slate-500">The current site tells patients to call, but the office is closed three days a week plus evenings. That is a predictable conversion gap.</p>
+        </div>
+        <!-- Card 2 -->
+        <div class="pain-card group reveal reveal-delay-2 rounded-[24px] border border-slate-100 bg-white p-7 shadow-soft transition-all hover:shadow-card hover:border-dental-blue/20">
+          <div class="pain-icon flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-dental-navy">High-value services under-converted</h3>
+          <p class="mt-3 text-sm leading-7 text-slate-500">Invisalign, same-day crowns, implants, whitening, and emergency cases all benefit from guided qualification and trust-building beyond a static page.</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="pain-card group reveal reveal-delay-3 rounded-[24px] border border-slate-100 bg-white p-7 shadow-soft transition-all hover:shadow-card hover:border-dental-blue/20">
+          <div class="pain-icon flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-dental-navy">Limited access hours</h3>
+          <p class="mt-3 text-sm leading-7 text-slate-500">Mon, Tue, Thu, Fri 9&ndash;5 only. When the office is closed, patient demand does not stop. Voxaris fills that gap with always-on coverage.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         THE VOXARIS STACK (3 SOLUTIONS)
+    ═══════════════════════════════════════════ -->
+    <section id="solutions" class="relative overflow-hidden bg-dental-navy px-5 py-16 text-white lg:px-10 lg:py-24">
+      <!-- Background decor -->
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(22,120,212,0.15),transparent_40%),radial-gradient(circle_at_80%_100%,rgba(14,165,164,0.1),transparent_35%)]"></div>
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+      <div class="relative mx-auto max-w-7xl">
+        <div class="max-w-3xl reveal">
+          <span class="text-xs font-bold uppercase tracking-[0.25em] text-sky-300">The Voxaris stack</span>
+          <h2 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">Three layers working together.</h2>
+          <p class="mt-4 max-w-2xl text-base leading-7 text-slate-300 lg:text-lg">Each solves a different piece of the access problem. Together, they convert the website from "call us sometime" into a 24/7 front desk.</p>
+        </div>
+        <div class="mt-12 grid gap-5 lg:grid-cols-3">
+          <!-- V-TEAMS -->
+          <div class="reveal reveal-delay-1 group rounded-[24px] border border-white/8 bg-white/[0.04] p-7 backdrop-blur transition-all hover:bg-white/[0.07] hover:border-white/15">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-400/15 text-sky-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div class="mt-5 text-xs font-bold uppercase tracking-[0.22em] text-sky-300">V&middot;TEAMS Inbound</div>
+            <h3 class="mt-3 text-xl font-bold">Answer, qualify, route, close</h3>
+            <p class="mt-3 text-sm leading-7 text-slate-300">A coordinated team handles new patients, emergencies, treatment questions, and consult requests with context preserved across every handoff.</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Invisalign</span>
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Emergency</span>
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Same-day crowns</span>
+            </div>
+          </div>
+          <!-- V-OUTBOUND -->
+          <div class="reveal reveal-delay-2 group rounded-[24px] border border-white/8 bg-white/[0.04] p-7 backdrop-blur transition-all hover:bg-white/[0.07] hover:border-white/15">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </div>
+            <div class="mt-5 text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">V&middot;OUTBOUND</div>
+            <h3 class="mt-3 text-xl font-bold">Wake up the dormant database</h3>
+            <p class="mt-3 text-sm leading-7 text-slate-300">Structured recall, overdue hygiene reactivation, unscheduled treatment follow-up, and Invisalign re-engagement campaigns.</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Recall</span>
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Reactivation</span>
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Follow-up</span>
+            </div>
+          </div>
+          <!-- V-FACE -->
+          <div class="reveal reveal-delay-3 group rounded-[24px] border border-white/8 bg-white/[0.04] p-7 backdrop-blur transition-all hover:bg-white/[0.07] hover:border-white/15">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-400/15 text-violet-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="mt-5 text-xs font-bold uppercase tracking-[0.22em] text-violet-300">V&middot;FACE</div>
+            <h3 class="mt-3 text-xl font-bold">A digital concierge with presence</h3>
+            <p class="mt-3 text-sm leading-7 text-slate-300">Photorealistic conversational video builds trust faster than a static page or basic chatbot. Patients see a face, hear a voice, and feel welcomed.</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Photorealistic</span>
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Conversational</span>
+              <span class="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-300">Always on</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         V-FACE HERO SECTION (Section D)
+    ═══════════════════════════════════════════ -->
+    <section id="vface" class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-[#0d1f36] to-[#10395e]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.12),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(124,92,255,0.08),transparent_30%)]"></div>
+
+      <div class="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 text-white lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:px-10 lg:py-24">
+        <!-- Left copy -->
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-sky-200">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            V&middot;FACE Concierge
+          </span>
+          <h2 class="mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl xl:text-[3.5rem]">
+            The digital front desk Family Orlando Dentistry never had.
+          </h2>
+          <p class="mt-5 max-w-xl text-base leading-8 text-slate-300 lg:text-lg">
+            A photorealistic dental concierge that welcomes visitors, explains Invisalign and same-day crown options, captures emergency intent, and routes each patient into the right V&middot;TEAMS flow.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#book" class="btn-shimmer inline-flex items-center gap-2 rounded-full bg-sky-400 px-6 py-3 text-sm font-bold text-slate-950 transition hover:bg-sky-300">
+              Talk to the concierge
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="#demo" class="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/8">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              Watch demo conversation
+            </a>
+          </div>
+          <!-- Stats row -->
+          <div class="mt-10 grid gap-3 sm:grid-cols-3">
+            <div class="rounded-2xl bg-white/[0.06] p-4 backdrop-blur border border-white/8">
+              <div class="text-2xl font-extrabold">24/7</div>
+              <div class="mt-1 text-sm text-slate-400">After-hours coverage</div>
+            </div>
+            <div class="rounded-2xl bg-white/[0.06] p-4 backdrop-blur border border-white/8">
+              <div class="text-2xl font-extrabold">Instant</div>
+              <div class="mt-1 text-sm text-slate-400">Service qualification</div>
+            </div>
+            <div class="rounded-2xl bg-white/[0.06] p-4 backdrop-blur border border-white/8">
+              <div class="text-2xl font-extrabold">Warm</div>
+              <div class="mt-1 text-sm text-slate-400">Human-like presence</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Video / Avatar -->
+        <div class="reveal" style="transition-delay: 0.15s;">
+          <div class="rounded-[26px] border border-white/10 bg-white/[0.04] p-3 backdrop-blur-xl sm:p-4">
+            <div class="overflow-hidden rounded-[22px] bg-slate-900/80 ring-1 ring-white/10">
+              <!--
+                ╔══════════════════════════════════════════════════════════╗
+                ║  ASSET SWAP: Replace src & poster with final avatar     ║
+                ║  video file and poster image once generated.            ║
+                ║  Recommended: 16:9, 1080p minimum, MP4 (H.264)         ║
+                ║  Poster: JPG, same aspect ratio as video                ║
+                ╚══════════════════════════════════════════════════════════╝
+              -->
+              <video
+                class="aspect-video w-full object-cover"
+                src="./assets/family-orlando-vface-demo.mp4"
+                poster="./assets/family-orlando-vface-poster.jpg"
+                autoplay
+                muted
+                loop
+                playsinline
+              ></video>
+              <!-- Fallback when no video available -->
+              <div class="aspect-video w-full bg-gradient-to-br from-[#183652] via-[#2b6ca3] to-[#4cb3ff] flex items-center justify-center" id="vfaceFallback">
+                <div class="text-center px-6">
+                  <div class="mx-auto h-20 w-20 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                    <svg class="w-10 h-10 text-white/60" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                  <div class="text-white/80 text-sm font-semibold">V&middot;FACE Avatar Preview</div>
+                  <div class="text-white/40 text-xs mt-1">Avatar video will appear here</div>
+                </div>
+              </div>
+            </div>
+            <!-- Transcript bubble -->
+            <div class="mt-3 rounded-2xl bg-white/[0.06] p-4 text-sm leading-7 text-slate-300 border border-white/8">
+              <div class="flex items-start gap-2.5">
+                <div class="mt-1 h-2 w-2 shrink-0 rounded-full bg-sky-400 animate-pulse-soft"></div>
+                <span>"Hi, welcome to Orlando Family Dentistry. I can help with Invisalign consultations, emergency concerns, whitening questions, and appointment requests. What would you like help with today?"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         HOW V-TEAMS WORKS (FLOW)
+    ═══════════════════════════════════════════ -->
+    <section class="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-24">
+      <div class="text-center reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-dental-blue">How it works</span>
+        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-dental-navy sm:text-4xl">Context flows with the patient. They never repeat themselves.</h2>
+      </div>
+      <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="reveal reveal-delay-1 relative rounded-[24px] border border-slate-100 bg-white p-6 shadow-soft text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-dental-blue/8 text-dental-blue text-lg font-extrabold">1</div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Receptionist</h4>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Greets, identifies intent, and captures initial context</p>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 hidden lg:block text-slate-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2 relative rounded-[24px] border border-slate-100 bg-white p-6 shadow-soft text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-dental-blue/8 text-dental-blue text-lg font-extrabold">2</div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Qualifier</h4>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Asks smart follow-ups based on service type and urgency</p>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 hidden lg:block text-slate-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-3 relative rounded-[24px] border border-slate-100 bg-white p-6 shadow-soft text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-dental-blue/8 text-dental-blue text-lg font-extrabold">3</div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Specialist</h4>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Handles service-specific education and packages the case</p>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 hidden lg:block text-slate-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="reveal rounded-[24px] border border-slate-100 bg-white p-6 shadow-soft text-center" style="transition-delay: 0.35s;">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-vox-green/10 text-vox-green text-lg font-extrabold">4</div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Closer</h4>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Captures preferences, tags priority, and books or escalates</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         ROI CALCULATOR (Section F)
+    ═══════════════════════════════════════════ -->
+    <section id="roi" class="bg-gradient-to-b from-slate-50 to-white px-5 py-16 lg:px-10 lg:py-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
+          <!-- Left: Copy -->
+          <div class="reveal">
+            <span class="text-xs font-bold uppercase tracking-[0.25em] text-dental-blue">Illustrative ROI Calculator</span>
+            <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-dental-navy sm:text-4xl lg:text-5xl">
+              Show what missed demand is worth.
+            </h2>
+            <p class="mt-5 max-w-lg text-base leading-7 text-slate-500 lg:text-lg">
+              Adjust the sliders to estimate how much after-hours recovery and reactivation could mean for a small private practice with limited office hours.
+            </p>
+            <!-- Summary boxes -->
+            <div class="mt-8 grid gap-3 sm:grid-cols-3">
+              <div class="rounded-2xl bg-dental-navy p-5 text-white">
+                <div class="text-xs font-bold uppercase tracking-[0.18em] text-sky-300">Recovered Appts</div>
+                <div id="bookedOut" class="mt-2 text-3xl font-extrabold counter-value">15</div>
+                <div class="mt-1 text-xs text-slate-400">per month</div>
+              </div>
+              <div class="rounded-2xl bg-dental-navy p-5 text-white">
+                <div class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">Reactivated</div>
+                <div id="reactivatedOut" class="mt-2 text-3xl font-extrabold counter-value">27</div>
+                <div class="mt-1 text-xs text-slate-400">patients</div>
+              </div>
+              <div class="rounded-2xl bg-gradient-to-br from-dental-blue to-[#1090e8] p-5 text-white">
+                <div class="text-xs font-bold uppercase tracking-[0.18em] text-sky-100">Monthly Lift</div>
+                <div id="revenueOut" class="mt-2 text-3xl font-extrabold counter-value">$18,900</div>
+                <div class="mt-1 text-xs text-sky-200">estimated</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Calculator -->
+          <div class="reveal" style="transition-delay: 0.15s;">
+            <div class="rounded-[28px] border border-slate-100 bg-white p-6 shadow-card sm:p-8">
+              <div class="grid gap-7">
+                <!-- Slider 1 -->
+                <div>
+                  <div class="mb-3 flex items-center justify-between">
+                    <label class="text-sm font-semibold text-slate-700">Missed / overflow calls per month</label>
+                    <span id="callsValue" class="rounded-lg bg-dental-blue/8 px-3 py-1 text-sm font-bold text-dental-blue tabular-nums">60</span>
+                  </div>
+                  <input id="calls" type="range" min="20" max="200" value="60" />
+                </div>
+                <!-- Slider 2 -->
+                <div>
+                  <div class="mb-3 flex items-center justify-between">
+                    <label class="text-sm font-semibold text-slate-700">Booking / recovery rate</label>
+                    <span id="recoveryValue" class="rounded-lg bg-dental-blue/8 px-3 py-1 text-sm font-bold text-dental-blue tabular-nums">25%</span>
+                  </div>
+                  <input id="recovery" type="range" min="10" max="50" value="25" />
+                </div>
+                <!-- Slider 3 -->
+                <div>
+                  <div class="mb-3 flex items-center justify-between">
+                    <label class="text-sm font-semibold text-slate-700">Average appointment value</label>
+                    <span id="valueValue" class="rounded-lg bg-dental-blue/8 px-3 py-1 text-sm font-bold text-dental-blue tabular-nums">$450</span>
+                  </div>
+                  <input id="apptValue" type="range" min="150" max="1500" step="50" value="450" />
+                </div>
+                <!-- Slider 4 -->
+                <div>
+                  <div class="mb-3 flex items-center justify-between">
+                    <label class="text-sm font-semibold text-slate-700">Dormant patients contacted</label>
+                    <span id="dormantValue" class="rounded-lg bg-dental-blue/8 px-3 py-1 text-sm font-bold text-dental-blue tabular-nums">150</span>
+                  </div>
+                  <input id="dormant" type="range" min="50" max="500" step="10" value="150" />
+                </div>
+                <!-- Slider 5 -->
+                <div>
+                  <div class="mb-3 flex items-center justify-between">
+                    <label class="text-sm font-semibold text-slate-700">Reactivation rate</label>
+                    <span id="reactivationValue" class="rounded-lg bg-dental-blue/8 px-3 py-1 text-sm font-bold text-dental-blue tabular-nums">18%</span>
+                  </div>
+                  <input id="reactivation" type="range" min="5" max="35" value="18" />
+                </div>
+              </div>
+              <!-- Disclaimer -->
+              <p class="mt-6 text-xs leading-5 text-slate-400">
+                These are illustrative projections for presentation purposes. Actual results depend on database quality, campaign execution, and service mix.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SERVICE-LINE PIPELINE
+    ═══════════════════════════════════════════ -->
+    <section class="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-24">
+      <div class="reveal text-center">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-dental-blue">Service-line demand</span>
+        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-dental-navy sm:text-4xl">High-value services, qualified and routed.</h2>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="reveal reveal-delay-1 stat-card rounded-[20px] border border-slate-100 bg-white p-5 shadow-soft text-center">
+          <div class="text-3xl font-extrabold text-dental-blue">18</div>
+          <div class="mt-1 text-sm font-semibold text-dental-navy">Invisalign Leads</div>
+          <div class="mt-2 text-xs text-slate-400">14 qualified / 11 booked</div>
+          <div class="mt-3 h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-dental-blue" style="width: 61%;"></div></div>
+        </div>
+        <div class="reveal reveal-delay-2 stat-card rounded-[20px] border border-slate-100 bg-white p-5 shadow-soft text-center">
+          <div class="text-3xl font-extrabold text-vox-amber">21</div>
+          <div class="mt-1 text-sm font-semibold text-dental-navy">Emergency Calls</div>
+          <div class="mt-2 text-xs text-slate-400">21 qualified / 19 routed</div>
+          <div class="mt-3 h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-vox-amber" style="width: 90%;"></div></div>
+        </div>
+        <div class="reveal reveal-delay-3 stat-card rounded-[20px] border border-slate-100 bg-white p-5 shadow-soft text-center">
+          <div class="text-3xl font-extrabold text-vox-purple">11</div>
+          <div class="mt-1 text-sm font-semibold text-dental-navy">Whitening / Cosmetic</div>
+          <div class="mt-2 text-xs text-slate-400">8 qualified / 6 booked</div>
+          <div class="mt-3 h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-vox-purple" style="width: 55%;"></div></div>
+        </div>
+        <div class="reveal stat-card rounded-[20px] border border-slate-100 bg-white p-5 shadow-soft text-center" style="transition-delay: 0.35s;">
+          <div class="text-3xl font-extrabold text-vox-teal">9</div>
+          <div class="mt-1 text-sm font-semibold text-dental-navy">Implants / Restorative</div>
+          <div class="mt-2 text-xs text-slate-400">7 qualified / 5 booked</div>
+          <div class="mt-3 h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-vox-teal" style="width: 56%;"></div></div>
+        </div>
+        <div class="reveal stat-card rounded-[20px] border border-slate-100 bg-white p-5 shadow-soft text-center" style="transition-delay: 0.4s;">
+          <div class="text-3xl font-extrabold text-vox-green">96</div>
+          <div class="mt-1 text-sm font-semibold text-dental-navy">Hygiene Reactivation</div>
+          <div class="mt-2 text-xs text-slate-400">34 responsive / 17 booked</div>
+          <div class="mt-3 h-1.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full bg-vox-green" style="width: 18%;"></div></div>
+        </div>
+      </div>
+      <p class="mt-6 text-center text-xs text-slate-400">Illustrative 90-day projections for presentation purposes</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         DEMO HIGHLIGHTS
+    ═══════════════════════════════════════════ -->
+    <section id="demo" class="bg-gradient-to-b from-[#f8fbff] to-[#f0f5ff] px-5 py-16 lg:px-10 lg:py-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal rounded-[32px] border border-white/80 bg-white p-6 shadow-card sm:p-8 lg:p-12">
+          <div class="grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+            <!-- Left -->
+            <div>
+              <span class="text-xs font-bold uppercase tracking-[0.25em] text-dental-blue">Demo Highlights</span>
+              <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-dental-navy sm:text-4xl">What the owner would experience in five minutes.</h2>
+              <ul class="mt-8 space-y-4">
+                <li class="flex items-start gap-3">
+                  <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-dental-blue/10 text-dental-blue">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <span class="text-base leading-7 text-slate-600">See a photorealistic concierge welcome a visitor on the website</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-dental-blue/10 text-dental-blue">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <span class="text-base leading-7 text-slate-600">Watch an Invisalign inquiry get qualified and routed through V&middot;TEAMS</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-dental-blue/10 text-dental-blue">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <span class="text-base leading-7 text-slate-600">Watch an emergency patient get triaged correctly with no repeat info</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-dental-blue/10 text-dental-blue">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <span class="text-base leading-7 text-slate-600">See dormant-patient outreach turn into booked hygiene visits</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-dental-blue/10 text-dental-blue">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                  <span class="text-base leading-7 text-slate-600">Review a dashboard showing calls answered, revenue lift, and pipeline</span>
+                </li>
+              </ul>
+            </div>
+            <!-- Right: Sample conversation -->
+            <div class="rounded-[24px] bg-dental-navy p-5 text-white sm:p-6">
+              <div class="rounded-[20px] bg-white/[0.06] p-4 backdrop-blur border border-white/8 sm:p-5">
+                <div class="flex items-center gap-2 mb-5">
+                  <div class="h-2 w-2 rounded-full bg-sky-400 animate-pulse-soft"></div>
+                  <span class="text-[10px] font-bold uppercase tracking-[0.24em] text-sky-300">Live Conversation Sample</span>
+                </div>
+                <div class="space-y-3 text-sm leading-7">
+                  <div class="rounded-2xl bg-white/[0.06] p-4 text-slate-200 border border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Patient</span>
+                    "I'm interested in Invisalign."
+                  </div>
+                  <div class="rounded-2xl bg-sky-400/15 p-4 text-slate-100 border border-sky-400/10">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-300 block mb-1">V&middot;TEAMS</span>
+                    "Great. Are you mainly looking to fix crowding, spacing, bite concerns, or a smile refresh?"
+                  </div>
+                  <div class="rounded-2xl bg-white/[0.06] p-4 text-slate-200 border border-white/5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Patient</span>
+                    "Mostly crowding and a smile refresh."
+                  </div>
+                  <div class="rounded-2xl bg-sky-400/15 p-4 text-slate-100 border border-sky-400/10">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-300 block mb-1">V&middot;TEAMS</span>
+                    "Perfect. I'll capture that and request the earliest consultation option for you."
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         EMOTIONAL CLOSE
+    ═══════════════════════════════════════════ -->
+    <section class="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-20">
+      <div class="reveal text-center max-w-3xl mx-auto">
+        <span class="text-xs font-bold uppercase tracking-[0.25em] text-dental-blue">It's not just about revenue</span>
+        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-dental-navy sm:text-4xl">This is a family practice. It should feel like one.</h2>
+        <p class="mt-4 text-base leading-7 text-slate-500 lg:text-lg">Voxaris protects what matters most to a family-run office.</p>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="reveal reveal-delay-1 stat-card rounded-[20px] border border-slate-100 bg-white p-6 shadow-soft text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Fewer personal-cell interruptions</h4>
+        </div>
+        <div class="reveal reveal-delay-2 stat-card rounded-[20px] border border-slate-100 bg-white p-6 shadow-soft text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+          </div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Less voicemail pressure</h4>
+        </div>
+        <div class="reveal reveal-delay-3 stat-card rounded-[20px] border border-slate-100 bg-white p-6 shadow-soft text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">Better patient experience</h4>
+        </div>
+        <div class="reveal stat-card rounded-[20px] border border-slate-100 bg-white p-6 shadow-soft text-center" style="transition-delay: 0.35s;">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <h4 class="mt-4 text-base font-bold text-dental-navy">More protected family time</h4>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CTA / BOOK DEMO
+    ═══════════════════════════════════════════ -->
+    <section id="book" class="px-5 py-16 lg:px-10 lg:py-24">
+      <div class="reveal mx-auto max-w-5xl overflow-hidden rounded-[32px] bg-gradient-to-br from-dental-navy via-[#114979] to-dental-blue px-6 py-12 text-center text-white shadow-hero sm:px-10 lg:px-14 lg:py-16">
+        <!-- Decorative -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.06),transparent_40%)]"></div>
+        <div class="relative">
+          <span class="text-xs font-bold uppercase tracking-[0.25em] text-sky-200">Next step</span>
+          <h2 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+            Book a personalized Voxaris demo<br class="hidden sm:block" />
+            for this exact practice.
+          </h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-200 lg:text-lg">
+            Show Family Orlando Dentistry how 24/7 response, high-value service qualification, and dormant-patient revival work together in one system.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href="https://voxaris.io/book-demo" target="_blank" rel="noopener" class="btn-shimmer inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-bold text-dental-navy shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl">
+              Book personalized demo
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="tel:+14078779003" class="inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-4 text-sm font-bold text-white transition hover:bg-white/8">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              (407) 877-9003
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="border-t border-slate-100 bg-white px-5 py-8 lg:px-10">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
+      <div class="flex items-center gap-2">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-dental-blue text-sm font-black text-white">V</div>
+        <span class="text-sm font-semibold text-dental-navy">Voxaris</span>
+      </div>
+      <div class="text-xs text-slate-400">
+        Custom demo built for Family Orlando Dentistry &middot; 2704 Rew Circle, Suite 103, Ocoee, FL 34761
+      </div>
+      <div class="text-xs text-slate-400">
+        &copy; 2026 Voxaris. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════ -->
+  <script>
+    // ── Scroll reveal ──────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Header scroll effect ───────────────────────────
+    const header = document.getElementById('header');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const scroll = window.scrollY;
+      if (scroll > 60) {
+        header.classList.add('shadow-soft');
+      } else {
+        header.classList.remove('shadow-soft');
+      }
+      lastScroll = scroll;
+    }, { passive: true });
+
+    // ── Mobile menu ────────────────────────────────────
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    mobileMenuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // ── ROI Calculator ─────────────────────────────────
+    const sliders = {
+      calls: document.getElementById('calls'),
+      recovery: document.getElementById('recovery'),
+      apptValue: document.getElementById('apptValue'),
+      dormant: document.getElementById('dormant'),
+      reactivation: document.getElementById('reactivation'),
+    };
+
+    const displays = {
+      callsValue: document.getElementById('callsValue'),
+      recoveryValue: document.getElementById('recoveryValue'),
+      valueValue: document.getElementById('valueValue'),
+      dormantValue: document.getElementById('dormantValue'),
+      reactivationValue: document.getElementById('reactivationValue'),
+      bookedOut: document.getElementById('bookedOut'),
+      reactivatedOut: document.getElementById('reactivatedOut'),
+      revenueOut: document.getElementById('revenueOut'),
+    };
+
+    function fmtMoney(n) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(n);
+    }
+
+    function updateSliderProgress(slider) {
+      const min = parseFloat(slider.min);
+      const max = parseFloat(slider.max);
+      const val = parseFloat(slider.value);
+      const pct = ((val - min) / (max - min)) * 100;
+      slider.style.setProperty('--progress', pct + '%');
+    }
+
+    function updateROI() {
+      const calls = +sliders.calls.value;
+      const recovery = +sliders.recovery.value / 100;
+      const apptValue = +sliders.apptValue.value;
+      const dormant = +sliders.dormant.value;
+      const reactivation = +sliders.reactivation.value / 100;
+
+      const booked = Math.round(calls * recovery);
+      const reactivated = Math.round(dormant * reactivation);
+      const revenue = (booked * apptValue) + (reactivated * 180);
+
+      displays.callsValue.textContent = calls;
+      displays.recoveryValue.textContent = Math.round(recovery * 100) + '%';
+      displays.valueValue.textContent = fmtMoney(apptValue);
+      displays.dormantValue.textContent = dormant;
+      displays.reactivationValue.textContent = Math.round(reactivation * 100) + '%';
+
+      // Animate output numbers
+      animateValue(displays.bookedOut, booked);
+      animateValue(displays.reactivatedOut, reactivated);
+      displays.revenueOut.textContent = fmtMoney(revenue);
+
+      // Update all slider progress bars
+      Object.values(sliders).forEach(updateSliderProgress);
+    }
+
+    function animateValue(el, target) {
+      el.textContent = target;
+    }
+
+    Object.values(sliders).forEach(slider => {
+      slider.addEventListener('input', updateROI);
+      updateSliderProgress(slider);
+    });
+
+    updateROI();
+
+    // ── V-FACE fallback (show fallback div when video fails) ──
+    const vfaceVideo = document.querySelector('video');
+    const vfaceFallback = document.getElementById('vfaceFallback');
+    if (vfaceVideo && vfaceFallback) {
+      // Hide fallback if video loads
+      vfaceVideo.addEventListener('loadeddata', () => {
+        vfaceFallback.style.display = 'none';
+      });
+      // If video source is not available, hide the video element
+      vfaceVideo.addEventListener('error', () => {
+        vfaceVideo.style.display = 'none';
+        vfaceFallback.style.display = 'flex';
+      });
+      // If no src or src fails, show fallback
+      if (!vfaceVideo.src || vfaceVideo.src === window.location.href) {
+        vfaceVideo.style.display = 'none';
+        vfaceFallback.style.display = 'flex';
+      }
+    }
+
+    // ── Smooth anchor offset for sticky header ─────────
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const offset = 80;
+          const position = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: position, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
