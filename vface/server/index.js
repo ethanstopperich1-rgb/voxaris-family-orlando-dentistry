@@ -59,10 +59,10 @@ app.post('/api/conversations', async (req, res) => {
     const { visitor_name, concern, urgency } = req.body;
 
     // Build contextual greeting
-    let greeting = 'Hi, welcome to Orlando Family Dentistry. I can help with appointments, Invisalign consultations, emergency concerns, or any questions about the practice. What brings you in today?';
+    let greeting = 'Hi, welcome to Family Orlando Dentistry. I can help with appointments, Invisalign consultations, emergency concerns, or any questions about the practice. What brings you in today?';
 
     if (visitor_name) {
-      greeting = `Hi ${visitor_name}, welcome to Orlando Family Dentistry. I can help with appointments, Invisalign consultations, emergency concerns, or any questions. What can I do for you today?`;
+      greeting = `Hi ${visitor_name}, welcome to Family Orlando Dentistry. I can help with appointments, Invisalign consultations, emergency concerns, or any questions. What can I do for you today?`;
     }
 
     // Build conversational context from visitor data

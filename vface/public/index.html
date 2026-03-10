@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>V·FACE Test — Family Orlando Dentistry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void: #07080a;
+      --void-light: #0d0f13;
+      --void-card: #111318;
+      --gold: #d4a843;
+      --gold-dim: rgba(212, 168, 67, .12);
+      --border: rgba(240, 236, 228, .06);
+      --border-active: rgba(212, 168, 67, .25);
+      --white: #f0ece4;
+      --white-dim: rgba(240, 236, 228, .55);
+      --white-muted: rgba(240, 236, 228, .35);
+      --radius: 20px;
+      --font-heading: 'Instrument Sans', system-ui, sans-serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--void);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .back-link {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: var(--white-muted);
+      text-decoration: none;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .2s;
+    }
+    .back-link:hover { color: var(--gold); }
+
+    .container { max-width: 640px; width: 100%; text-align: center; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-active);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 em { font-style: normal; color: var(--gold); }
+
+    .subtitle {
+      color: var(--white-dim);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    /* ─── Video Frame ─── */
+    .video-frame {
+      background: var(--void-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .video-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ─── Fallback UI ─── */
+    .fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 40px;
+    }
+    .fallback-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(22, 120, 212, .15), var(--gold-dim));
+      border: 2px solid var(--border-active);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fallback-avatar svg { opacity: .4; }
+    .fallback h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .fallback p {
+      color: var(--white-muted);
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 360px;
+    }
+    .fallback-env {
+      background: rgba(251, 113, 133, .08);
+      border: 1px solid rgba(251, 113, 133, .2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #fb7185;
+      text-align: left;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    /* ─── Controls ─── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .btn {
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: 1px solid var(--border-active);
+      background: var(--gold-dim);
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .btn:hover { background: rgba(212, 168, 67, .2); transform: translateY(-1px); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+    .btn.danger {
+      border-color: rgba(251, 113, 133, .3);
+      background: rgba(251, 113, 133, .08);
+      color: #fb7185;
+    }
+    .btn.danger:hover { background: rgba(251, 113, 133, .15); }
+
+    /* ─── Status ─── */
+    .status {
+      font-size: 12px;
+      color: var(--white-muted);
+      min-height: 18px;
+    }
+    .status.error { color: #fb7185; }
+    .status.success { color: #34d399; }
+  </style>
+</head>
+<body>
+
+  <a href="../index.html" class="back-link">&larr; Back to Hub</a>
+
+  <div class="container">
+    <div class="badge">V&middot;FACE Conversational Video</div>
+    <h1>Family Orlando Dentistry <em>Concierge</em></h1>
+    <p class="subtitle">Tavus-powered video agent. Click "Start Session" to launch a live conversational video experience with the dental concierge.</p>
+
+    <div class="video-frame" id="videoFrame">
+      <div class="fallback" id="fallbackUI">
+        <div class="fallback-avatar">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20v-1a6 6 0 0112 0v1"/>
+          </svg>
+        </div>
+        <h3>V&middot;FACE Concierge</h3>
+        <p id="fallbackMessage">Checking server configuration...</p>
+        <div class="fallback-env" id="fallbackEnv" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="btnStart" disabled onclick="startSession()">Start Session</button>
+      <button class="btn danger" id="btnEnd" disabled onclick="endSession()">End Session</button>
+    </div>
+
+    <div class="status" id="statusText"></div>
+  </div>
+
+  <script>
+    let currentSessionId = null;
+    let currentSessionUrl = null;
+
+    const videoFrame = document.getElementById('videoFrame');
+    const fallbackUI = document.getElementById('fallbackUI');
+    const fallbackMessage = document.getElementById('fallbackMessage');
+    const fallbackEnv = document.getElementById('fallbackEnv');
+    const btnStart = document.getElementById('btnStart');
+    const btnEnd = document.getElementById('btnEnd');
+    const statusText = document.getElementById('statusText');
+
+    function setStatus(msg, type = '') {
+      statusText.textContent = msg;
+      statusText.className = 'status' + (type ? ' ' + type : '');
+    }
+
+    // Check server health on load
+    async function checkHealth() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+
+        if (data.tavus_configured) {
+          fallbackMessage.textContent = 'Ready. Click "Start Session" to begin.';
+          btnStart.disabled = false;
+          setStatus('Server connected and configured', 'success');
+        } else {
+          fallbackMessage.textContent = 'Server running but missing credentials. Set the following in your .env file:';
+          fallbackEnv.style.display = 'block';
+          fallbackEnv.textContent = (data.missing_credentials || []).join('\n');
+          setStatus('Missing API credentials — see fallback panel', 'error');
+        }
+      } catch {
+        fallbackMessage.textContent = 'V\u00b7FACE server is not running. Start it with: node vface/server/index.js';
+        setStatus('Cannot reach server at /api/status', 'error');
+      }
+    }
+
+    async function startSession() {
+      btnStart.disabled = true;
+      setStatus('Creating session...');
+
+      try {
+        const res = await fetch('/api/conversations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || err.error || 'Session creation failed');
+        }
+
+        const data = await res.json();
+        currentSessionId = data.conversation_id;
+        currentSessionUrl = data.conversation_url;
+
+        // Replace fallback with iframe
+        fallbackUI.style.display = 'none';
+        const iframe = document.createElement('iframe');
+        iframe.src = currentSessionUrl;
+        iframe.allow = 'camera; microphone; autoplay';
+        iframe.id = 'tavusIframe';
+        videoFrame.appendChild(iframe);
+
+        btnEnd.disabled = false;
+        setStatus('Session active: ' + currentSessionId, 'success');
+      } catch (err) {
+        btnStart.disabled = false;
+        setStatus('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function endSession() {
+      if (!currentSessionId) return;
+      btnEnd.disabled = true;
+      setStatus('Ending session...');
+
+      try {
+        await fetch(`/api/conversations/${currentSessionId}/end`, { method: 'POST' });
+      } catch {
+        // Ignore errors on end
+      }
+
+      // Remove iframe, restore fallback
+      const iframe = document.getElementById('tavusIframe');
+      if (iframe) iframe.remove();
+      fallbackUI.style.display = 'flex';
+      fallbackMessage.textContent = 'Session ended. Click "Start Session" to begin a new one.';
+      fallbackEnv.style.display = 'none';
+
+      currentSessionId = null;
+      currentSessionUrl = null;
+      btnStart.disabled = false;
+      setStatus('Session ended', 'success');
+    }
+
+    checkHealth();
+  </script>
+</body>
+</html>
