@@ -1,0 +1,14 @@
+{
+  "name": "voxaris-vapi-family-orlando-dentistry",
+  "version": "1.0.0",
+  "description": "VAPI voice agent layer for Family Orlando Dentistry — inbound squad + outbound campaigns",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "setup": "node api/setup.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}

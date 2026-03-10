@@ -1,0 +1,111 @@
+{
+  "name": "Family Orlando Dentistry — Inbound Squad",
+  "members": [
+    {
+      "assistant": {
+        "name": "Receptionist",
+        "firstMessage": "Hi, thanks for calling Family Orlando Dentistry. How can I help you today?",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.4,
+          "systemPrompt": "{{file:prompts/receptionist.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "marsh"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call",
+        "serverUrlSecret": "{{VAPI_WEBHOOK_SECRET}}"
+      },
+      "assistantDestinations": [
+        {
+          "type": "assistant",
+          "assistantName": "Invisalign Qualifier",
+          "message": "I'm going to connect you with our Invisalign specialist.",
+          "description": "Transfer when caller expresses interest in Invisalign or teeth straightening."
+        },
+        {
+          "type": "assistant",
+          "assistantName": "Emergency Qualifier",
+          "message": "Let me connect you with our urgent care team right away.",
+          "description": "Transfer when caller reports dental emergency, pain, or trauma."
+        },
+        {
+          "type": "assistant",
+          "assistantName": "General Scheduler",
+          "message": "Let me help you get that scheduled.",
+          "description": "Transfer when caller wants to book a routine appointment."
+        }
+      ]
+    },
+    {
+      "assistant": {
+        "name": "Invisalign Qualifier",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.4,
+          "systemPrompt": "{{file:prompts/qualifier-invisalign.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "marsh"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call"
+      }
+    },
+    {
+      "assistant": {
+        "name": "Emergency Qualifier",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.3,
+          "systemPrompt": "{{file:prompts/qualifier-emergency.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "marsh"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call"
+      }
+    },
+    {
+      "assistant": {
+        "name": "General Scheduler",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.4,
+          "systemPrompt": "{{file:prompts/general-scheduler.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "marsh"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call"
+      }
+    }
+  ]
+}

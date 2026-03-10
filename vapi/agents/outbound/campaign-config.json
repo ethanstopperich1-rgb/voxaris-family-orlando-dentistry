@@ -1,0 +1,115 @@
+{
+  "campaigns": [
+    {
+      "id": "hygiene-reactivation",
+      "name": "Family Orlando Dentistry — Hygiene Reactivation",
+      "description": "Reach patients overdue for cleaning/hygiene visits. Friendly check-in, not a sales call.",
+      "assistant": {
+        "name": "Ava — Hygiene Reactivation",
+        "firstMessage": "Hi, this is Ava with Family Orlando Dentistry. I'm calling with a quick follow-up — it looks like you're due for a hygiene visit, and we wanted to make it easy to get back on the schedule.",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.5,
+          "systemPrompt": "{{file:prompts/hygiene-reactivation.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "cove"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call",
+        "endCallMessage": "Thanks for your time. Have a great day!",
+        "maxDurationSeconds": 180
+      },
+      "schedule": {
+        "callWindow": { "start": "09:00", "end": "17:00" },
+        "daysOfWeek": ["monday", "tuesday", "thursday", "friday"],
+        "timezone": "America/New_York",
+        "maxConcurrent": 1,
+        "retryPolicy": {
+          "maxAttempts": 2,
+          "retryAfterHours": 48
+        }
+      }
+    },
+    {
+      "id": "invisalign-followup",
+      "name": "Family Orlando Dentistry — Invisalign Follow-Up",
+      "description": "Follow up with patients who showed Invisalign interest but haven't booked a consultation.",
+      "assistant": {
+        "name": "Ava — Invisalign Follow-Up",
+        "firstMessage": "Hi, this is Ava with Family Orlando Dentistry. I'm following up because you showed interest in Invisalign, and I wanted to see if you're still considering a consultation.",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.5,
+          "systemPrompt": "{{file:prompts/invisalign-followup.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "cove"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call",
+        "endCallMessage": "Thanks for chatting with me. Have a wonderful day!",
+        "maxDurationSeconds": 180
+      },
+      "schedule": {
+        "callWindow": { "start": "10:00", "end": "16:00" },
+        "daysOfWeek": ["tuesday", "thursday"],
+        "timezone": "America/New_York",
+        "maxConcurrent": 1,
+        "retryPolicy": {
+          "maxAttempts": 1,
+          "retryAfterHours": 72
+        }
+      }
+    },
+    {
+      "id": "dormant-revival",
+      "name": "Family Orlando Dentistry — Dormant Patient Revival",
+      "description": "Reconnect with patients who haven't visited the practice in 12+ months.",
+      "assistant": {
+        "name": "Ava — Dormant Revival",
+        "firstMessage": "Hi, this is Ava with Family Orlando Dentistry. We noticed it's been a while since your last visit, and we just wanted to check in and see if there's anything we can help with.",
+        "model": {
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "temperature": 0.5,
+          "systemPrompt": "{{file:prompts/dormant-revival.txt}}"
+        },
+        "voice": {
+          "provider": "rime",
+          "voiceId": "cove"
+        },
+        "transcriber": {
+          "provider": "deepgram",
+          "model": "nova-2",
+          "language": "en"
+        },
+        "serverUrl": "{{VAPI_SERVER_URL}}/api/tool-call",
+        "endCallMessage": "Thanks for your time. We're always here when you need us.",
+        "maxDurationSeconds": 180
+      },
+      "schedule": {
+        "callWindow": { "start": "10:00", "end": "15:00" },
+        "daysOfWeek": ["monday", "wednesday", "friday"],
+        "timezone": "America/New_York",
+        "maxConcurrent": 1,
+        "retryPolicy": {
+          "maxAttempts": 2,
+          "retryAfterHours": 72
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>V·FACE — Family Orlando Dentistry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Daily.js for Tavus CVI WebRTC -->
+  <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
+  <style>
+    /* ═══ Tokens ═══ */
+    :root {
+      --void: #07080a;
+      --void-up: #0c0e12;
+      --void-card: #111318;
+      --void-card-2: #161921;
+      --gold: #d4a843;
+      --gold-dim: rgba(212,168,67,.12);
+      --gold-glow: rgba(212,168,67,.06);
+      --blue: #1678d4;
+      --teal: #0ea5a4;
+      --emerald: #34d399;
+      --rose: #f87171;
+      --white: #eae6df;
+      --white-dim: rgba(234,230,223,.55);
+      --white-muted: rgba(234,230,223,.35);
+      --border: rgba(234,230,223,.06);
+      --border-gold: rgba(212,168,67,.2);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 20px 60px rgba(0,0,0,.4);
+      --font-h: 'Instrument Sans', system-ui, sans-serif;
+      --font-b: 'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-b);
+      background: var(--void);
+      color: var(--white);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══ Ambient ═══ */
+    .ambient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 0%, rgba(22,120,212,.05), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 70% 100%, rgba(212,168,67,.04), transparent 50%);
+    }
+
+    /* ═══ Layout ═══ */
+    .page { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 32px 24px 60px; }
+
+    /* ═══ Header ═══ */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 36px; flex-wrap: wrap; gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), #b8922e);
+      display: grid; place-items: center;
+      font-family: var(--font-h); font-weight: 700; font-size: 15px; color: var(--void);
+    }
+    .brand-text { font-family: var(--font-h); font-weight: 700; font-size: 17px; }
+    .brand-text em { font-style: normal; color: var(--gold); }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      transition: all .3s ease;
+    }
+    .status-pill.checking { background: rgba(234,230,223,.06); color: var(--white-muted); }
+    .status-pill.ready { background: rgba(52,211,153,.1); color: var(--emerald); }
+    .status-pill.offline { background: rgba(248,113,113,.1); color: var(--rose); }
+    .status-pill.active { background: var(--gold-dim); color: var(--gold); }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor; animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(.7); }
+    }
+
+    /* ═══ Main Layout ═══ */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ═══ Video Container ═══ */
+    .video-container {
+      background: var(--void-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .video-area {
+      position: relative;
+      aspect-ratio: 16/9;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 20%, rgba(22,120,212,.15), transparent 60%),
+        linear-gradient(160deg, #0a1929, #102a48 45%, #1a5a8f 85%, #3ca0e8);
+      overflow: hidden;
+    }
+    .video-area video {
+      width: 100%; height: 100%; object-fit: cover;
+      display: none;
+    }
+    .video-area video.visible { display: block; }
+
+    /* Self-view PiP */
+    .self-view {
+      position: absolute; bottom: 16px; right: 16px;
+      width: 140px; aspect-ratio: 4/3;
+      border-radius: 12px; overflow: hidden;
+      border: 2px solid rgba(255,255,255,.12);
+      background: var(--void-card);
+      display: none;
+    }
+    .self-view.visible { display: block; }
+    .self-view video { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Tags on video */
+    .video-tag {
+      position: absolute; padding: 6px 12px; border-radius: 8px;
+      background: rgba(0,0,0,.5); backdrop-filter: blur(8px);
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: rgba(255,255,255,.7);
+    }
+    .video-tag.top-left { top: 16px; left: 16px; }
+    .video-tag.top-right {
+      top: 16px; right: 16px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--emerald); animation: pulse-dot 1.5s ease infinite;
+    }
+
+    /* ═══ Placeholder (no Tavus / idle) ═══ */
+    .placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 32px;
+    }
+    .placeholder.hidden { display: none; }
+
+    .placeholder-rings { position: relative; width: 160px; height: 160px; margin-bottom: 24px; }
+    .placeholder-rings .ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.06);
+      animation: ring-breathe 4s ease-in-out infinite;
+    }
+    .placeholder-rings .ring:nth-child(2) { inset: -20px; animation-delay: .5s; }
+    .placeholder-rings .ring:nth-child(3) { inset: -40px; animation-delay: 1s; }
+    .placeholder-rings .silhouette {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -40%);
+      width: 80px; height: 110px;
+      border-radius: 50px 50px 10px 10px;
+      background: linear-gradient(180deg, #e8d0b8 0%, #d4b896 28%, #102a48 30%, #0f2740 100%);
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    }
+    @keyframes ring-breathe {
+      0%,100% { opacity: .25; transform: scale(1); }
+      50% { opacity: .6; transform: scale(1.03); }
+    }
+
+    .placeholder-title {
+      font-family: var(--font-h); font-weight: 700; font-size: 20px;
+      color: var(--white); margin-bottom: 8px;
+    }
+    .placeholder-desc {
+      font-size: 14px; color: var(--white-dim); line-height: 1.6;
+      max-width: 400px; margin-bottom: 24px;
+    }
+
+    /* ═══ Loading spinner ═══ */
+    .spinner {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      animation: spin .8s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══ Controls bar ═══ */
+    .controls {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .ctrl-btn {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent; color: var(--white-dim);
+      padding: 10px 18px; font-family: var(--font-b);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: all .2s ease;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ctrl-btn:hover { border-color: var(--border-gold); color: var(--white); }
+    .ctrl-btn:disabled { opacity: .3; cursor: not-allowed; }
+    .ctrl-btn.primary {
+      background: linear-gradient(135deg, var(--gold), #c9982e);
+      border-color: transparent; color: var(--void); font-weight: 700;
+    }
+    .ctrl-btn.primary:hover { filter: brightness(1.1); }
+    .ctrl-btn.primary:disabled { filter: none; }
+    .ctrl-btn.danger { border-color: rgba(248,113,113,.2); color: var(--rose); }
+    .ctrl-btn.danger:hover { background: rgba(248,113,113,.08); }
+    .ctrl-mic { margin-left: auto; }
+
+    /* ═══ Sidebar ═══ */
+    .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+    .card {
+      background: var(--void-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-h); font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-header .icon { opacity: .4; font-size: 14px; }
+    .card-body { padding: 16px 20px; }
+
+    /* Quick-start form */
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--white-muted); margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%; padding: 10px 14px;
+      background: var(--void-up); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--white);
+      font-family: var(--font-b); font-size: 14px;
+      outline: none; transition: border-color .2s ease;
+    }
+    .form-input:focus { border-color: var(--border-gold); }
+    .form-input::placeholder { color: var(--white-muted); }
+    .form-select {
+      width: 100%; padding: 10px 14px;
+      background: var(--void-up); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--white);
+      font-family: var(--font-b); font-size: 14px;
+      outline: none; cursor: pointer;
+    }
+    .form-select option { background: var(--void-card); }
+
+    /* Session info */
+    .session-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .session-row:last-child { border-bottom: none; }
+    .session-key { color: var(--white-muted); }
+    .session-val { color: var(--white); font-weight: 600; font-family: var(--font-h); }
+    .session-val.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; }
+
+    /* Fallback card */
+    .fallback-card {
+      border-color: rgba(248,113,113,.12);
+    }
+    .fallback-body {
+      padding: 20px;
+      font-size: 13px; color: var(--white-dim); line-height: 1.6;
+    }
+    .fallback-body code {
+      background: rgba(234,230,223,.06);
+      padding: 2px 6px; border-radius: 4px;
+      font-size: 12px; color: var(--gold);
+    }
+    .fallback-body ul { padding-left: 18px; margin: 8px 0; }
+    .fallback-body li { margin-bottom: 4px; }
+
+    /* ═══ Footer ═══ */
+    .footer {
+      margin-top: 48px; text-align: center; padding: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--white-muted);
+    }
+    .footer a { color: var(--gold); text-decoration: none; }
+
+    /* ═══ Responsive ═══ */
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 16px 14px 40px; }
+      .controls { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div class="brand-text"><em>V·FACE</em> &mdash; Family Orlando Dentistry</div>
+    </div>
+    <div class="status-pill checking" id="statusPill">
+      <span class="status-dot"></span>
+      <span id="statusText">Checking...</span>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Video -->
+    <div class="video-container">
+      <div class="video-area" id="videoArea">
+        <div class="video-tag top-left">V·FACE</div>
+        <div class="video-tag top-right" id="liveTag" style="display:none;">
+          <span class="live-dot"></span> Live
+        </div>
+
+        <!-- Replica video (Tavus renders here via Daily.js) -->
+        <video id="replicaVideo" autoplay playsinline></video>
+
+        <!-- Self-view -->
+        <div class="self-view" id="selfView">
+          <video id="selfVideo" autoplay playsinline muted></video>
+        </div>
+
+        <!-- Placeholder: idle -->
+        <div class="placeholder" id="placeholderIdle">
+          <div class="placeholder-rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="silhouette"></div>
+          </div>
+          <div class="placeholder-title">Virtual Dental Concierge</div>
+          <div class="placeholder-desc">
+            Start a session to speak with the V·FACE concierge for Orlando Family Dentistry.
+            Available for Invisalign consultations, emergency triage, and appointment routing.
+          </div>
+        </div>
+
+        <!-- Placeholder: loading -->
+        <div class="placeholder hidden" id="placeholderLoading">
+          <div class="spinner"></div>
+          <div class="placeholder-title">Connecting...</div>
+          <div class="placeholder-desc">
+            Creating your V·FACE session. This takes a few seconds while the concierge prepares.
+          </div>
+        </div>
+
+        <!-- Placeholder: not configured -->
+        <div class="placeholder hidden" id="placeholderOffline">
+          <div class="placeholder-rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="silhouette"></div>
+          </div>
+          <div class="placeholder-title">Tavus Not Configured</div>
+          <div class="placeholder-desc" id="offlineDesc">
+            This V·FACE experience requires Tavus CVI credentials. See the setup section for details.
+          </div>
+        </div>
+
+        <!-- Placeholder: ended -->
+        <div class="placeholder hidden" id="placeholderEnded">
+          <div class="placeholder-title">Session Complete</div>
+          <div class="placeholder-desc">
+            Thank you for speaking with the V·FACE concierge. You can start a new session anytime.
+          </div>
+        </div>
+
+        <!-- Placeholder: error -->
+        <div class="placeholder hidden" id="placeholderError">
+          <div class="placeholder-title" style="color:var(--rose);">Connection Error</div>
+          <div class="placeholder-desc" id="errorDesc">
+            Something went wrong. Please try again.
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="ctrl-btn primary" id="btnStart" onclick="startSession()">Start Session</button>
+        <button class="ctrl-btn danger" id="btnEnd" onclick="endSession()" disabled>End Call</button>
+        <button class="ctrl-btn ctrl-mic" id="btnMic" onclick="toggleMic()" disabled title="Toggle microphone">
+          Mic On
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Quick Start -->
+      <div class="card">
+        <div class="card-header"><span class="icon">&#9758;</span> Quick Start</div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label" for="visitorName">Your Name (optional)</label>
+            <input class="form-input" type="text" id="visitorName" placeholder="e.g. Maria" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="concern">Primary Concern</label>
+            <select class="form-select" id="concern">
+              <option value="">General inquiry</option>
+              <option value="invisalign">Invisalign / Teeth Straightening</option>
+              <option value="emergency">Dental Emergency / Pain</option>
+              <option value="whitening">Teeth Whitening</option>
+              <option value="implants">Dental Implants</option>
+              <option value="crowns">Same-Day Crowns</option>
+              <option value="cleaning">Cleaning / Checkup</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="urgency">Urgency</label>
+            <select class="form-select" id="urgency">
+              <option value="normal">Normal</option>
+              <option value="emergency">Urgent / Emergency</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Info -->
+      <div class="card">
+        <div class="card-header"><span class="icon">&#9881;</span> Session Info</div>
+        <div class="card-body" id="sessionInfo">
+          <div class="session-row">
+            <span class="session-key">Status</span>
+            <span class="session-val" id="sessionStatus">Idle</span>
+          </div>
+          <div class="session-row">
+            <span class="session-key">Conversation ID</span>
+            <span class="session-val mono" id="sessionId">&mdash;</span>
+          </div>
+          <div class="session-row">
+            <span class="session-key">Duration</span>
+            <span class="session-val" id="sessionDuration">0:00</span>
+          </div>
+          <div class="session-row">
+            <span class="session-key">Tavus</span>
+            <span class="session-val" id="sessionTavus">Checking...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Setup Info (shown when not configured) -->
+      <div class="card fallback-card" id="setupCard" style="display:none;">
+        <div class="card-header" style="color:var(--rose);"><span class="icon">&#9888;</span> Setup Required</div>
+        <div class="fallback-body">
+          <p>Tavus CVI credentials are missing. To enable live video sessions:</p>
+          <ul>
+            <li>Copy <code>.env.example</code> to <code>.env</code></li>
+            <li>Add your <code>TAVUS_API_KEY</code></li>
+            <li>Create a persona via <code>POST /api/setup/persona</code></li>
+            <li>Add the <code>TAVUS_PERSONA_ID</code></li>
+            <li>Pick a replica via <code>GET /api/setup/replicas</code></li>
+            <li>Add the <code>TAVUS_REPLICA_ID</code></li>
+            <li>Restart the server</li>
+          </ul>
+          <p style="margin-top:8px;">See <code>vface/README.md</code> for full instructions.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Voxaris V·FACE &middot; Tavus CVI Integration for
+    <a href="https://familyorlandodentistry.com/" target="_blank" rel="noopener">Orlando Family Dentistry</a><br />
+    Dr. Nadine Nitisusanta DMD &amp; Dr. Jonathan Nitisusanta DDS &mdash; (407) 877-9003
+  </footer>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════ */
+
+let tavusReady = false;
+let callObject = null;
+let conversationId = null;
+let conversationUrl = null;
+let durationTimer = null;
+let durationSec = 0;
+let micOn = true;
+
+const API_BASE = window.location.origin;
+
+/* ═══════════════════════════════════════════════════
+   INIT: Check server status
+   ═══════════════════════════════════════════════════ */
+
+async function checkStatus() {
+  try {
+    const res = await fetch(`${API_BASE}/api/status`);
+    const data = await res.json();
+
+    tavusReady = data.tavus_configured;
+    updateStatusUI(data);
+  } catch {
+    // Server not running — pure static fallback
+    tavusReady = false;
+    updateStatusUI({ tavus_configured: false, missing_credentials: ['Server not running'], status: 'server_offline' });
+  }
+}
+
+function updateStatusUI(data) {
+  const pill = document.getElementById('statusPill');
+  const text = document.getElementById('statusText');
+  const sessionTavus = document.getElementById('sessionTavus');
+  const setupCard = document.getElementById('setupCard');
+  const btnStart = document.getElementById('btnStart');
+
+  if (data.tavus_configured) {
+    pill.className = 'status-pill ready';
+    text.textContent = 'Tavus Ready';
+    sessionTavus.textContent = 'Connected';
+    sessionTavus.style.color = 'var(--emerald)';
+    setupCard.style.display = 'none';
+    btnStart.disabled = false;
+    showPlaceholder('idle');
+  } else {
+    pill.className = 'status-pill offline';
+    text.textContent = data.status === 'server_offline' ? 'Server Offline' : 'Not Configured';
+    sessionTavus.textContent = 'Missing credentials';
+    sessionTavus.style.color = 'var(--rose)';
+    setupCard.style.display = 'block';
+    btnStart.disabled = true;
+
+    const offlineDesc = document.getElementById('offlineDesc');
+    if (data.status === 'server_offline') {
+      offlineDesc.textContent = 'The V·FACE server is not running. Start it with: cd vface/server && npm start';
+    } else if (data.missing_credentials) {
+      offlineDesc.textContent = `Missing: ${data.missing_credentials.join(', ')}. See setup card for instructions.`;
+    }
+    showPlaceholder('offline');
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   PLACEHOLDER MANAGEMENT
+   ═══════════════════════════════════════════════════ */
+
+function showPlaceholder(name) {
+  ['idle', 'loading', 'offline', 'ended', 'error'].forEach(n => {
+    const el = document.getElementById(`placeholder${n.charAt(0).toUpperCase() + n.slice(1)}`);
+    if (el) el.classList.toggle('hidden', n !== name);
+  });
+
+  const replicaVid = document.getElementById('replicaVideo');
+  const selfViewEl = document.getElementById('selfView');
+  const liveTag = document.getElementById('liveTag');
+
+  if (name !== null) {
+    replicaVid.classList.remove('visible');
+    selfViewEl.classList.remove('visible');
+    liveTag.style.display = 'none';
+  }
+}
+
+function hideAllPlaceholders() {
+  ['idle', 'loading', 'offline', 'ended', 'error'].forEach(n => {
+    const el = document.getElementById(`placeholder${n.charAt(0).toUpperCase() + n.slice(1)}`);
+    if (el) el.classList.add('hidden');
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   START SESSION
+   ═══════════════════════════════════════════════════ */
+
+async function startSession() {
+  if (!tavusReady) return;
+
+  const btnStart = document.getElementById('btnStart');
+  const btnEnd = document.getElementById('btnEnd');
+  const btnMic = document.getElementById('btnMic');
+
+  btnStart.disabled = true;
+  showPlaceholder('loading');
+  updateSessionStatus('Connecting...');
+
+  // Gather form data
+  const visitorName = document.getElementById('visitorName').value.trim();
+  const concern = document.getElementById('concern').value;
+  const urgency = document.getElementById('urgency').value;
+
+  try {
+    // 1. Create conversation via backend
+    const res = await fetch(`${API_BASE}/api/conversations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitor_name: visitorName || undefined, concern: concern || undefined, urgency }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Conversation creation failed');
+    }
+
+    const data = await res.json();
+    conversationId = data.conversation_id;
+    conversationUrl = data.conversation_url;
+
+    document.getElementById('sessionId').textContent = conversationId.slice(0, 12) + '...';
+    updateSessionStatus('Joining...');
+
+    // 2. Create Daily call object and join
+    callObject = DailyIframe.createCallObject({
+      audioSource: true,
+      videoSource: true,
+    });
+
+    // Event listeners
+    callObject.on('participant-joined', handleParticipantJoined);
+    callObject.on('participant-updated', handleParticipantUpdated);
+    callObject.on('participant-left', handleParticipantLeft);
+    callObject.on('left-meeting', handleLeftMeeting);
+    callObject.on('error', handleDailyError);
+
+    // 3. Join with noise cancellation
+    await callObject.join({
+      url: conversationUrl,
+      inputSettings: {
+        audio: { processor: { type: 'noise-cancellation' } },
+      },
+    });
+
+    // Double-apply noise cancellation (Tavus best practice)
+    await callObject.updateInputSettings({
+      audio: { processor: { type: 'noise-cancellation' } },
+    });
+
+    // 4. UI updates
+    hideAllPlaceholders();
+    document.getElementById('liveTag').style.display = 'flex';
+    btnEnd.disabled = false;
+    btnMic.disabled = false;
+    micOn = true;
+    btnMic.textContent = 'Mic On';
+    updateStatusPill('active', 'Live Session');
+    updateSessionStatus('Active');
+    startDurationTimer();
+
+    // Attach local video
+    attachLocalVideo();
+
+  } catch (err) {
+    console.error('[vface] Session start error:', err);
+    document.getElementById('errorDesc').textContent = err.message || 'Failed to connect. Check server logs.';
+    showPlaceholder('error');
+    updateSessionStatus('Error');
+    btnStart.disabled = false;
+    cleanup();
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   END SESSION
+   ═══════════════════════════════════════════════════ */
+
+async function endSession() {
+  updateSessionStatus('Ending...');
+
+  try {
+    if (callObject) {
+      await callObject.leave();
+    }
+    if (conversationId) {
+      fetch(`${API_BASE}/api/conversations/${conversationId}/end`, { method: 'POST' }).catch(() => {});
+    }
+  } catch (err) {
+    console.error('[vface] End session error:', err);
+  }
+
+  cleanup();
+  showPlaceholder('ended');
+  updateSessionStatus('Ended');
+  updateStatusPill('ready', 'Tavus Ready');
+}
+
+/* ═══════════════════════════════════════════════════
+   DAILY.JS EVENT HANDLERS
+   ═══════════════════════════════════════════════════ */
+
+function handleParticipantJoined(event) {
+  const p = event.participant;
+  if (p.user_name === 'Tavus Replica' || (p.user_id && p.user_id.includes('tavus'))) {
+    attachReplicaVideo(p);
+  }
+}
+
+function handleParticipantUpdated(event) {
+  const p = event.participant;
+  if (p.user_name === 'Tavus Replica' || (p.user_id && p.user_id.includes('tavus'))) {
+    attachReplicaVideo(p);
+  }
+}
+
+function handleParticipantLeft(event) {
+  const p = event.participant;
+  if (p.user_name === 'Tavus Replica' || (p.user_id && p.user_id.includes('tavus'))) {
+    document.getElementById('replicaVideo').classList.remove('visible');
+  }
+}
+
+function handleLeftMeeting() {
+  cleanup();
+  showPlaceholder('ended');
+  updateSessionStatus('Ended');
+  updateStatusPill('ready', 'Tavus Ready');
+}
+
+function handleDailyError(event) {
+  console.error('[daily] Error:', event);
+  document.getElementById('errorDesc').textContent = event.errorMsg || 'Daily.js connection error.';
+  showPlaceholder('error');
+  updateSessionStatus('Error');
+  cleanup();
+}
+
+/* ═══════════════════════════════════════════════════
+   VIDEO ATTACHMENT
+   ═══════════════════════════════════════════════════ */
+
+function attachReplicaVideo(participant) {
+  const videoEl = document.getElementById('replicaVideo');
+  if (!participant.tracks.video || !participant.tracks.video.persistentTrack) return;
+
+  const stream = new MediaStream([participant.tracks.video.persistentTrack]);
+  if (participant.tracks.audio && participant.tracks.audio.persistentTrack) {
+    stream.addTrack(participant.tracks.audio.persistentTrack);
+  }
+  videoEl.srcObject = stream;
+  videoEl.classList.add('visible');
+}
+
+function attachLocalVideo() {
+  if (!callObject) return;
+  const local = callObject.participants().local;
+  if (!local || !local.tracks.video || !local.tracks.video.persistentTrack) return;
+
+  const videoEl = document.getElementById('selfVideo');
+  const stream = new MediaStream([local.tracks.video.persistentTrack]);
+  videoEl.srcObject = stream;
+  document.getElementById('selfView').classList.add('visible');
+}
+
+/* ═══════════════════════════════════════════════════
+   MIC TOGGLE
+   ═══════════════════════════════════════════════════ */
+
+function toggleMic() {
+  if (!callObject) return;
+  micOn = !micOn;
+  callObject.setLocalAudio(micOn);
+  document.getElementById('btnMic').textContent = micOn ? 'Mic On' : 'Mic Off';
+}
+
+/* ═══════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════ */
+
+function cleanup() {
+  stopDurationTimer();
+
+  if (callObject) {
+    callObject.off('participant-joined', handleParticipantJoined);
+    callObject.off('participant-updated', handleParticipantUpdated);
+    callObject.off('participant-left', handleParticipantLeft);
+    callObject.off('left-meeting', handleLeftMeeting);
+    callObject.off('error', handleDailyError);
+    callObject.destroy();
+    callObject = null;
+  }
+
+  conversationId = null;
+  conversationUrl = null;
+
+  document.getElementById('btnStart').disabled = !tavusReady;
+  document.getElementById('btnEnd').disabled = true;
+  document.getElementById('btnMic').disabled = true;
+  document.getElementById('liveTag').style.display = 'none';
+  document.getElementById('selfView').classList.remove('visible');
+  document.getElementById('replicaVideo').classList.remove('visible');
+}
+
+function updateSessionStatus(text) {
+  document.getElementById('sessionStatus').textContent = text;
+}
+
+function updateStatusPill(cls, text) {
+  const pill = document.getElementById('statusPill');
+  pill.className = `status-pill ${cls}`;
+  document.getElementById('statusText').textContent = text;
+}
+
+function startDurationTimer() {
+  durationSec = 0;
+  updateDuration();
+  durationTimer = setInterval(() => {
+    durationSec++;
+    updateDuration();
+  }, 1000);
+}
+
+function stopDurationTimer() {
+  if (durationTimer) { clearInterval(durationTimer); durationTimer = null; }
+}
+
+function updateDuration() {
+  const m = Math.floor(durationSec / 60);
+  const s = durationSec % 60;
+  document.getElementById('sessionDuration').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+/* ═══════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════ */
+
+checkStatus();
+</script>
+
+</body>
+</html>
