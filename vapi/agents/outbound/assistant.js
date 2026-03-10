@@ -114,17 +114,8 @@ function getDormantRevivalConfig(serverUrl) {
 function getCallOverrides(dynamicVars = {}) {
   const overrides = {};
 
-  if (dynamicVars.patient_name) {
-    // Personalize the first message with their name
-    overrides.firstMessage = overrides.firstMessage
-      ? overrides.firstMessage.replace(
-          "Hi, this is Ava",
-          `Hi ${dynamicVars.patient_name}, this is Ava`
-        )
-      : undefined;
-  }
-
-  // Inject dynamic variables into the system prompt context
+  // Inject dynamic variables as additional system context.
+  // This is appended to (not replacing) the base prompt via assistantOverrides.
   if (Object.keys(dynamicVars).length > 0) {
     const contextBlock = Object.entries(dynamicVars)
       .map(([k, v]) => `- {{${k}}}: ${v}`)

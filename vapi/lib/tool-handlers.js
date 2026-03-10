@@ -4,9 +4,52 @@
  * Each handler receives (callId, params) and returns a result object.
  * Results are JSON-stringified before being sent back to VAPI.
  *
- * In production, these would write to a database (Drizzle/Postgres).
- * Currently they log to console and return confirmation objects.
+ * Data is persisted to JSON files in /vapi/data/.
+ * For production, swap appendToStore() with Supabase/Drizzle writes.
  */
+
+const fs = require("fs");
+const path = require("path");
+
+// ─── Persistence Layer ───
+
+const DATA_DIR = path.join(__dirname, "..", "data");
+
+/**
+ * Append a record to a JSON-lines file.
+ * Creates the data directory and file if they don't exist.
+ */
+function appendToStore(storeName, record) {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const filePath = path.join(DATA_DIR, `${storeName}.jsonl`);
+    const line = JSON.stringify(record) + "\n";
+    fs.appendFileSync(filePath, line, "utf-8");
+    console.log(`[store:${storeName}] persisted`, record.call_id || "");
+    return true;
+  } catch (err) {
+    console.error(`[store:${storeName}] write failed:`, err.message);
+    return false;
+  }
+}
+
+/**
+ * Read all records from a store (for debugging/reporting).
+ */
+function readStore(storeName) {
+  const filePath = path.join(DATA_DIR, `${storeName}.jsonl`);
+  if (!fs.existsSync(filePath)) return [];
+  return fs
+    .readFileSync(filePath, "utf-8")
+    .trim()
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => JSON.parse(line));
+}
+
+// ─── Tool Handlers ───
 
 /**
  * capture_lead — Record a new lead with interest details
@@ -22,13 +65,10 @@ async function handleCaptureLead(callId, params) {
     captured_at: new Date().toISOString(),
   };
 
-  console.log("[tool:capture_lead]", JSON.stringify(lead));
-
-  // TODO: Insert into leads table
-  // await db.insert(leads).values(lead);
+  const persisted = appendToStore("leads", lead);
 
   return {
-    success: true,
+    success: persisted,
     message: `Lead captured: ${lead.interest_type} interest, timeline ${lead.timeline}.`,
     lead_id: `lead_${Date.now()}`,
   };
@@ -48,10 +88,7 @@ async function handleRequestAppointment(callId, params) {
     requested_at: new Date().toISOString(),
   };
 
-  console.log("[tool:request_appointment]", JSON.stringify(appointment));
-
-  // TODO: Insert into appointment_requests table
-  // await db.insert(appointmentRequests).values(appointment);
+  const persisted = appendToStore("appointments", appointment);
 
   const priorityLabel =
     appointment.priority === "emergency"
@@ -59,7 +96,7 @@ async function handleRequestAppointment(callId, params) {
       : "The scheduling team will follow up.";
 
   return {
-    success: true,
+    success: persisted,
     message: `Appointment request logged: ${appointment.visit_type}, ${appointment.time_preference} preferred. ${priorityLabel}`,
     request_id: `apt_${Date.now()}`,
   };
@@ -78,14 +115,10 @@ async function handleMarkEmergency(callId, params) {
     flagged_at: new Date().toISOString(),
   };
 
-  console.log("[tool:mark_emergency_priority]", JSON.stringify(emergency));
-
-  // TODO: Insert into emergency_flags table + send alert
-  // await db.insert(emergencyFlags).values(emergency);
-  // await sendEmergencyAlert(emergency);
+  const persisted = appendToStore("emergencies", emergency);
 
   return {
-    success: true,
+    success: persisted,
     message: `Emergency flagged: ${emergency.issue_type}, pain level ${emergency.pain_level || "not reported"}. This call is marked as priority.`,
     emergency_id: `emg_${Date.now()}`,
   };
@@ -104,42 +137,19 @@ async function handleLogReactivation(callId, params) {
     logged_at: new Date().toISOString(),
   };
 
-  console.log("[tool:log_reactivation_interest]", JSON.stringify(reactivation));
-
-  // TODO: Update patient record with reactivation status
-  // await db.insert(reactivationLogs).values(reactivation);
+  const persisted = appendToStore("reactivations", reactivation);
 
   return {
-    success: true,
+    success: persisted,
     message: `Reactivation logged: ${reactivation.disposition}.`,
   };
 }
 
 /**
- * transfer_to_human — Transfer caller to live staff
- */
-async function handleTransferToHuman(callId, params) {
-  const transfer = {
-    call_id: callId,
-    reason: params.reason || "caller requested",
-    context_summary: params.context_summary || "",
-    requested_at: new Date().toISOString(),
-  };
-
-  console.log("[tool:transfer_to_human]", JSON.stringify(transfer));
-
-  // TODO: Trigger actual transfer via VAPI's transferCall or SIP
-  // The transfer destination number is set in env: PRACTICE_TRANSFER_NUMBER
-
-  return {
-    success: true,
-    message: "Transferring to the practice team now.",
-    transfer_number: process.env.PRACTICE_TRANSFER_NUMBER || "+14078779003",
-  };
-}
-
-/**
- * Route a tool call to the correct handler
+ * Route a tool call to the correct handler.
+ *
+ * NOTE: transfer_to_human and endCall are VAPI native tools —
+ * they do NOT route through this handler. VAPI executes them directly.
  */
 async function handleToolCall(callId, toolName, params) {
   switch (toolName) {
@@ -151,8 +161,6 @@ async function handleToolCall(callId, toolName, params) {
       return handleMarkEmergency(callId, params);
     case "log_reactivation_interest":
       return handleLogReactivation(callId, params);
-    case "transfer_to_human":
-      return handleTransferToHuman(callId, params);
     default:
       console.warn(`[tool-handlers] Unknown tool: ${toolName}`);
       return { success: false, error: `Unknown tool: ${toolName}` };
@@ -165,5 +173,5 @@ module.exports = {
   handleRequestAppointment,
   handleMarkEmergency,
   handleLogReactivation,
-  handleTransferToHuman,
+  readStore,
 };

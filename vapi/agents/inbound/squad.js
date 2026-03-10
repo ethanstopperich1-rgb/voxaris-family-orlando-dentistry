@@ -129,7 +129,10 @@ function getGeneralSchedulerConfig(serverUrl) {
       ],
       temperature: 0.4,
       maxTokens: 200,
-      tools: INBOUND_QUALIFIER_TOOLS,
+      tools: [
+        require("../../lib/tools").TOOL_REQUEST_APPOINTMENT,
+        require("../../lib/tools").TOOL_TRANSFER_TO_HUMAN,
+      ],
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,

@@ -98,7 +98,7 @@ const V_SENSE_OUTBOUND_CONFIG = {
     tools: OUTBOUND_TOOL_SET,
   },
   voice: {
-    provider: "rime-ai",
+    provider: "rime",
     voiceId: "cove",
     model: "arcana",
   },
