@@ -157,6 +157,18 @@
     }
     .placeholder.hidden { display: none; }
 
+    .idle-preview {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .idle-overlay {
+      position: relative; z-index: 1;
+      margin-top: auto; padding: 24px 32px;
+      width: 100%;
+      background: linear-gradient(to top, rgba(7,8,10,.85) 0%, rgba(7,8,10,.4) 60%, transparent 100%);
+      text-align: center;
+    }
+
     .placeholder-rings { position: relative; width: 160px; height: 160px; margin-bottom: 24px; }
     .placeholder-rings .ring {
       position: absolute; inset: 0; border-radius: 50%;
@@ -352,16 +364,12 @@
 
         <!-- Placeholder: idle -->
         <div class="placeholder" id="placeholderIdle">
-          <div class="placeholder-rings">
-            <div class="ring"></div>
-            <div class="ring"></div>
-            <div class="ring"></div>
-            <div class="silhouette"></div>
-          </div>
-          <div class="placeholder-title">Virtual Dental Concierge</div>
-          <div class="placeholder-desc">
-            Start a session to speak with the V·FACE concierge for Family Orlando Dentistry.
-            Available for Invisalign consultations, emergency triage, and appointment routing.
+          <video class="idle-preview" src="https://cdn.replica.tavus.io/39359/cd603e65.mp4" autoplay muted loop playsinline></video>
+          <div class="idle-overlay">
+            <div class="placeholder-title">Virtual Dental Concierge</div>
+            <div class="placeholder-desc">
+              Start a session to speak with the V·FACE concierge for Family Orlando Dentistry.
+            </div>
           </div>
         </div>
 

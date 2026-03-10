@@ -1,0 +1,158 @@
+{
+  "tools": [
+    {
+      "name": "capture_lead",
+      "description": "Captures a qualified Invisalign or cosmetic lead with full contact and qualification context. Called after the agent has collected name, callback number, interest type, and intent level.",
+      "parameters": {
+        "type": "object",
+        "required": ["caller_name", "callback_phone", "interest_type", "intent_level"],
+        "properties": {
+          "caller_name": {
+            "type": "string",
+            "description": "Caller's first name (or 'Unknown' if refused)"
+          },
+          "callback_phone": {
+            "type": "string",
+            "description": "Caller's callback phone number. Must be collected before calling this tool."
+          },
+          "interest_type": {
+            "type": "string",
+            "enum": ["invisalign", "whitening", "implants", "veneers", "cosmetic_general"],
+            "description": "Primary service interest"
+          },
+          "intent_level": {
+            "type": "string",
+            "enum": ["hot", "warm", "cold"],
+            "description": "hot = wants to book within 30 days, warm = interested but no timeline, cold = just researching"
+          },
+          "qualification_notes": {
+            "type": "string",
+            "description": "Free-text notes: what they want to improve, prior orthodontic history, concerns mentioned"
+          },
+          "time_preference": {
+            "type": "string",
+            "description": "Morning, afternoon, or specific day preferences"
+          },
+          "prior_orthodontic_history": {
+            "type": "boolean",
+            "description": "Whether the caller has had braces or aligners before"
+          }
+        }
+      },
+      "filler_messages": [
+        "Let me get that noted for you.",
+        "One moment while I save your information."
+      ]
+    },
+    {
+      "name": "request_appointment",
+      "description": "Submits a scheduling request with contact info, appointment type, and timing preference. Called after collecting name, phone, type, and preference.",
+      "parameters": {
+        "type": "object",
+        "required": ["caller_name", "callback_phone", "appointment_type"],
+        "properties": {
+          "caller_name": {
+            "type": "string",
+            "description": "Caller's first name (or 'Unknown' if refused)"
+          },
+          "callback_phone": {
+            "type": "string",
+            "description": "Caller's callback phone number. Must be collected before calling this tool."
+          },
+          "appointment_type": {
+            "type": "string",
+            "enum": ["cleaning", "exam", "follow_up", "consultation", "emergency", "crown", "extraction", "root_canal", "other"],
+            "description": "Type of appointment requested"
+          },
+          "time_preference": {
+            "type": "string",
+            "description": "Morning, afternoon, specific days, or 'ASAP'"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional context about the appointment request"
+          },
+          "is_new_patient": {
+            "type": "boolean",
+            "description": "Whether the caller is a new patient to the practice"
+          }
+        }
+      },
+      "filler_messages": [
+        "Let me send that request over to the team.",
+        "One moment while I get that into the schedule queue."
+      ]
+    },
+    {
+      "name": "mark_emergency_priority",
+      "description": "Flags a dental emergency for priority follow-up. Captures severity, symptoms, and contact info. Called when caller reports pain 7+, trauma, swelling, avulsion, or other urgent dental issue.",
+      "parameters": {
+        "type": "object",
+        "required": ["caller_name", "callback_phone", "issue_description", "severity_tier"],
+        "properties": {
+          "caller_name": {
+            "type": "string",
+            "description": "Caller's first name (or 'Unknown' if refused)"
+          },
+          "callback_phone": {
+            "type": "string",
+            "description": "Caller's callback phone number. Must be collected before calling this tool."
+          },
+          "issue_description": {
+            "type": "string",
+            "description": "What happened — cracked tooth, knocked-out tooth, swelling, pain, etc."
+          },
+          "pain_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Patient-reported pain level on 1-10 scale"
+          },
+          "symptoms": {
+            "type": "string",
+            "description": "Swelling, bleeding, fever, difficulty breathing/swallowing, pus, etc."
+          },
+          "onset": {
+            "type": "string",
+            "description": "When the issue started — today, yesterday, gradual over days, etc."
+          },
+          "severity_tier": {
+            "type": "string",
+            "enum": ["critical", "high", "moderate"],
+            "description": "critical = avulsion/breathing/severe swelling, high = pain 7+ or active bleeding, moderate = pain under 7 with no danger signs"
+          },
+          "after_hours": {
+            "type": "boolean",
+            "description": "Whether this call is occurring outside office hours"
+          }
+        }
+      },
+      "filler_messages": [
+        "Let me flag this right away.",
+        "I'm marking this as a priority case now."
+      ]
+    },
+    {
+      "name": "transfer_to_human",
+      "description": "Transfers the caller to a live team member. Can fire immediately without collecting name or phone. Used when: caller requests live person, situation exceeds agent capability, caller objects to recording, or active emergency during office hours.",
+      "parameters": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Why the transfer is happening: caller_request, recording_objection, emergency_transfer, exceeds_capability, hostile_caller"
+          },
+          "context_summary": {
+            "type": "string",
+            "description": "Brief summary of conversation so far to pass to the human agent"
+          }
+        }
+      },
+      "filler_messages": [
+        "Let me connect you with someone on the team.",
+        "One moment, I'll get you to a team member."
+      ]
+    }
+  ]
+}
