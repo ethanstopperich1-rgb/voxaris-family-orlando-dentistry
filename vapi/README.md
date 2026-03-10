@@ -1,6 +1,6 @@
 # Voxaris VAPI Voice Agents — Family Orlando Dentistry
 
-Production voice-agent layer for Orlando Family Dentistry (Ocoee, FL). Built on the VAPI platform with Rime TTS, Deepgram STT, and GPT-4o-mini.
+Production voice-agent layer for Family Orlando Dentistry (Ocoee, FL). Built on the VAPI platform with Rime TTS, Deepgram STT, and GPT-4o-mini.
 
 ## Architecture
 
@@ -212,7 +212,7 @@ Prompts are under 500 tokens to minimize TTFB latency.
 
 ## Practice Info
 
-- **Practice**: Orlando Family Dentistry / Nitisusanta Family Dentistry
+- **Practice**: Family Orlando Dentistry / Nitisusanta Family Dentistry
 - **Location**: 2704 Rew Circle, Suite 103, Ocoee, FL 34761
 - **Doctors**: Dr. Nadine Nitisusanta DMD & Dr. Jonathan Nitisusanta DDS
 - **Phone**: (407) 877-9003

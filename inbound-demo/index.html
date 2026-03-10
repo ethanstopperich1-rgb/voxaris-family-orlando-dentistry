@@ -394,6 +394,7 @@
 
   <!-- ─── Header ─── -->
   <header class="header">
+    <a href="../index.html" style="color:var(--white-muted);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color .2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--white-muted)'">&larr; Hub</a>
     <div class="brand">
       <div class="brand-mark">V</div>
       <div class="brand-text"><span>Voxaris</span> Inbound Demo</div>
@@ -406,7 +407,7 @@
     <div class="hero-content">
       <div class="practice-tag">
         <span class="dot"></span>
-        Orlando Family Dentistry &mdash; Ocoee, FL
+        Family Orlando Dentistry &mdash; Ocoee, FL
       </div>
       <h1>V&middot;TEAMS <em>Inbound</em> Experience</h1>
       <p>See how Voxaris answers instantly, qualifies correctly, routes intelligently, and books or escalates &mdash; without making the patient repeat themselves. Choose a scenario below.</p>
@@ -482,7 +483,7 @@
 
   <!-- ─── Footer ─── -->
   <footer class="footer">
-    Voxaris &middot; V&middot;TEAMS Inbound Demo for <a href="https://familyorlandodentistry.com/" target="_blank" rel="noopener">Orlando Family Dentistry</a><br/>
+    Voxaris &middot; V&middot;TEAMS Inbound Demo for <a href="https://familyorlandodentistry.com/" target="_blank" rel="noopener">Family Orlando Dentistry</a><br/>
     Dr. Nadine Nitisusanta DMD &amp; Dr. Jonathan Nitisusanta DDS &mdash; (407) 877-9003
   </footer>
 
@@ -529,11 +530,11 @@ const scenarios = {
     ],
     messages: [
       { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
-        text: 'Hi, welcome to Orlando Family Dentistry. I\'m the Voxaris virtual concierge for the practice. I can help you with appointments, questions, Invisalign consultations, or urgent dental concerns. What brings you in today?' },
+        text: 'Hi, welcome to Family Orlando Dentistry. I\'m the Voxaris virtual concierge for the practice. I can help you with appointments, questions, Invisalign consultations, or urgent dental concerns. What brings you in today?' },
       { type: 'user', agent: 'Patient', step: 0,
         text: 'I\'m interested in Invisalign. I\'ve been thinking about straightening my teeth.' },
       { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
-        text: 'Absolutely. Orlando Family Dentistry offers Invisalign and currently promotes a free consultation, so you\'re in the right place. Let me ask a couple of quick questions so I can guide you to the best next step. Is this mostly for crowding, spacing, bite concerns, or a smile refresh?',
+        text: 'Absolutely. Family Orlando Dentistry offers Invisalign and currently promotes a free consultation, so you\'re in the right place. Let me ask a couple of quick questions so I can guide you to the best next step. Is this mostly for crowding, spacing, bite concerns, or a smile refresh?',
         contextAdd: [0] },
       { type: 'user', agent: 'Patient', step: 0,
         text: 'Mostly crowding and a smile refresh.' },
@@ -602,7 +603,7 @@ const scenarios = {
     ],
     messages: [
       { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
-        text: 'Hi, welcome to Orlando Family Dentistry. I can help with appointments, questions, or urgent dental issues. What\'s going on today?' },
+        text: 'Hi, welcome to Family Orlando Dentistry. I can help with appointments, questions, or urgent dental issues. What\'s going on today?' },
       { type: 'user', agent: 'Patient', step: 0,
         text: 'I think I cracked a tooth and it really hurts.' },
       { type: 'bot', agent: 'V&middot;FACE Receptionist', agentClass: 'receptionist', step: 0,
@@ -611,7 +612,7 @@ const scenarios = {
       { type: 'user', agent: 'Patient', step: 1,
         text: 'Severe pain, no bleeding.' },
       { type: 'bot', agent: 'V&middot;TEAMS Emergency Qualifier', agentClass: 'emergency', step: 1,
-        text: 'Thank you. Orlando Family Dentistry publicly lists emergency care, root canals, extractions, and related treatment pathways, so this is absolutely within the practice\'s service scope. On a scale from 1 to 10, how strong is the pain?',
+        text: 'Thank you. Family Orlando Dentistry publicly lists emergency care, root canals, extractions, and related treatment pathways, so this is absolutely within the practice\'s service scope. On a scale from 1 to 10, how strong is the pain?',
         contextAdd: [2, 3] },
       { type: 'user', agent: 'Patient', step: 1,
         text: 'An 8.' },

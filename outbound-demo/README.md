@@ -1,6 +1,6 @@
-# V·OUTBOUND Reactivation Demo — Orlando Family Dentistry
+# V·OUTBOUND Reactivation Demo — Family Orlando Dentistry
 
-Standalone interactive demo showcasing the Voxaris V·OUTBOUND reactivation engine for Orlando Family Dentistry.
+Standalone interactive demo showcasing the Voxaris V·OUTBOUND reactivation engine for Family Orlando Dentistry.
 
 ## What This Covers
 

@@ -39,7 +39,7 @@ The **V·TEAMS Inbound** flow: Receptionist → Qualifier → Specialist → Clo
 
 ## Practice Info
 
-- **Practice**: Orlando Family Dentistry / Nitisusanta Family Dentistry
+- **Practice**: Family Orlando Dentistry / Nitisusanta Family Dentistry
 - **Location**: 2704 Rew Circle, Suite 103, Ocoee, FL 34761
 - **Doctors**: Dr. Nadine Nitisusanta DMD & Dr. Jonathan Nitisusanta DDS
 - **Phone**: (407) 877-9003

@@ -46,7 +46,7 @@ function getReceptionistConfig(serverUrl) {
   return {
     name: "FOD Receptionist",
     firstMessage:
-      "Hi, thanks for calling Orlando Family Dentistry. How can I help you today?",
+      "Hi, thanks for calling Family Orlando Dentistry. How can I help you today?",
     firstMessageMode: "assistant-speaks-first",
     model: {
       provider: "openai",

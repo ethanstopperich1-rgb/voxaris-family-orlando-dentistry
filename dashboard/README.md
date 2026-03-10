@@ -1,6 +1,6 @@
 # Voxaris Command — Client Dashboard Demo
 
-**Client:** Family Orlando Dentistry (Orlando Family Dentistry / Nitisusanta Family Dentistry)
+**Client:** Family Orlando Dentistry (Family Orlando Dentistry / Nitisusanta Family Dentistry)
 **Location:** 2704 Rew Circle, Suite 103, Ocoee, FL 34761
 
 ## What This Is

@@ -1,8 +1,8 @@
-# Orlando Family Dentistry — Knowledge Base
+# Family Orlando Dentistry — Knowledge Base
 
 ## Practice Overview
 
-Orlando Family Dentistry, also known as Nitisusanta Family Dentistry, is a private family dental practice located at 2704 Rew Circle, Suite 103, Ocoee, FL 34761. The practice is led by Dr. Nadine Nitisusanta DMD and Dr. Jonathan Nitisusanta DDS, a husband-and-wife team with over 55 years of combined dental experience.
+Family Orlando Dentistry, also known as Nitisusanta Family Dentistry, is a private family dental practice located at 2704 Rew Circle, Suite 103, Ocoee, FL 34761. The practice is led by Dr. Nadine Nitisusanta DMD and Dr. Jonathan Nitisusanta DDS, a husband-and-wife team with over 55 years of combined dental experience.
 
 Phone: (407) 877-9003
 Email: niti.dental@gmail.com

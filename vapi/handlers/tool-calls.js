@@ -29,7 +29,10 @@ async function handleToolCalls(body) {
   const results = [];
 
   for (const tc of toolCallList) {
-    const { id: toolCallId, name: toolName, parameters } = tc;
+    // Defensive: VAPI may nest under tc.function.name / tc.function.arguments
+    const toolCallId = tc.id || tc.toolCallId;
+    const toolName = tc.name || tc.function?.name;
+    const parameters = tc.parameters || (tc.function?.arguments ? JSON.parse(tc.function.arguments) : {});
 
     console.log(
       `[tool-calls] call=${callId} tool=${toolName} tcId=${toolCallId}`

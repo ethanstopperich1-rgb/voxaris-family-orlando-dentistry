@@ -63,7 +63,7 @@ function getHygieneReactivationConfig(serverUrl) {
     ...base,
     name: "FOD Hygiene Reactivation",
     firstMessage:
-      "Hi, this is Ava with Orlando Family Dentistry. I'm calling with a quick follow-up — it looks like you're due for a hygiene visit, and we wanted to make it easy to get back on the schedule.",
+      "Hi, this is Ava with Family Orlando Dentistry. I'm calling with a quick follow-up — it looks like you're due for a hygiene visit, and we wanted to make it easy to get back on the schedule.",
     model: {
       ...base.model,
       messages: [
@@ -79,7 +79,7 @@ function getInvisalignFollowupConfig(serverUrl) {
     ...base,
     name: "FOD Invisalign Follow-up",
     firstMessage:
-      "Hi, this is Ava with Orlando Family Dentistry. I'm following up because you showed interest in Invisalign, and I wanted to see if you're still considering a consultation.",
+      "Hi, this is Ava with Family Orlando Dentistry. I'm following up because you showed interest in Invisalign, and I wanted to see if you're still considering a consultation.",
     model: {
       ...base.model,
       messages: [
@@ -95,7 +95,7 @@ function getDormantRevivalConfig(serverUrl) {
     ...base,
     name: "FOD Dormant Revival",
     firstMessage:
-      "Hi, this is Ava with Orlando Family Dentistry. We noticed it's been a while since your last visit, and we just wanted to check in and see if there's anything we can help with.",
+      "Hi, this is Ava with Family Orlando Dentistry. We noticed it's been a while since your last visit, and we just wanted to check in and see if there's anything we can help with.",
     model: {
       ...base.model,
       messages: [

@@ -11,7 +11,11 @@
 
 const { V_SENSE_OUTBOUND_CONFIG } = require("./v-sense-config");
 
-const VAPI_API_KEY = process.env.VAPI_API_KEY || "0ecce228-c953-45f6-b16c-31c5477a8a41";
+const VAPI_API_KEY = process.env.VAPI_API_KEY;
+if (!VAPI_API_KEY) {
+  console.error("VAPI_API_KEY is required. Set it in your environment.");
+  process.exit(1);
+}
 const VAPI_BASE = "https://api.vapi.ai";
 const EXISTING_ID = process.env.VAPI_OUTBOUND_ASSISTANT_ID || "";
 
@@ -45,7 +49,7 @@ async function main() {
     ...V_SENSE_OUTBOUND_CONFIG,
     serverUrl:
       process.env.VAPI_SERVER_URL ||
-      "https://your-app.vercel.app/api/voice/webhooks/vapi",
+      "https://your-app.vercel.app/api/vapi/webhook",
   };
 
   if (EXISTING_ID) {

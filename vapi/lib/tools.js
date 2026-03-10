@@ -209,29 +209,20 @@ const TOOL_LOG_REACTIVATION = {
   async: true, // fire-and-forget — don't block conversation
 };
 
+/**
+ * VAPI native transferCall — initiates a real SIP transfer.
+ * This replaces the old custom function that only returned JSON.
+ */
 const TOOL_TRANSFER_TO_HUMAN = {
-  type: "function",
-  function: {
-    name: "transfer_to_human",
-    description:
-      "Transfer the caller to a live team member at the practice. Use when the caller specifically asks to speak with a person, or when you cannot resolve their request.",
-    parameters: {
-      type: "object",
-      properties: {
-        reason: {
-          type: "string",
-          description:
-            "Why the transfer is happening. Examples: caller requested, insurance question, complex case.",
-        },
-        context_summary: {
-          type: "string",
-          description:
-            "Summary of the conversation so far, to be passed to the human agent.",
-        },
-      },
-      required: ["reason"],
+  type: "transferCall",
+  destinations: [
+    {
+      type: "number",
+      number: "+14078779003",
+      message: "I'm connecting you with the team at Orlando Family Dentistry now. One moment please.",
+      description: "Transfer to Family Orlando Dentistry office line for live staff.",
     },
-  },
+  ],
   messages: [
     {
       type: "request-start",
@@ -241,10 +232,22 @@ const TOOL_TRANSFER_TO_HUMAN = {
     {
       type: "request-failed",
       content:
-        "I'm having trouble connecting you right now. Please call the office directly at 407-877-9003.",
+        "I'm having trouble connecting you right now. Please call the office directly at four oh seven, eight seven seven, nine zero zero three.",
     },
   ],
-  async: false,
+};
+
+/**
+ * VAPI native endCall — cleanly terminates the call.
+ * Use after disposition is logged, or for voicemail/wrong-number/DNC exits.
+ */
+const TOOL_END_CALL = {
+  type: "endCall",
+  messages: [
+    { type: "request-start", content: "Have a great day. Goodbye." },
+    { type: "request-complete", content: "" },
+    { type: "request-failed", content: "" },
+  ],
 };
 
 // ─── Tool sets by agent type ───
@@ -274,6 +277,7 @@ const OUTBOUND_TOOLS = [
   TOOL_LOG_REACTIVATION,
   TOOL_MARK_EMERGENCY,
   TOOL_TRANSFER_TO_HUMAN,
+  TOOL_END_CALL,
 ];
 
 module.exports = {
@@ -282,6 +286,7 @@ module.exports = {
   TOOL_MARK_EMERGENCY,
   TOOL_LOG_REACTIVATION,
   TOOL_TRANSFER_TO_HUMAN,
+  TOOL_END_CALL,
   INBOUND_RECEPTIONIST_TOOLS,
   INBOUND_QUALIFIER_TOOLS,
   INBOUND_EMERGENCY_TOOLS,
