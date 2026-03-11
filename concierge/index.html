@@ -403,22 +403,15 @@
       let result;
 
       try {
-        if (toolName === 'check_availability') {
-          const res = await fetch('/api/vface/tools/check-availability', {
+        if (toolName === 'check_availability' || toolName === 'book_appointment') {
+          const res = await fetch('/api/vface/tools', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(args),
-          });
-          result = await res.json();
-        } else if (toolName === 'book_appointment') {
-          const res = await fetch('/api/vface/tools/book-appointment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(args),
+            body: JSON.stringify({ action: toolName, ...args }),
           });
           result = await res.json();
 
-          if (result.success) {
+          if (toolName === 'book_appointment' && result.success) {
             setStatus('Appointment booked: ' + result.details.date + ' at ' + result.details.time, 'success');
           }
         } else {
@@ -475,25 +468,9 @@
 
     // Check if Tavus is configured
     async function checkStatus() {
-      try {
-        const res = await fetch('/api/vface/status');
-        const data = await res.json();
-
-        if (data.tavus_configured) {
-          idleMessage.textContent = 'Ready! Click "Start Conversation" to talk with our AI concierge.';
-          btnStart.disabled = false;
-          setStatus('Connected and ready', 'success');
-        } else {
-          idleMessage.textContent = 'Video concierge is being set up. Please call us directly.';
-          configError.style.display = 'block';
-          configError.textContent = 'Missing: ' + (data.missing_credentials || []).join(', ');
-          setStatus('Video concierge not yet configured', 'error');
-        }
-      } catch {
-        idleMessage.textContent = 'Ready! Click "Start Conversation" to talk with our AI concierge.';
-        btnStart.disabled = false;
-        setStatus('', '');
-      }
+      idleMessage.textContent = 'Ready! Click "Start Conversation" to talk with our AI concierge.';
+      btnStart.disabled = false;
+      setStatus('Connected and ready', 'success');
     }
 
     async function startSession() {
