@@ -56,12 +56,11 @@ function tavusRequest(method, path, body = null) {
 /**
  * Create a new conversation session
  */
-async function createConversation({ greeting, context, conversationName } = {}) {
+async function createConversation({ greeting, context, conversationName, callbackUrl } = {}) {
   const payload = {
     persona_id: config.personaId,
     replica_id: config.replicaId,
     conversation_name: conversationName || config.conversationDefaults.conversation_name,
-    properties: { ...config.conversationDefaults.properties },
   };
 
   if (greeting) {
@@ -70,6 +69,10 @@ async function createConversation({ greeting, context, conversationName } = {}) 
 
   if (context) {
     payload.conversational_context = context;
+  }
+
+  if (callbackUrl) {
+    payload.callback_url = callbackUrl;
   }
 
   return tavusRequest('POST', '/conversations', payload);

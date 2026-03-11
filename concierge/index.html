@@ -377,9 +377,12 @@
     <p>&copy; 2025 Family Orlando Dentistry &middot; <a href="../landing-page/index.html">Back to Home</a> &middot; <a href="tel:+14078779003">(407) 877-9003</a></p>
   </div>
 
+  <!-- Daily.co SDK for tool call event handling -->
+  <script src="https://unpkg.com/@daily-co/daily-js"></script>
   <script>
     let sessionId = null;
     let sessionUrl = null;
+    let dailyCall = null;
 
     const videoContainer = document.getElementById('videoContainer');
     const idleState = document.getElementById('idleState');
@@ -392,6 +395,82 @@
     function setStatus(msg, type) {
       statusBar.textContent = msg;
       statusBar.className = 'status-bar' + (type ? ' ' + type : '');
+    }
+
+    // ─── Tool Call Handler ───
+    async function handleToolCall(toolName, args, toolCallId) {
+      console.log('[concierge] Tool call:', toolName, args);
+      let result;
+
+      try {
+        if (toolName === 'check_availability') {
+          const res = await fetch('/api/vface/tools/check-availability', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(args),
+          });
+          result = await res.json();
+        } else if (toolName === 'book_appointment') {
+          const res = await fetch('/api/vface/tools/book-appointment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(args),
+          });
+          result = await res.json();
+
+          if (result.success) {
+            setStatus('Appointment booked: ' + result.details.date + ' at ' + result.details.time, 'success');
+          }
+        } else {
+          result = { error: 'Unknown tool: ' + toolName };
+        }
+      } catch (err) {
+        result = { error: 'Tool call failed: ' + err.message };
+      }
+
+      // Send tool results back to the conversation
+      if (dailyCall && toolCallId) {
+        try {
+          dailyCall.sendAppMessage({
+            message_type: 'conversation',
+            event_type: 'conversation.tool_result',
+            conversation_id: sessionId,
+            properties: {
+              tool_call_id: toolCallId,
+              result: JSON.stringify(result),
+            },
+          }, '*');
+          console.log('[concierge] Tool result sent back:', toolName);
+        } catch (e) {
+          console.warn('[concierge] Could not send tool result:', e);
+        }
+      }
+
+      return result;
+    }
+
+    // ─── Daily.co App-Message Listener ───
+    function onAppMessage(event) {
+      const msg = event?.data;
+      if (!msg) return;
+
+      console.log('[concierge] app-message:', msg);
+
+      // Handle tool call events
+      const eventType = msg.event_type || msg.eventType || '';
+      if (eventType.includes('tool_call') || eventType.includes('toolcall')) {
+        const props = msg.properties || msg.data || msg;
+        const toolName = props.name || props.function_name || props.tool_name || '';
+        let toolArgs = props.arguments || props.args || {};
+
+        // Arguments may be a JSON string
+        if (typeof toolArgs === 'string') {
+          try { toolArgs = JSON.parse(toolArgs); } catch {}
+        }
+
+        const toolCallId = props.tool_call_id || props.id || '';
+        handleToolCall(toolName, toolArgs, toolCallId);
+      }
     }
 
     // Check if Tavus is configured
@@ -437,19 +516,35 @@
         sessionId = data.conversation_id;
         sessionUrl = data.conversation_url;
 
-        // Replace idle state with iframe
+        // Hide idle state
         idleState.style.display = 'none';
-        const iframe = document.createElement('iframe');
-        iframe.src = sessionUrl;
-        iframe.allow = 'camera; microphone; autoplay';
-        iframe.id = 'tavusFrame';
-        videoContainer.appendChild(iframe);
+
+        // Create Daily call frame inside video container
+        dailyCall = window.Daily.createFrame(videoContainer, {
+          iframeStyle: {
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            position: 'absolute',
+            top: '0',
+            left: '0',
+          },
+          showLeaveButton: false,
+          showFullscreenButton: false,
+        });
+
+        // Listen for tool call events
+        dailyCall.on('app-message', onAppMessage);
+
+        // Join the conversation
+        await dailyCall.join({ url: sessionUrl });
 
         btnEnd.disabled = false;
         setStatus('Session active — speak naturally!', 'success');
       } catch (err) {
         btnStart.disabled = false;
         setStatus('Error: ' + err.message, 'error');
+        console.error('[concierge] Start error:', err);
       }
     }
 
@@ -462,8 +557,16 @@
         await fetch(`/api/vface/conversations/${sessionId}/end`, { method: 'POST' });
       } catch {}
 
-      const iframe = document.getElementById('tavusFrame');
-      if (iframe) iframe.remove();
+      // Clean up Daily call
+      if (dailyCall) {
+        try {
+          dailyCall.off('app-message', onAppMessage);
+          await dailyCall.leave();
+          dailyCall.destroy();
+        } catch {}
+        dailyCall = null;
+      }
+
       idleState.style.display = '';
       idleMessage.textContent = 'Session ended. Click "Start Conversation" to talk again.';
       configError.style.display = 'none';

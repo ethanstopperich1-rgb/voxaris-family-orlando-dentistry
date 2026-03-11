@@ -45,9 +45,14 @@ module.exports = async function handler(req, res) {
       context += "The visitor has flagged this as urgent. Prioritize triage questions. ";
     }
 
+    const callbackUrl = process.env.NEXT_PUBLIC_BASE_URL
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/vface/tools/webhook`
+      : undefined;
+
     const result = await createConversation({
       greeting,
       context: context || undefined,
+      callbackUrl,
     });
 
     return res.status(200).json({
