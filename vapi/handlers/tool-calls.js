@@ -30,9 +30,15 @@ async function handleToolCalls(body) {
 
   for (const tc of toolCallList) {
     // Defensive: VAPI may nest under tc.function.name / tc.function.arguments
+    // Arguments can arrive as a JSON string or already-parsed object
     const toolCallId = tc.id || tc.toolCallId;
     const toolName = tc.name || tc.function?.name;
-    const parameters = tc.parameters || (tc.function?.arguments ? JSON.parse(tc.function.arguments) : {});
+    const rawArgs = tc.parameters || tc.function?.arguments;
+    const parameters = rawArgs
+      ? typeof rawArgs === "string"
+        ? JSON.parse(rawArgs)
+        : rawArgs
+      : {};
 
     console.log(
       `[tool-calls] call=${callId} tool=${toolName} tcId=${toolCallId}`
