@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Journey &amp; Analytics — Family Orlando Dentistry x Voxaris</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ─── */
+    :root {
+      --bg:          #07080a;
+      --surface:     #0e1117;
+      --surface-2:   #111318;
+      --surface-3:   #161921;
+      --border:      rgba(212,168,67,.10);
+      --border-s:    rgba(255,255,255,.06);
+      --gold:        #d4a843;
+      --gold-dim:    rgba(212,168,67,.15);
+      --gold-glow:   rgba(212,168,67,.08);
+      --dental-blue: #1678d4;
+      --teal:        #0ea5a4;
+      --emerald:     #34d399;
+      --emerald-d:   rgba(52,211,153,.12);
+      --blue:        #60a5fa;
+      --blue-d:      rgba(96,165,250,.12);
+      --purple:      #a78bfa;
+      --purple-d:    rgba(167,139,250,.12);
+      --amber:       #fbbf24;
+      --amber-d:     rgba(251,191,36,.12);
+      --rose:        #fb7185;
+      --rose-d:      rgba(251,113,133,.12);
+      --text:        #f0f2f5;
+      --text-2:      #94a3b8;
+      --text-3:      #64748b;
+      --radius:      20px;
+      --radius-sm:   14px;
+      --radius-xs:   10px;
+      --font:        'Inter','DM Sans',system-ui,sans-serif;
+      --font-dm:     'DM Sans',system-ui,sans-serif;
+    }
+
+    /* ─── RESET ─── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(212,168,67,.2);border-radius:99px}
+
+    /* ─── LAYOUT ─── */
+    .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+
+    /* ─── SIDEBAR ─── */
+    .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:28px 20px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .brand-icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--gold),#b8912e);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#07080a;flex-shrink:0}
+    .brand-text{font-size:18px;font-weight:800;letter-spacing:.04em}
+    .brand-text span{color:var(--gold)}
+    .client-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.12em;margin:4px 0 28px 48px}
+    .nav{display:flex;flex-direction:column;gap:4px}
+    .nav a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-2);padding:11px 14px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:500;transition:all .2s;cursor:pointer}
+    .nav a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+    .nav a.active{background:var(--gold-dim);color:var(--gold);font-weight:600}
+    .nav .sep{height:1px;background:var(--border-s);margin:12px 0}
+    .sidebar-footer{margin-top:auto;padding-top:20px;border-top:1px solid var(--border-s)}
+    .sidebar-footer .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--emerald);font-weight:600}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);animation:pulse 2s ease infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* ─── MAIN ─── */
+    .main{padding:28px 32px 60px;display:flex;flex-direction:column;gap:20px;max-width:1280px}
+
+    /* ─── HEADER BAR ─── */
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+    .page-header h1{font-size:24px;font-weight:800}
+    .page-header .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--gold-dim);color:var(--gold);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+    .page-header .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s ease infinite}
+    .date-label{font-size:13px;color:var(--text-3)}
+
+    /* ─── PANELS ─── */
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0}
+    .panel-head h2{font-size:15px;font-weight:700}
+    .panel-head .tag{font-size:11px;color:var(--text-3);background:rgba(255,255,255,.04);padding:4px 10px;border-radius:8px}
+    .panel-body{padding:16px 22px 22px}
+
+    /* ─── GRID HELPERS ─── */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+    .row-split{display:grid;grid-template-columns:1.4fr .6fr;gap:16px}
+    .row-split-even{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+    /* ─── TODAY SNAPSHOT CARDS ─── */
+    .snap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;position:relative;overflow:hidden}
+    .snap-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+    .snap-card:nth-child(1)::before{background:var(--blue)}
+    .snap-card:nth-child(2)::before{background:var(--emerald)}
+    .snap-card:nth-child(3)::before{background:var(--teal)}
+    .snap-card:nth-child(4)::before{background:var(--gold)}
+    .snap-card:nth-child(5)::before{background:var(--rose)}
+    .snap-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+    .snap-value{font-size:32px;font-weight:800;line-height:1;margin-bottom:4px}
+    .snap-card:nth-child(1) .snap-value{color:var(--blue)}
+    .snap-card:nth-child(2) .snap-value{color:var(--emerald)}
+    .snap-card:nth-child(3) .snap-value{color:var(--teal)}
+    .snap-card:nth-child(4) .snap-value{color:var(--gold)}
+    .snap-card:nth-child(5) .snap-value{color:var(--rose)}
+    .snap-delta{font-size:11px;font-weight:600;color:var(--emerald)}
+    .snap-delta.warn{color:var(--amber)}
+    .snap-delta.bad{color:var(--rose)}
+    .sparkline-wrap{height:32px;margin-top:8px}
+    .sparkline-wrap canvas{width:100%!important;height:32px!important}
+
+    /* ─── FUNNEL ─── */
+    .funnel-container{position:relative;padding:24px 0}
+    .funnel-stages{display:flex;align-items:flex-start;gap:0;position:relative}
+    .funnel-stage{flex:1;text-align:center;position:relative;cursor:pointer;padding:12px 4px;border-radius:var(--radius-xs);transition:background .2s}
+    .funnel-stage:hover{background:rgba(255,255,255,.03)}
+    .funnel-stage.active{background:rgba(212,168,67,.08)}
+    .funnel-bar{height:48px;margin:0 auto 10px;border-radius:8px;transition:all .4s ease;position:relative;min-width:20px}
+    .funnel-bar-inner{height:100%;border-radius:8px;transition:all .6s ease}
+    .funnel-count{font-size:18px;font-weight:800;margin-bottom:2px}
+    .funnel-name{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;line-height:1.3;margin-bottom:6px}
+    .funnel-rate{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;display:inline-block}
+    .funnel-rate.green{background:rgba(52,211,153,.12);color:var(--emerald)}
+    .funnel-rate.yellow{background:rgba(251,191,36,.12);color:var(--amber)}
+    .funnel-rate.red{background:rgba(251,113,133,.12);color:var(--rose)}
+    .funnel-arrow{position:absolute;top:24px;right:-8px;width:16px;height:48px;display:flex;align-items:center;justify-content:center;z-index:2}
+    .funnel-arrow svg{opacity:.3}
+    .funnel-detail{margin-top:16px;padding:16px;background:var(--surface-3);border:1px solid var(--border-s);border-radius:var(--radius-sm);display:none}
+    .funnel-detail.visible{display:block;animation:fadeIn .3s ease}
+    .funnel-detail h3{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gold)}
+    .source-bar{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px}
+    .source-bar .bar{flex:1;height:6px;border-radius:3px;background:var(--surface);overflow:hidden}
+    .source-bar .bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+    .source-bar .lbl{width:60px;color:var(--text-2);font-weight:500}
+    .source-bar .val{width:40px;text-align:right;font-weight:600}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ─── REVENUE IMPACT ─── */
+    .rev-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .rev-card{background:linear-gradient(135deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center}
+    .rev-card .rev-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:18px}
+    .rev-card .rev-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+    .rev-card .rev-value{font-size:28px;font-weight:800;line-height:1}
+    .rev-card .rev-sub{font-size:11px;color:var(--text-3);margin-top:4px}
+    .rev-card:nth-child(1) .rev-icon{background:var(--emerald-d)}
+    .rev-card:nth-child(1) .rev-value{color:var(--emerald)}
+    .rev-card:nth-child(2) .rev-icon{background:var(--blue-d)}
+    .rev-card:nth-child(2) .rev-value{color:var(--blue)}
+    .rev-card:nth-child(3) .rev-icon{background:var(--gold-dim)}
+    .rev-card:nth-child(3) .rev-value{color:var(--gold)}
+    .rev-card:nth-child(4) .rev-icon{background:var(--purple-d)}
+    .rev-card:nth-child(4) .rev-value{color:var(--purple)}
+
+    /* ─── AGENT TABLE ─── */
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.1em;padding:10px 14px;border-bottom:1px solid var(--border-s);font-weight:600}
+    td{padding:12px 14px;border-bottom:1px solid var(--border-s);font-size:13px;color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    td:first-child{color:var(--text);font-weight:600}
+    .badge{display:inline-flex;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+    .badge.green{background:var(--emerald-d);color:var(--emerald)}
+    .badge.yellow{background:var(--amber-d);color:var(--amber)}
+    .badge.blue{background:var(--blue-d);color:var(--blue)}
+    .badge.gold{background:var(--gold-dim);color:var(--gold)}
+
+    /* ─── REACTIVATION TRACKER ─── */
+    .react-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border-s)}
+    .react-row:last-child{border-bottom:none}
+    .react-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+    .react-info{flex:1;min-width:0}
+    .react-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .react-meta{font-size:11px;color:var(--text-3)}
+    .react-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap}
+
+    /* ─── ROI CALCULATOR ─── */
+    .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .calc-inputs{display:flex;flex-direction:column;gap:16px}
+    .calc-group label{display:block;font-size:12px;color:var(--text-2);margin-bottom:6px;font-weight:500}
+    .calc-group .slider-row{display:flex;align-items:center;gap:12px}
+    .calc-group input[type=range]{flex:1;-webkit-appearance:none;background:var(--surface-3);height:6px;border-radius:3px;outline:none}
+    .calc-group input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 10px rgba(212,168,67,.4)}
+    .calc-group .slider-val{min-width:60px;text-align:right;font-size:14px;font-weight:700;color:var(--gold)}
+    .calc-outputs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .calc-out{background:var(--surface-3);border:1px solid var(--border-s);border-radius:var(--radius-xs);padding:14px;text-align:center}
+    .calc-out .co-label{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+    .calc-out .co-value{font-size:22px;font-weight:800;transition:all .3s}
+    .calc-out:nth-child(1) .co-value{color:var(--text-2)}
+    .calc-out:nth-child(2) .co-value{color:var(--emerald)}
+    .calc-out:nth-child(3) .co-value{color:var(--gold)}
+    .calc-out:nth-child(4) .co-value{color:var(--blue)}
+    .calc-out:nth-child(5) .co-value{color:var(--purple)}
+    .calc-out:nth-child(6) .co-value{color:var(--teal)}
+    .calc-comparison{margin-top:16px}
+    .calc-comparison table{font-size:12px}
+    .calc-comparison th{font-size:10px}
+    .calc-note{font-size:11px;color:var(--text-3);font-style:italic;margin-top:12px;text-align:center}
+
+    /* ─── HEATMAP ─── */
+    .heatmap-container{position:relative;border-radius:var(--radius-sm);overflow:hidden;background:var(--surface-3)}
+    .heatmap-viewport{position:relative;width:100%;aspect-ratio:16/10;overflow:hidden}
+    .heatmap-site{width:100%;height:100%;background:linear-gradient(180deg,#0f2740 0%,#081a2e 30%,#0a1f35 60%,#081a2e 100%);position:relative}
+    .heatmap-site .site-header{height:12%;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:0 5%}
+    .heatmap-site .site-logo{font-size:11px;font-weight:700;color:rgba(255,255,255,.6)}
+    .heatmap-site .site-nav{display:flex;gap:8px}
+    .heatmap-site .site-nav span{font-size:8px;color:rgba(255,255,255,.3);background:rgba(255,255,255,.05);padding:3px 8px;border-radius:4px}
+    .heatmap-site .site-hero{height:35%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:0 10%}
+    .heatmap-site .site-hero .h-title{font-size:14px;font-weight:800;color:rgba(255,255,255,.5);text-align:center}
+    .heatmap-site .site-hero .h-sub{font-size:9px;color:rgba(255,255,255,.25);text-align:center}
+    .heatmap-site .site-hero .h-cta{font-size:9px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(22,120,212,.3);padding:5px 16px;border-radius:6px;margin-top:4px}
+    .heatmap-site .site-sections{height:40%;display:flex;gap:3%;padding:3% 5%}
+    .heatmap-site .site-section{flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+    .heatmap-site .site-section span{font-size:7px;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.1em}
+    .heatmap-site .site-phone{position:absolute;top:3%;right:5%;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)}
+    .heatmap-site .site-vface{position:absolute;bottom:5%;right:4%;width:36px;height:36px;border-radius:50%;background:rgba(14,165,164,.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.5)}
+    .hotspot{position:absolute;border-radius:50%;pointer-events:none;filter:blur(18px);opacity:.5;animation:hotspotPulse 3s ease-in-out infinite}
+    .hotspot.red{background:radial-gradient(circle,rgba(239,68,68,.7),rgba(239,68,68,0))}
+    .hotspot.orange{background:radial-gradient(circle,rgba(251,146,60,.6),rgba(251,146,60,0))}
+    .hotspot.yellow{background:radial-gradient(circle,rgba(250,204,21,.5),rgba(250,204,21,0))}
+    @keyframes hotspotPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.15);opacity:.7}}
+    .heatmap-toggle{display:flex;gap:8px;margin-top:12px}
+    .heatmap-toggle button{padding:6px 16px;border-radius:8px;border:1px solid var(--border-s);background:transparent;color:var(--text-2);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font)}
+    .heatmap-toggle button.active{background:var(--gold-dim);color:var(--gold);border-color:rgba(212,168,67,.25)}
+
+    /* ─── A/B TEST TABLE ─── */
+    .ab-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
+    .ab-status.running{background:var(--emerald-d);color:var(--emerald)}
+    .ab-status.planned{background:var(--blue-d);color:var(--blue)}
+    .ab-status.completed{background:var(--gold-dim);color:var(--gold)}
+    .ab-status .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+    /* ─── CHART CONTAINER ─── */
+    .chart-wrap{position:relative}
+    .chart-wrap canvas{width:100%!important}
+
+    /* ─── SECTION TITLES ─── */
+    .section-title{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.14em;font-weight:700;margin-bottom:4px}
+
+    /* ─── TABS ─── */
+    .tabs{display:flex;gap:4px;margin-bottom:16px}
+    .tab{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text-3);cursor:pointer;transition:all .2s;border:none;background:transparent;font-family:var(--font)}
+    .tab:hover{color:var(--text-2);background:rgba(255,255,255,.03)}
+    .tab.active{color:var(--gold);background:var(--gold-dim)}
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:1200px){.grid-4,.rev-cards{grid-template-columns:repeat(2,1fr)}.grid-5{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{padding:20px 16px}.grid-2,.row-split,.row-split-even,.calc-grid{grid-template-columns:1fr}.funnel-stages{flex-wrap:wrap}.funnel-stage{min-width:80px}}
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">V</div>
+      <div class="brand-text">VOX<span>ARIS</span></div>
+    </div>
+    <div class="client-label">Family Orlando Dentistry</div>
+
+    <nav class="nav">
+      <a href="../dashboard/index.html">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="1" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="10" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>
+        Command Center
+      </a>
+      <a href="#" class="active">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><path d="M1 13l4-4 3 3 5-6 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/></svg>
+        Patient Journey
+      </a>
+      <a href="../landing-page/index.html">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><path d="M9 1v16M1 9h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/></svg>
+        Landing Page
+      </a>
+      <div class="sep"></div>
+      <a href="../inbound-demo/index.html">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><path d="M16 12.5a3.5 3.5 0 01-3.5 3.5h-1l-3 2v-2H5.5A3.5 3.5 0 012 12.5v-7A3.5 3.5 0 015.5 2h7A3.5 3.5 0 0116 5.5z" stroke="currentColor" stroke-width="1.5"/></svg>
+        Inbound Demo
+      </a>
+      <a href="../outbound-demo/index.html">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><path d="M14 4L4 14M14 4v6M14 4H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Outbound Demo
+      </a>
+      <a href="../vface/index.html">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 16c0-3.5 3-5 7-5s7 1.5 7 5" stroke="currentColor" stroke-width="1.5"/></svg>
+        V-FACE
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status">
+        <span class="status-dot"></span>
+        All Systems Operational
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="main">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <div class="pill"><span class="dot"></span> Live Analytics</div>
+        <h1 style="margin-top:10px">Patient Journey &amp; Analytics</h1>
+        <div class="date-label">Monday, March 10, 2026 &mdash; Family Orlando Dentistry</div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: TODAY'S SNAPSHOT ═══ -->
+    <div class="section-title">Today's Snapshot</div>
+    <div class="grid-5">
+      <div class="snap-card">
+        <div class="snap-label">Calls Answered</div>
+        <div class="snap-value" data-count="47">0</div>
+        <div class="snap-delta">+12% vs last Mon</div>
+        <div class="sparkline-wrap"><canvas id="spark-calls"></canvas></div>
+      </div>
+      <div class="snap-card">
+        <div class="snap-label">Forms Submitted</div>
+        <div class="snap-value" data-count="12">0</div>
+        <div class="snap-delta">+8% vs last Mon</div>
+        <div class="sparkline-wrap"><canvas id="spark-forms"></canvas></div>
+      </div>
+      <div class="snap-card">
+        <div class="snap-label">V-FACE Conversations</div>
+        <div class="snap-value" data-count="23">0</div>
+        <div class="snap-delta">+18% vs last Mon</div>
+        <div class="sparkline-wrap"><canvas id="spark-vface"></canvas></div>
+      </div>
+      <div class="snap-card">
+        <div class="snap-label">Appts Booked</div>
+        <div class="snap-value" data-count="8">0</div>
+        <div class="snap-delta warn">-3% vs last Mon</div>
+        <div class="sparkline-wrap"><canvas id="spark-appts"></canvas></div>
+      </div>
+      <div class="snap-card">
+        <div class="snap-label">Emergency Triages</div>
+        <div class="snap-value" data-count="2">0</div>
+        <div class="snap-delta">100% resolved</div>
+        <div class="sparkline-wrap"><canvas id="spark-emerg"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: PATIENT JOURNEY FUNNEL ═══ -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Patient Journey Funnel</h2>
+        <div class="tag">Last 30 days</div>
+      </div>
+      <div class="panel-body">
+        <div class="funnel-container">
+          <div class="funnel-stages" id="funnelStages"></div>
+          <div class="funnel-detail" id="funnelDetail"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: WEEKLY PERFORMANCE + CHANNEL ATTRIBUTION ═══ -->
+    <div class="row-split">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Weekly Performance</h2>
+          <div class="tag">This week</div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap" style="height:260px"><canvas id="weeklyChart"></canvas></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Channel Attribution</h2>
+          <div class="tag">This month</div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap" style="height:260px"><canvas id="channelChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: REVENUE IMPACT ═══ -->
+    <div class="section-title">Revenue Impact</div>
+    <div class="rev-cards">
+      <div class="rev-card">
+        <div class="rev-icon">&#128176;</div>
+        <div class="rev-label">Monthly AI Revenue</div>
+        <div class="rev-value" data-count="18450" data-prefix="$" data-format="comma">$0</div>
+        <div class="rev-sub">Attributed to Voxaris agents</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-icon">&#128200;</div>
+        <div class="rev-label">Cost Savings</div>
+        <div class="rev-value" data-count="4200" data-prefix="$" data-format="comma">$0</div>
+        <div class="rev-sub">vs. human front-desk staff</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-icon">&#127942;</div>
+        <div class="rev-label">ROI</div>
+        <div class="rev-value" data-count="312" data-suffix="%">0%</div>
+        <div class="rev-sub">Return on investment</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-icon">&#128101;</div>
+        <div class="rev-label">Reactivated Patients</div>
+        <div class="rev-value" data-count="34">0</div>
+        <div class="rev-sub">Dormant patients this month</div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: AGENT PERFORMANCE + REACTIVATION ═══ -->
+    <div class="row-split-even">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Agent Performance</h2>
+          <div class="tag">March 2026</div>
+        </div>
+        <div class="panel-body" style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Handled</th>
+                <th>Avg Duration</th>
+                <th>CSAT</th>
+                <th>Conversion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Receptionist AI</td>
+                <td>342</td>
+                <td>3:12</td>
+                <td><span class="badge green">4.7/5</span></td>
+                <td><span class="badge green">43%</span></td>
+              </tr>
+              <tr>
+                <td>Invisalign Qualifier</td>
+                <td>87</td>
+                <td>4:45</td>
+                <td><span class="badge green">4.8/5</span></td>
+                <td><span class="badge gold">38%</span></td>
+              </tr>
+              <tr>
+                <td>Emergency Triage</td>
+                <td>24</td>
+                <td>1:48</td>
+                <td><span class="badge green">4.9/5</span></td>
+                <td><span class="badge green">72%</span></td>
+              </tr>
+              <tr>
+                <td>Outbound Revival</td>
+                <td>156</td>
+                <td>2:34</td>
+                <td><span class="badge yellow">4.3/5</span></td>
+                <td><span class="badge yellow">19%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Patient Reactivation Tracker</h2>
+          <div class="tag">18% success rate</div>
+        </div>
+        <div class="panel-body" id="reactivationList"></div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: ROI CALCULATOR ═══ -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>ROI Calculator</h2>
+        <div class="tag">Interactive</div>
+      </div>
+      <div class="panel-body">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <div class="calc-group">
+              <label>Monthly Call Volume</label>
+              <div class="slider-row">
+                <input type="range" id="sliderCalls" min="50" max="500" value="200" step="10" />
+                <span class="slider-val" id="valCalls">200</span>
+              </div>
+            </div>
+            <div class="calc-group">
+              <label>Average Case Value ($)</label>
+              <div class="slider-row">
+                <input type="range" id="sliderCase" min="200" max="5000" value="380" step="20" />
+                <span class="slider-val" id="valCase">$380</span>
+              </div>
+            </div>
+            <div class="calc-group">
+              <label>Current Conversion Rate (%)</label>
+              <div class="slider-row">
+                <input type="range" id="sliderConv" min="5" max="30" value="12" step="1" />
+                <span class="slider-val" id="valConv">12%</span>
+              </div>
+            </div>
+            <div class="calc-group">
+              <label>Missed Call Rate (%)</label>
+              <div class="slider-row">
+                <input type="range" id="sliderMissed" min="10" max="60" value="35" step="1" />
+                <span class="slider-val" id="valMissed">35%</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="calc-outputs" id="calcOutputs">
+              <div class="calc-out"><div class="co-label">Current Monthly Rev</div><div class="co-value" id="coCurrentRev">$0</div></div>
+              <div class="calc-out"><div class="co-label">Projected with Voxaris</div><div class="co-value" id="coProjectedRev">$0</div></div>
+              <div class="calc-out"><div class="co-label">Monthly Lift</div><div class="co-value" id="coLift">$0</div></div>
+              <div class="calc-out"><div class="co-label">Annual Impact</div><div class="co-value" id="coAnnual">$0</div></div>
+              <div class="calc-out"><div class="co-label">ROI</div><div class="co-value" id="coROI">0%</div></div>
+              <div class="calc-out"><div class="co-label">Payback Period</div><div class="co-value" id="coPayback">0 mo</div></div>
+            </div>
+            <div class="calc-comparison" style="margin-top:14px">
+              <table>
+                <thead><tr><th>Metric</th><th>Before</th><th>With Voxaris</th></tr></thead>
+                <tbody>
+                  <tr><td>Answer Rate</td><td id="cmpAnswerBefore">65%</td><td style="color:var(--emerald);font-weight:600" id="cmpAnswerAfter">98%</td></tr>
+                  <tr><td>Conversion Rate</td><td id="cmpConvBefore">12%</td><td style="color:var(--emerald);font-weight:600" id="cmpConvAfter">28%</td></tr>
+                  <tr><td>Avg Speed to Answer</td><td>45 sec</td><td style="color:var(--emerald);font-weight:600">&lt; 1 sec</td></tr>
+                  <tr><td>After-Hours Coverage</td><td>0%</td><td style="color:var(--emerald);font-weight:600">100%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="calc-note">Based on industry benchmarks for dental practices in the Orlando metro area</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: HEATMAP + A/B TESTS ═══ -->
+    <div class="row-split-even">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Click Heatmap</h2>
+          <div class="tag">Simulated</div>
+        </div>
+        <div class="panel-body">
+          <div class="heatmap-container">
+            <div class="heatmap-viewport" id="heatmapViewport">
+              <div class="heatmap-site">
+                <div class="site-header">
+                  <div class="site-logo">Family Orlando Dentistry</div>
+                  <div class="site-nav"><span>Home</span><span>Services</span><span>About</span><span>Contact</span></div>
+                </div>
+                <div class="site-phone">(407) 877-9003</div>
+                <div class="site-hero">
+                  <div class="h-title">Your Family's Smile Starts Here</div>
+                  <div class="h-sub">Dr. Nadine &amp; Dr. Jonathan Nitisusanta</div>
+                  <div class="h-cta">Book Now</div>
+                </div>
+                <div class="site-sections">
+                  <div class="site-section"><span>Invisalign</span></div>
+                  <div class="site-section"><span>CEREC Crowns</span></div>
+                  <div class="site-section"><span>Implants</span></div>
+                  <div class="site-section"><span>FAQ</span></div>
+                </div>
+                <div class="site-vface">V</div>
+              </div>
+              <!-- Hotspots for desktop -->
+              <div id="hotspots-desktop">
+                <div class="hotspot red" style="width:80px;height:80px;top:42%;left:46%"></div>
+                <div class="hotspot red" style="width:60px;height:60px;top:2%;right:6%"></div>
+                <div class="hotspot orange" style="width:70px;height:70px;bottom:18%;left:8%"></div>
+                <div class="hotspot orange" style="width:60px;height:60px;bottom:6%;right:5%"></div>
+                <div class="hotspot yellow" style="width:55px;height:55px;bottom:18%;right:8%"></div>
+                <div class="hotspot yellow" style="width:40px;height:40px;top:6%;left:30%"></div>
+              </div>
+              <!-- Hotspots for mobile (hidden by default) -->
+              <div id="hotspots-mobile" style="display:none">
+                <div class="hotspot red" style="width:90px;height:90px;top:38%;left:35%"></div>
+                <div class="hotspot red" style="width:70px;height:70px;top:5%;left:30%"></div>
+                <div class="hotspot orange" style="width:60px;height:60px;bottom:10%;right:8%"></div>
+                <div class="hotspot orange" style="width:55px;height:55px;bottom:25%;left:15%"></div>
+                <div class="hotspot yellow" style="width:45px;height:45px;bottom:28%;right:15%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="heatmap-toggle">
+            <button class="active" onclick="toggleHeatmap('desktop',this)">Desktop</button>
+            <button onclick="toggleHeatmap('mobile',this)">Mobile</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>A/B Test Notes</h2>
+          <div class="tag">3 active</div>
+        </div>
+        <div class="panel-body" style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>Test</th><th>Hypothesis</th><th>Metric</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hero CTA Color</td>
+                <td style="color:var(--text-2);font-weight:400;font-size:12px">Coral CTA will outperform blue by 15%+</td>
+                <td style="font-size:12px">CTR</td>
+                <td><span class="ab-status running"><span class="dot"></span> Running</span></td>
+              </tr>
+              <tr>
+                <td>V-FACE Greeting Delay</td>
+                <td style="color:var(--text-2);font-weight:400;font-size:12px">3s delay yields more conversations than 5s</td>
+                <td style="font-size:12px">Session Rate</td>
+                <td><span class="ab-status running"><span class="dot"></span> Running</span></td>
+              </tr>
+              <tr>
+                <td>Form Length</td>
+                <td style="color:var(--text-2);font-weight:400;font-size:12px">3-step form has higher completion than 5-step</td>
+                <td style="font-size:12px">Completion %</td>
+                <td><span class="ab-status planned"><span class="dot"></span> Planned</span></td>
+              </tr>
+              <tr>
+                <td>Phone # Placement</td>
+                <td style="color:var(--text-2);font-weight:400;font-size:12px">Sticky header phone# increases call clicks 20%</td>
+                <td style="font-size:12px">Call Clicks</td>
+                <td><span class="ab-status running"><span class="dot"></span> Running</span></td>
+              </tr>
+              <tr>
+                <td>Social Proof Badge</td>
+                <td style="color:var(--text-2);font-weight:400;font-size:12px">Google rating badge in hero lifts form starts</td>
+                <td style="font-size:12px">Form Starts</td>
+                <td><span class="ab-status completed"><span class="dot"></span> Done</span></td>
+              </tr>
+              <tr>
+                <td>Invisalign LP Video</td>
+                <td style="color:var(--text-2);font-weight:400;font-size:12px">Auto-play video increases time on page 40%+</td>
+                <td style="font-size:12px">Engagement</td>
+                <td><span class="ab-status planned"><span class="dot"></span> Planned</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ─── COUNT-UP ANIMATION ─────────────────────────────────────────────────
+  function animateCountUp(el, target, duration, prefix, suffix, format) {
+    prefix = prefix || '';
+    suffix = suffix || '';
+    duration = duration || 1200;
+    var start = 0;
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var ease = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(start + (target - start) * ease);
+      var display = current;
+      if (format === 'comma') display = current.toLocaleString();
+      el.textContent = prefix + display + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Observe and animate all count-up elements
+  var countEls = document.querySelectorAll('[data-count]');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        var target = parseInt(el.dataset.count, 10);
+        var prefix = el.dataset.prefix || '';
+        var suffix = el.dataset.suffix || '';
+        var format = el.dataset.format || '';
+        animateCountUp(el, target, 1400, prefix, suffix, format);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.3 });
+  countEls.forEach(function(el) { observer.observe(el); });
+
+  // ─── SPARKLINE CHARTS ───────────────────────────────────────────────────
+  function createSparkline(canvasId, data, color) {
+    var ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(function(_, i) { return i; }),
+        datasets: [{
+          data: data,
+          borderColor: color,
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: true,
+          backgroundColor: color.replace(')', ',.08)').replace('rgb', 'rgba'),
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+        elements: { line: { borderCapStyle: 'round' } }
+      }
+    });
+  }
+
+  createSparkline('spark-calls',  [32,38,35,42,40,45,47], 'rgb(96,165,250)');
+  createSparkline('spark-forms',  [8,10,9,11,10,13,12],   'rgb(52,211,153)');
+  createSparkline('spark-vface',  [14,16,15,18,20,21,23], 'rgb(14,165,164)');
+  createSparkline('spark-appts',  [7,9,8,10,9,7,8],       'rgb(212,168,67)');
+  createSparkline('spark-emerg',  [1,0,2,1,3,1,2],        'rgb(251,113,133)');
+
+  // ─── FUNNEL DATA ────────────────────────────────────────────────────────
+  var funnelData = [
+    { name:'Website Visit',        count:2480, color:'var(--blue)',       sources:{Organic:1116,Direct:496,Paid:620,Referral:248}},
+    { name:'Page Engagement',      count:1612, color:'var(--blue)',       sources:{Organic:725,Direct:322,Paid:403,Referral:162}},
+    { name:'Form Start',           count:298,  color:'var(--teal)',       sources:{Organic:119,Direct:45,Paid:104,Referral:30}},
+    { name:'Form Complete',        count:207,  color:'var(--teal)',       sources:{Organic:83,Direct:31,Paid:72,Referral:21}},
+    { name:'V-FACE Chat',          count:198,  color:'var(--dental-blue)',sources:{Organic:79,Direct:40,Paid:59,Referral:20}},
+    { name:'Booking Request',      count:110,  color:'var(--gold)',       sources:{Organic:44,Direct:22,Paid:33,Referral:11}},
+    { name:'Appt Confirmed',       count:93,   color:'var(--emerald)',    sources:{Organic:37,Direct:19,Paid:28,Referral:9}},
+    { name:'Treatment Done',       count:81,   color:'var(--emerald)',    sources:{Organic:32,Direct:16,Paid:25,Referral:8}}
+  ];
+
+  function getConversionClass(rate) {
+    if (rate >= 60) return 'green';
+    if (rate >= 30) return 'yellow';
+    return 'red';
+  }
+
+  function renderFunnel() {
+    var container = document.getElementById('funnelStages');
+    container.innerHTML = '';
+    var maxCount = funnelData[0].count;
+
+    funnelData.forEach(function(stage, i) {
+      var rate = i < funnelData.length - 1
+        ? ((funnelData[i+1].count / stage.count) * 100).toFixed(1)
+        : '---';
+      var dropoff = i < funnelData.length - 1
+        ? (100 - (funnelData[i+1].count / stage.count) * 100).toFixed(1)
+        : '0';
+      var barWidth = Math.max(20, (stage.count / maxCount) * 100);
+      var rateClass = rate === '---' ? 'green' : getConversionClass(parseFloat(rate));
+
+      var div = document.createElement('div');
+      div.className = 'funnel-stage';
+      div.setAttribute('data-index', i);
+      div.innerHTML =
+        '<div class="funnel-bar" style="width:' + barWidth + '%">' +
+          '<div class="funnel-bar-inner" style="background:' + stage.color + ';opacity:.7;height:100%"></div>' +
+        '</div>' +
+        '<div class="funnel-count" style="color:' + stage.color + '">' + stage.count.toLocaleString() + '</div>' +
+        '<div class="funnel-name">' + stage.name + '</div>' +
+        '<div class="funnel-rate ' + rateClass + '">' +
+          (rate === '---' ? 'Final' : rate + '% conv') +
+        '</div>' +
+        (i < funnelData.length - 1 ? '<div class="funnel-arrow"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>' : '');
+
+      div.addEventListener('click', function() { showFunnelDetail(i); });
+      container.appendChild(div);
+    });
+  }
+
+  function showFunnelDetail(index) {
+    var detail = document.getElementById('funnelDetail');
+    var stages = document.querySelectorAll('.funnel-stage');
+    stages.forEach(function(s) { s.classList.remove('active'); });
+    stages[index].classList.add('active');
+
+    var stage = funnelData[index];
+    var total = Object.values(stage.sources).reduce(function(a, b) { return a + b; }, 0);
+    var colors = { Organic: 'var(--emerald)', Direct: 'var(--blue)', Paid: 'var(--gold)', Referral: 'var(--purple)' };
+
+    var html = '<h3>' + stage.name + ' &mdash; Breakdown by Source</h3>';
+    Object.keys(stage.sources).forEach(function(src) {
+      var val = stage.sources[src];
+      var pct = ((val / total) * 100).toFixed(1);
+      html += '<div class="source-bar">' +
+        '<span class="lbl">' + src + '</span>' +
+        '<div class="bar"><div class="bar-fill" style="width:' + pct + '%;background:' + colors[src] + '"></div></div>' +
+        '<span class="val">' + val + '</span>' +
+      '</div>';
+    });
+    detail.innerHTML = html;
+    detail.classList.add('visible');
+  }
+
+  renderFunnel();
+
+  // ─── WEEKLY PERFORMANCE CHART ───────────────────────────────────────────
+  (function() {
+    var ctx = document.getElementById('weeklyChart');
+    if (!ctx) return;
+    var days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    var todayIndex = 0; // Monday
+    var bgColors = days.map(function(_, i) {
+      return i === todayIndex ? 'rgba(212,168,67,.9)' : 'rgba(212,168,67,.3)';
+    });
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: days,
+        datasets: [
+          { label: 'Inbound Calls', data: [47,52,0,48,38,0,0], backgroundColor: 'rgba(96,165,250,.7)', borderRadius: 6 },
+          { label: 'Outbound Calls', data: [18,22,0,20,15,0,0], backgroundColor: 'rgba(167,139,250,.7)', borderRadius: 6 },
+          { label: 'Web Forms', data: [12,14,0,11,9,0,0], backgroundColor: 'rgba(52,211,153,.7)', borderRadius: 6 },
+          { label: 'V-FACE', data: [23,28,0,25,19,0,0], backgroundColor: 'rgba(14,165,164,.7)', borderRadius: 6 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' }, boxWidth: 12, padding: 14 } }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { color: '#64748b', font: { size: 11 } } },
+          y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { color: '#64748b', font: { size: 11 } }, beginAtZero: true }
+        }
+      }
+    });
+  })();
+
+  // ─── CHANNEL ATTRIBUTION CHART ──────────────────────────────────────────
+  (function() {
+    var ctx = document.getElementById('channelChart');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Phone (V-TEAMS)', 'V-FACE', 'Web Forms', 'Walk-in'],
+        datasets: [{
+          data: [45, 25, 20, 10],
+          backgroundColor: [
+            'rgba(96,165,250,.85)',
+            'rgba(14,165,164,.85)',
+            'rgba(52,211,153,.85)',
+            'rgba(167,139,250,.85)'
+          ],
+          borderWidth: 0,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' }, boxWidth: 12, padding: 12 }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) { return ctx.label + ': ' + ctx.parsed + '%'; }
+            }
+          }
+        }
+      }
+    });
+  })();
+
+  // ─── REACTIVATION TRACKER ──────────────────────────────────────────────
+  (function() {
+    var patients = [
+      { name:'Maria Santos', last:'14 months ago', status:'Booked', statusClass:'background:var(--emerald-d);color:var(--emerald)', color:'var(--emerald-d)', initial:'MS' },
+      { name:'James Chen', last:'8 months ago', status:'Responded', statusClass:'background:var(--blue-d);color:var(--blue)', color:'var(--blue-d)', initial:'JC' },
+      { name:'Angela Williams', last:'11 months ago', status:'Booked', statusClass:'background:var(--emerald-d);color:var(--emerald)', color:'var(--emerald-d)', initial:'AW' },
+      { name:'Robert Garcia', last:'9 months ago', status:'Contacted', statusClass:'background:var(--amber-d);color:var(--amber)', color:'var(--amber-d)', initial:'RG' },
+      { name:'Lisa Thompson', last:'16 months ago', status:'No Answer', statusClass:'background:var(--rose-d);color:var(--rose)', color:'var(--rose-d)', initial:'LT' },
+      { name:'David Kim', last:'7 months ago', status:'Booked', statusClass:'background:var(--emerald-d);color:var(--emerald)', color:'var(--emerald-d)', initial:'DK' },
+      { name:'Sarah Johnson', last:'12 months ago', status:'Responded', statusClass:'background:var(--blue-d);color:var(--blue)', color:'var(--blue-d)', initial:'SJ' },
+      { name:'Michael Brown', last:'10 months ago', status:'VM Left', statusClass:'background:var(--purple-d);color:var(--purple)', color:'var(--purple-d)', initial:'MB' }
+    ];
+
+    var container = document.getElementById('reactivationList');
+    patients.forEach(function(p) {
+      container.innerHTML +=
+        '<div class="react-row">' +
+          '<div class="react-avatar" style="background:' + p.color + ';color:' + (p.color.includes('emerald') ? 'var(--emerald)' : p.color.includes('blue') ? 'var(--blue)' : p.color.includes('amber') ? 'var(--amber)' : p.color.includes('rose') ? 'var(--rose)' : 'var(--purple)') + '">' + p.initial + '</div>' +
+          '<div class="react-info"><div class="react-name">' + p.name + '</div><div class="react-meta">Last visit: ' + p.last + '</div></div>' +
+          '<span class="react-status" style="' + p.statusClass + '">' + p.status + '</span>' +
+        '</div>';
+    });
+  })();
+
+  // ─── ROI CALCULATOR ─────────────────────────────────────────────────────
+  var sliders = {
+    calls:  document.getElementById('sliderCalls'),
+    caseVal:document.getElementById('sliderCase'),
+    conv:   document.getElementById('sliderConv'),
+    missed: document.getElementById('sliderMissed')
+  };
+  var vals = {
+    calls:  document.getElementById('valCalls'),
+    caseVal:document.getElementById('valCase'),
+    conv:   document.getElementById('valConv'),
+    missed: document.getElementById('valMissed')
+  };
+
+  function updateCalc() {
+    var calls     = parseInt(sliders.calls.value);
+    var caseVal   = parseInt(sliders.caseVal.value);
+    var conv      = parseInt(sliders.conv.value) / 100;
+    var missed    = parseInt(sliders.missed.value) / 100;
+
+    vals.calls.textContent  = calls;
+    vals.caseVal.textContent = '$' + caseVal.toLocaleString();
+    vals.conv.textContent   = sliders.conv.value + '%';
+    vals.missed.textContent = sliders.missed.value + '%';
+
+    // Current: only answered calls convert
+    var answeredCalls    = calls * (1 - missed);
+    var currentPatients  = answeredCalls * conv;
+    var currentRev       = currentPatients * caseVal;
+
+    // With Voxaris: 98% answer rate, 2.3x conversion improvement
+    var voxAnswered      = calls * 0.98;
+    var voxConv          = Math.min(conv * 2.3, 0.65);
+    var voxPatients      = voxAnswered * voxConv;
+    var voxRev           = voxPatients * caseVal;
+
+    var lift      = voxRev - currentRev;
+    var annual    = lift * 12;
+    var monthlyCost = 1497;
+    var roi       = ((lift - monthlyCost) / monthlyCost * 100);
+    var payback   = lift > 0 ? Math.max(0.5, monthlyCost / lift) : 99;
+
+    document.getElementById('coCurrentRev').textContent   = '$' + Math.round(currentRev).toLocaleString();
+    document.getElementById('coProjectedRev').textContent  = '$' + Math.round(voxRev).toLocaleString();
+    document.getElementById('coLift').textContent          = '+$' + Math.round(lift).toLocaleString();
+    document.getElementById('coAnnual').textContent        = '$' + Math.round(annual).toLocaleString();
+    document.getElementById('coROI').textContent           = Math.round(roi) + '%';
+    document.getElementById('coPayback').textContent       = payback < 1 ? '< 1 mo' : payback.toFixed(1) + ' mo';
+
+    // Update comparison table
+    document.getElementById('cmpAnswerBefore').textContent = (100 - parseInt(sliders.missed.value)) + '%';
+    document.getElementById('cmpConvBefore').textContent   = sliders.conv.value + '%';
+    document.getElementById('cmpConvAfter').textContent    = Math.round(voxConv * 100) + '%';
+  }
+
+  Object.values(sliders).forEach(function(s) {
+    s.addEventListener('input', updateCalc);
+  });
+  updateCalc();
+
+  // ─── HEATMAP TOGGLE ─────────────────────────────────────────────────────
+  window.toggleHeatmap = function(view, btn) {
+    var buttons = document.querySelectorAll('.heatmap-toggle button');
+    buttons.forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    var desktop = document.getElementById('hotspots-desktop');
+    var mobile  = document.getElementById('hotspots-mobile');
+    var viewport = document.getElementById('heatmapViewport');
+
+    if (view === 'mobile') {
+      desktop.style.display = 'none';
+      mobile.style.display  = 'block';
+      viewport.style.maxWidth = '280px';
+      viewport.style.margin = '0 auto';
+      viewport.style.aspectRatio = '9/16';
+    } else {
+      desktop.style.display = 'block';
+      mobile.style.display  = 'none';
+      viewport.style.maxWidth = 'none';
+      viewport.style.margin = '0';
+      viewport.style.aspectRatio = '16/10';
+    }
+  };
+
+})();
+</script>
+</body>
+</html>
