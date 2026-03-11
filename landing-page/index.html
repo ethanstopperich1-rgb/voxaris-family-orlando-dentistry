@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Family Orlando Dentistry | General, Restorative and Cosmetic Dentistry</title>
-  <meta name="description" content="Family Orlando Dentistry offers general, restorative, and cosmetic dental services in Orlando, FL. Schedule your appointment today! (407) 877-9003" />
+  <meta name="description" content="Family Orlando Dentistry offers general, restorative, and cosmetic dental services in Ocoee, FL. Schedule your appointment today! (407) 877-9003" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cantata+One&family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -134,19 +134,22 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      background: linear-gradient(135deg, #0c3454 0%, #1a5e8e 40%, #2EA3F2 100%);
+      background: radial-gradient(circle at 100% 50%, rgba(255,255,255,0) 0%, rgb(249,250,252) 100%),
+                  url("https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-03.jpg");
+      background-size: cover;
+      background-position: center;
       overflow: hidden;
     }
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background: linear-gradient(135deg, rgba(0,89,195,0.85) 0%, rgba(0,129,255,0.7) 100%);
     }
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at center, rgba(46,163,242,0.1) 0%, rgba(12,52,84,0.4) 100%);
+      background: radial-gradient(ellipse at center, rgba(46,163,242,0.05) 0%, rgba(0,0,0,0.15) 100%);
     }
     .hero-content {
       position: relative;
@@ -213,7 +216,10 @@
 
     /* ─── INFO BAR ─── */
     .info-bar {
-      background: var(--divi-blue);
+      background: linear-gradient(108deg, rgb(0,89,195) 0%, rgba(0,129,255,0.9) 100%),
+                  url("https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-04.png");
+      background-size: cover;
+      background-position: center;
       color: var(--white);
       padding: 20px 0;
     }
@@ -306,6 +312,11 @@
       width: 48px;
       height: 48px;
     }
+    .badge img {
+      max-height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
     .badge span {
       font-size: 13px;
       font-weight: 700;
@@ -317,7 +328,10 @@
     /* ─── SERVICES SECTION ─── */
     .services-section {
       padding: var(--section-padding) 0;
-      background: var(--off-white);
+      background: url("https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-19.png"),
+                  linear-gradient(rgb(255,255,255) 0%, rgb(239,241,244) 100%);
+      background-size: cover;
+      background-position: center;
     }
     .services-grid {
       display: grid;
@@ -361,6 +375,11 @@
       align-items: center;
       justify-content: center;
     }
+    .service-icon img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
     .service-icon svg {
       width: 56px;
       height: 56px;
@@ -403,13 +422,19 @@
     }
     .doctor-photo {
       width: 100%;
-      height: 300px;
+      height: 380px;
       background: linear-gradient(135deg, #e8f4fd 0%, #d0ebf9 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
+    }
+    .doctor-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
     }
     .doctor-photo svg {
       width: 80px;
@@ -459,14 +484,20 @@
       padding: 20px;
     }
     .team-avatar {
-      width: 80px;
-      height: 80px;
+      width: 110px;
+      height: 110px;
       background: linear-gradient(135deg, #e8f4fd, #d0ebf9);
       border-radius: 50%;
       margin: 0 auto 15px;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+    }
+    .team-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .team-avatar svg {
       width: 36px;
@@ -491,7 +522,11 @@
     /* ─── CTA SECTION ─── */
     .cta-section {
       padding: 70px 0;
-      background: linear-gradient(135deg, #0c3454, #2EA3F2);
+      background: linear-gradient(108deg, rgba(0,89,195,0.92) 0%, rgba(0,129,255,0.88) 100%),
+                  url("https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-08.png");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       text-align: center;
       color: var(--white);
     }
@@ -773,11 +808,11 @@
         </div>
         <div class="info-item">
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-          <a href="mailto:familyorlandodentistry@gmail.com">familyorlandodentistry@gmail.com</a>
+          <a href="mailto:niti.dental@gmail.com">niti.dental@gmail.com</a>
         </div>
         <div class="info-item">
           <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
-          <span>6150 Metrowest Blvd, Suite 204, Orlando, FL 32835</span>
+          <span>2704 Rew Circle, Suite 103, Ocoee, FL 34761</span>
         </div>
         <div class="info-item">
           <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
@@ -806,17 +841,11 @@
       </div>
       <div class="welcome-badges fade-in">
         <div class="badge">
-          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="8" y="14" width="48" height="36" rx="4" stroke="#2EA3F2" stroke-width="2.5" fill="none"/>
-            <path d="M20 32l8 8 16-16" stroke="#2EA3F2" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <img src="https://familyorlandodentistry.com/wp-content/uploads/2020/08/InvisalignProviderLogo_Charcoal.png" alt="Invisalign Provider" />
           <span>Invisalign Provider</span>
         </div>
         <div class="badge">
-          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="22" stroke="#2EA3F2" stroke-width="2.5" fill="none"/>
-            <path d="M22 32h20M32 22v20" stroke="#2EA3F2" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
+          <img src="https://familyorlandodentistry.com/wp-content/uploads/2024/12/CEREC-hero-banner-image-1440x417-1.jpg" alt="CEREC Same-Day Crowns" style="max-height:36px;" />
           <span>CEREC Same-Day Crowns</span>
         </div>
         <div class="badge">
@@ -841,58 +870,58 @@
       </div>
 
       <div class="services-grid">
-        <!-- Preventative Care -->
+        <!-- General Checkups -->
         <div class="service-card fade-in">
           <div class="service-icon">
-            <svg viewBox="0 0 64 64"><path d="M32 4C24 4 18 10 18 18c0 10 14 26 14 26s14-16 14-26c0-8-6-14-14-14zm0 19a5 5 0 110-10 5 5 0 010 10z" fill="#2EA3F2" opacity="0.15"/><path d="M48 28c0 4-2 8-5 12H21c-3-4-5-8-5-12 0-8.8 7.2-16 16-16s16 7.2 16 16z" stroke="#2EA3F2" stroke-width="2" fill="none"/><path d="M26 48h12M28 54h8M32 40v-8M28 36h8" stroke="#2EA3F2" stroke-width="2" stroke-linecap="round"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-icon-6.png" alt="General Checkups" />
           </div>
-          <h3>Preventative Care</h3>
+          <h3>General Checkups</h3>
           <p>Regular cleanings, exams, X-rays, sealants, and fluoride treatments to keep your smile healthy and catch issues early.</p>
-        </div>
-
-        <!-- Cosmetic Dentistry -->
-        <div class="service-card fade-in">
-          <div class="service-icon">
-            <svg viewBox="0 0 64 64"><path d="M32 8l4 12h12l-10 7 4 12-10-7-10 7 4-12L16 20h12l4-12z" stroke="#2EA3F2" stroke-width="2" fill="none" stroke-linejoin="round"/><circle cx="32" cy="42" r="14" stroke="#2EA3F2" stroke-width="2" fill="none"/><path d="M26 42c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#2EA3F2" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Cosmetic Dentistry</h3>
-          <p>Veneers, bonding, and smile makeovers designed to give you the confident, beautiful smile you deserve.</p>
-        </div>
-
-        <!-- Orthodontics / Invisalign -->
-        <div class="service-card fade-in">
-          <div class="service-icon">
-            <svg viewBox="0 0 64 64"><rect x="12" y="20" width="40" height="24" rx="12" stroke="#2EA3F2" stroke-width="2" fill="none"/><rect x="20" y="28" width="8" height="8" rx="1" stroke="#2EA3F2" stroke-width="1.5" fill="none"/><rect x="36" y="28" width="8" height="8" rx="1" stroke="#2EA3F2" stroke-width="1.5" fill="none"/><line x1="28" y1="32" x2="36" y2="32" stroke="#2EA3F2" stroke-width="1.5"/></svg>
-          </div>
-          <h3>Invisalign</h3>
-          <p>Straighten your teeth discreetly with clear aligner technology. Custom treatment plans for teens and adults.</p>
-        </div>
-
-        <!-- Tooth Whitening -->
-        <div class="service-card fade-in">
-          <div class="service-icon">
-            <svg viewBox="0 0 64 64"><path d="M32 10c-6 0-11 3-13 8-2 6 0 12 3 18 2 4 3 9 3 14h14c0-5 1-10 3-14 3-6 5-12 3-18-2-5-7-8-13-8z" stroke="#2EA3F2" stroke-width="2" fill="none"/><path d="M26 50h12M28 54h8" stroke="#2EA3F2" stroke-width="2" stroke-linecap="round"/><path d="M37 18l3-4M27 18l-3-4M32 16V10" stroke="#2EA3F2" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Tooth Whitening</h3>
-          <p>Professional in-office and take-home whitening treatments to brighten your smile safely and effectively.</p>
-        </div>
-
-        <!-- Emergency Care -->
-        <div class="service-card fade-in">
-          <div class="service-icon">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" stroke="#2EA3F2" stroke-width="2" fill="none"/><path d="M32 18v28M18 32h28" stroke="#2EA3F2" stroke-width="3" stroke-linecap="round"/><path d="M32 8v4M32 52v4M52 32h4M4 32h4" stroke="#2EA3F2" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Emergency Dental Care</h3>
-          <p>Immediate care for dental emergencies including toothaches, broken teeth, infections, and trauma.</p>
         </div>
 
         <!-- Dental Implants -->
         <div class="service-card fade-in">
           <div class="service-icon">
-            <svg viewBox="0 0 64 64"><path d="M26 12h12l-2 18h-8l-2-18z" stroke="#2EA3F2" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M28 30v6l-2 4v8h12v-8l-2-4v-6" stroke="#2EA3F2" stroke-width="2" fill="none" stroke-linejoin="round"/><line x1="28" y1="36" x2="36" y2="36" stroke="#2EA3F2" stroke-width="1.5"/><line x1="26" y1="42" x2="38" y2="42" stroke="#2EA3F2" stroke-width="1.5"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-icon-4.png" alt="Dental Implants" />
           </div>
           <h3>Dental Implants</h3>
           <p>Permanent tooth replacement solutions that look, feel, and function like natural teeth. Restore your complete smile.</p>
+        </div>
+
+        <!-- Restoration -->
+        <div class="service-card fade-in">
+          <div class="service-icon">
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-icon-1.png" alt="Restoration" />
+          </div>
+          <h3>Restoration</h3>
+          <p>Crowns, bridges, fillings, and CEREC same-day restorations to repair and strengthen damaged teeth.</p>
+        </div>
+
+        <!-- Cosmetic Dentistry -->
+        <div class="service-card fade-in">
+          <div class="service-icon">
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-icon-3.png" alt="Cosmetic Dentistry" />
+          </div>
+          <h3>Cosmetic Dentistry</h3>
+          <p>Veneers, bonding, and smile makeovers designed to give you the confident, beautiful smile you deserve.</p>
+        </div>
+
+        <!-- Teeth Whitening -->
+        <div class="service-card fade-in">
+          <div class="service-icon">
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-icon-5.png" alt="Teeth Whitening" />
+          </div>
+          <h3>Teeth Whitening</h3>
+          <p>Professional in-office and take-home whitening treatments to brighten your smile safely and effectively.</p>
+        </div>
+
+        <!-- Orthodontic Care -->
+        <div class="service-card fade-in">
+          <div class="service-icon">
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/10/dentist-icon-2.png" alt="Orthodontic Care" />
+          </div>
+          <h3>Orthodontic Care</h3>
+          <p>Straighten your teeth discreetly with Invisalign clear aligner technology. Custom treatment plans for teens and adults.</p>
         </div>
       </div>
 
@@ -919,7 +948,7 @@
       <div class="about-grid">
         <div class="doctor-card fade-in">
           <div class="doctor-photo">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="22" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 52c0-8.8 7.2-16 16-16s16 7.2 16 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2018/11/Nadine-UIC.jpg" alt="Dr. Nadine Nitisusanta DMD" />
           </div>
           <div class="doctor-info">
             <h3>Dr. Nadine Nitisusanta</h3>
@@ -930,7 +959,7 @@
 
         <div class="doctor-card fade-in">
           <div class="doctor-photo">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="22" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 52c0-8.8 7.2-16 16-16s16 7.2 16 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2024/12/IMG_1336.jpg" alt="Dr. Jonathan Nitisusanta DDS" />
           </div>
           <div class="doctor-info">
             <h3>Dr. Jonathan Nitisusanta</h3>
@@ -955,31 +984,31 @@
       <div class="team-grid">
         <div class="team-member fade-in">
           <div class="team-avatar">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="22" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M18 52c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2020/08/Chris.jpg" alt="Chris Kushner" />
           </div>
-          <h4>Adriana</h4>
-          <span>Office Manager</span>
+          <h4>Chris Kushner</h4>
+          <span>Office Manager / Finance</span>
         </div>
         <div class="team-member fade-in">
           <div class="team-avatar">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="22" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M18 52c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2024/12/90CAA400-1FDA-4494-8CF0-A9BC6F621219.jpg" alt="Heather Lincoln" />
           </div>
-          <h4>Jennifer</h4>
-          <span>Hygienist</span>
+          <h4>Heather Lincoln</h4>
+          <span>Office Manager / Finance</span>
         </div>
         <div class="team-member fade-in">
           <div class="team-avatar">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="22" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M18 52c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2024/12/IMG_1453-Copy.jpg" alt="Teresa Holleran" />
           </div>
-          <h4>Mary</h4>
-          <span>Dental Assistant</span>
+          <h4>Teresa Holleran</h4>
+          <span>Registered Dental Hygienist</span>
         </div>
         <div class="team-member fade-in">
           <div class="team-avatar">
-            <svg viewBox="0 0 64 64"><circle cx="32" cy="22" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M18 52c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <img src="https://familyorlandodentistry.com/wp-content/uploads/2026/01/Sophie.jpg" alt="Sophie Webb" />
           </div>
-          <h4>Yanel</h4>
-          <span>Dental Assistant</span>
+          <h4>Sophie Webb</h4>
+          <span>Registered Dental Hygienist</span>
         </div>
       </div>
     </div>
@@ -1030,10 +1059,10 @@
           </div>
           <h3>Our Location</h3>
           <p>
-            6150 Metrowest Blvd<br>
-            Suite 204<br>
-            Orlando, FL 32835<br><br>
-            <a href="https://maps.google.com/?q=6150+Metrowest+Blvd+Suite+204+Orlando+FL+32835" target="_blank" rel="noopener">Get Directions &rarr;</a>
+            2704 Rew Circle<br>
+            Suite 103<br>
+            Ocoee, FL 34761<br><br>
+            <a href="https://maps.google.com/?q=2704+Rew+Circle+Suite+103+Ocoee+FL+34761" target="_blank" rel="noopener">Get Directions &rarr;</a>
           </p>
         </div>
         <div class="info-block fade-in">
@@ -1044,7 +1073,7 @@
           <p>
             Phone: <a href="tel:+14078779003">(407) 877-9003</a><br>
             Fax: (407) 704-7682<br><br>
-            Email: <a href="mailto:familyorlandodentistry@gmail.com">familyorlandodentistry@gmail.com</a>
+            Email: <a href="mailto:niti.dental@gmail.com">niti.dental@gmail.com</a>
           </p>
         </div>
       </div>
@@ -1059,7 +1088,7 @@
       <div class="footer-inner">
         <div class="footer-brand">
           <h4>Family Orlando Dentistry</h4>
-          <p>Providing gentle, personalized dental care for you and your entire family in Orlando, FL.</p>
+          <p>Providing gentle, personalized dental care for you and your entire family in Ocoee, FL.</p>
         </div>
         <div class="footer-nav">
           <a href="#home">Home</a>
@@ -1071,8 +1100,8 @@
         <div class="footer-contact">
           <p>
             <a href="tel:+14078779003">(407) 877-9003</a><br>
-            6150 Metrowest Blvd, Ste 204<br>
-            Orlando, FL 32835
+            2704 Rew Circle, Ste 103<br>
+            Ocoee, FL 34761
           </p>
         </div>
       </div>
