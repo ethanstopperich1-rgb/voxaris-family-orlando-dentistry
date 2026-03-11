@@ -56,7 +56,56 @@ const config = {
       llm: {
         model: 'tavus-gpt-oss',
         speculative_inference: true,
-        tools: [],
+        tools: [
+          {
+            type: 'function',
+            function: {
+              name: 'check_availability',
+              description: 'Check live appointment availability across one or more Family Orlando Dentistry calendars. Always use this before offering appointment times or booking anything.',
+              parameters: {
+                type: 'object',
+                properties: {
+                  appointment_type: { type: 'string', enum: ['invisalign_consult','cosmetic_consult','whitening','implant_consult','same_day_crown_consult','emergency_exam','general_new_patient','general_existing_patient','botox_tmj_eval'], description: 'The appointment type the visitor wants.' },
+                  service_line: { type: 'string', enum: ['invisalign','cosmetic','whitening','implants','same_day_crowns','emergency','general','botox_tmj'], description: 'High-level service bucket used for routing and calendar mapping.' },
+                  patient_type: { type: 'string', enum: ['new','existing','unknown'], description: 'Whether the visitor is a new or existing patient, if known.' },
+                  urgency: { type: 'string', enum: ['low','medium','high'], description: 'Use high for urgent same-day dental concerns.' },
+                  provider_preference: { type: 'string', enum: ['jonathan','nadine','no_preference'], description: 'Preferred provider if the visitor gave one.' },
+                  preferred_days: { type: 'array', items: { type: 'string', enum: ['monday','tuesday','thursday','friday'] }, description: 'Preferred office days if the visitor gave them.' },
+                  preferred_time_of_day: { type: 'string', enum: ['morning','afternoon','no_preference'], description: 'Time-of-day preference if known.' },
+                  start_date: { type: 'string', description: 'Optional ISO date to start searching from.' },
+                  end_date: { type: 'string', description: 'Optional ISO date to stop searching.' },
+                  duration_minutes: { type: 'number', description: 'Optional duration override in minutes.' },
+                },
+                required: ['appointment_type','service_line','patient_type','urgency','provider_preference','preferred_days','preferred_time_of_day','start_date','end_date','duration_minutes'],
+              },
+            },
+          },
+          {
+            type: 'function',
+            function: {
+              name: 'book_appointment',
+              description: 'Book a confirmed appointment into the correct Family Orlando Dentistry calendar after availability has already been checked and the visitor has chosen a specific offered slot.',
+              parameters: {
+                type: 'object',
+                properties: {
+                  appointment_type: { type: 'string', enum: ['invisalign_consult','cosmetic_consult','whitening','implant_consult','same_day_crown_consult','emergency_exam','general_new_patient','general_existing_patient','botox_tmj_eval'], description: 'The appointment type being booked.' },
+                  service_line: { type: 'string', enum: ['invisalign','cosmetic','whitening','implants','same_day_crowns','emergency','general','botox_tmj'], description: 'High-level service bucket used for calendar mapping.' },
+                  provider_key: { type: 'string', enum: ['jonathan','nadine','main'], description: 'The provider or calendar target selected from the availability response.' },
+                  slot_start_iso: { type: 'string', description: 'The confirmed appointment start time in ISO 8601 format.' },
+                  slot_end_iso: { type: 'string', description: 'The confirmed appointment end time in ISO 8601 format.' },
+                  patient_first_name: { type: 'string', description: 'Patient first name.' },
+                  patient_last_name: { type: 'string', description: 'Patient last name.' },
+                  patient_phone: { type: 'string', description: 'Best callback phone number.' },
+                  patient_email: { type: 'string', description: 'Optional email address for follow-up if provided.' },
+                  patient_type: { type: 'string', enum: ['new','existing','unknown'], description: 'Whether the patient is new or existing, if known.' },
+                  notes: { type: 'string', description: 'Short operational note only. Keep this concise and non-diagnostic.' },
+                  request_id: { type: 'string', description: 'Optional idempotency key for duplicate-safe booking.' },
+                },
+                required: ['appointment_type','service_line','provider_key','slot_start_iso','slot_end_iso','patient_first_name','patient_last_name','patient_phone','patient_email','patient_type','notes','request_id'],
+              },
+            },
+          },
+        ],
       },
       stt: {
         stt_engine: 'tavus-advanced',

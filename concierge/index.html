@@ -384,6 +384,9 @@
     let sessionUrl = null;
     let dailyCall = null;
 
+    // ─── Booking deduplication ───
+    const inflightBookings = new Map();
+
     const videoContainer = document.getElementById('videoContainer');
     const idleState = document.getElementById('idleState');
     const idleMessage = document.getElementById('idleMessage');
@@ -397,49 +400,113 @@
       statusBar.className = 'status-bar' + (type ? ' ' + type : '');
     }
 
-    // ─── Tool Call Handler ───
-    async function handleToolCall(toolName, args, toolCallId) {
-      console.log('[concierge] Tool call:', toolName, args);
-      let result;
+    function safeJsonParse(value) {
+      if (!value) return {};
+      if (typeof value === 'object') return value;
+      try { return JSON.parse(value); } catch { return {}; }
+    }
+
+    // ─── Tool Call API ───
+    async function callToolApi(toolName, args) {
+      const res = await fetch('/api/vface/tools', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: toolName, ...args }),
+      });
+      const data = await res.json();
+      if (!res.ok && !data.ok) {
+        throw new Error(data.error || 'Request failed: ' + res.status);
+      }
+      return data;
+    }
+
+    // ─── Send tool result back to Tavus conversation ───
+    function sendToolResult(toolCallId, result) {
+      if (!dailyCall || !toolCallId) return;
+      try {
+        dailyCall.sendAppMessage({
+          message_type: 'conversation',
+          event_type: 'conversation.tool_result',
+          conversation_id: sessionId,
+          properties: {
+            tool_call_id: toolCallId,
+            result: JSON.stringify(result),
+          },
+        }, '*');
+        console.log('[maria] Tool result sent:', toolCallId);
+      } catch (e) {
+        console.warn('[maria] Could not send tool result:', e);
+      }
+    }
+
+    // ─── Handle a single tool call ───
+    async function handleSingleToolCall(toolCall) {
+      const toolCallId = toolCall.id || crypto.randomUUID();
+      const functionName = toolCall.function?.name || toolCall.name || '';
+      const args = safeJsonParse(toolCall.function?.arguments || toolCall.arguments);
+
+      if (!functionName) return;
+      console.log('[maria] Tool call:', functionName, args);
 
       try {
-        if (toolName === 'check_availability' || toolName === 'book_appointment') {
-          const res = await fetch('/api/vface/tools', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: toolName, ...args }),
-          });
-          result = await res.json();
+        if (functionName === 'check_availability') {
+          const result = await callToolApi('check_availability', args);
+          sendToolResult(toolCallId, result);
 
-          if (toolName === 'book_appointment' && result.success) {
-            setStatus('Appointment booked: ' + result.details.date + ' at ' + result.details.time, 'success');
+        } else if (functionName === 'book_appointment') {
+          // Deduplicate booking calls
+          const dedupeKey = args.request_id || (args.provider_key + '|' + args.slot_start_iso + '|' + args.patient_phone);
+
+          if (inflightBookings.has(dedupeKey)) {
+            const existing = await inflightBookings.get(dedupeKey);
+            sendToolResult(toolCallId, existing);
+            console.log('[maria] Deduplicated booking:', dedupeKey);
+            return;
           }
+
+          const bookingPromise = callToolApi('book_appointment', args)
+            .finally(() => inflightBookings.delete(dedupeKey));
+          inflightBookings.set(dedupeKey, bookingPromise);
+
+          const result = await bookingPromise;
+          sendToolResult(toolCallId, result);
+
+          if (result.ok && result.confirmation_text) {
+            setStatus(result.confirmation_text, 'success');
+          }
+
         } else {
-          result = { error: 'Unknown tool: ' + toolName };
+          const fallback = { ok: false, error: 'Unknown tool: ' + functionName };
+          sendToolResult(toolCallId, fallback);
         }
       } catch (err) {
-        result = { error: 'Tool call failed: ' + err.message };
+        const errResult = { ok: false, error: 'Tool call failed: ' + err.message };
+        sendToolResult(toolCallId, errResult);
+        console.error('[maria] Tool error:', functionName, err);
       }
+    }
 
-      // Send tool results back to the conversation
-      if (dailyCall && toolCallId) {
-        try {
-          dailyCall.sendAppMessage({
-            message_type: 'conversation',
-            event_type: 'conversation.tool_result',
-            conversation_id: sessionId,
-            properties: {
-              tool_call_id: toolCallId,
-              result: JSON.stringify(result),
-            },
-          }, '*');
-          console.log('[concierge] Tool result sent back:', toolName);
-        } catch (e) {
-          console.warn('[concierge] Could not send tool result:', e);
+    // ─── Normalize tool call events from Tavus/Daily ───
+    function normalizeToolCalls(event) {
+      if (!event) return [];
+      // Array of tool_calls
+      if (Array.isArray(event.tool_calls)) return event.tool_calls;
+      // Single tool_call object
+      if (event.tool_call) return [event.tool_call];
+      // Flat format with name + arguments
+      if (event.name && event.arguments !== undefined) {
+        return [{ id: event.id || crypto.randomUUID(), function: { name: event.name, arguments: event.arguments } }];
+      }
+      // Properties wrapper (Daily format)
+      const props = event.properties || event.data;
+      if (props) {
+        const name = props.name || props.function_name || props.tool_name;
+        if (name) {
+          return [{ id: props.tool_call_id || props.id || crypto.randomUUID(), function: { name, arguments: props.arguments || props.args } }];
         }
       }
-
-      return result;
+      return [];
     }
 
     // ─── Daily.co App-Message Listener ───
@@ -447,26 +514,18 @@
       const msg = event?.data;
       if (!msg) return;
 
-      console.log('[concierge] app-message:', msg);
-
-      // Handle tool call events
       const eventType = msg.event_type || msg.eventType || '';
-      if (eventType.includes('tool_call') || eventType.includes('toolcall')) {
-        const props = msg.properties || msg.data || msg;
-        const toolName = props.name || props.function_name || props.tool_name || '';
-        let toolArgs = props.arguments || props.args || {};
+      const isToolCall = eventType.includes('tool_call') || eventType.includes('toolcall');
+      if (!isToolCall) return;
 
-        // Arguments may be a JSON string
-        if (typeof toolArgs === 'string') {
-          try { toolArgs = JSON.parse(toolArgs); } catch {}
-        }
-
-        const toolCallId = props.tool_call_id || props.id || '';
-        handleToolCall(toolName, toolArgs, toolCallId);
+      console.log('[maria] app-message:', eventType);
+      const toolCalls = normalizeToolCalls(msg);
+      for (const tc of toolCalls) {
+        handleSingleToolCall(tc);
       }
     }
 
-    // Check if Tavus is configured
+    // Check readiness
     async function checkStatus() {
       idleMessage.textContent = 'Ready! Click "Start Conversation" to talk with our AI concierge.';
       btnStart.disabled = false;
@@ -534,7 +593,8 @@
         await fetch(`/api/vface/conversations/${sessionId}/end`, { method: 'POST' });
       } catch {}
 
-      // Clean up Daily call
+      // Clean up Daily call and booking state
+      inflightBookings.clear();
       if (dailyCall) {
         try {
           dailyCall.off('app-message', onAppMessage);
