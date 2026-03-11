@@ -118,52 +118,64 @@
 
     /* ─── IDLE STATE ─── */
     .idle-state {
-      text-align: center;
-      padding: 60px 30px;
-      color: var(--white);
-    }
-    .idle-avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(46,163,242,0.2), rgba(46,163,242,0.05));
-      border: 2px solid rgba(46,163,242,0.3);
-      margin: 0 auto 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .idle-avatar::before {
-      content: '';
       position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 2px solid rgba(46,163,242,0.15);
-      animation: avatar-pulse 2.5s ease-in-out infinite;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      color: var(--white);
+      z-index: 2;
     }
-    @keyframes avatar-pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.5; }
+    .idle-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
     }
-    .idle-avatar svg {
-      width: 40px;
-      height: 40px;
-      fill: rgba(46,163,242,0.5);
+    .idle-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 40%);
+      z-index: 1;
     }
-    .idle-state h3 {
+    .idle-label {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 24px 30px 30px;
+    }
+    .idle-label h3 {
       font-family: var(--font-heading);
       font-size: 20px;
       font-weight: 400;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: rgba(255,255,255,0.95);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
-    .idle-state p {
-      font-size: 14px;
-      color: rgba(255,255,255,0.5);
+    .idle-label p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
       max-width: 340px;
       margin: 0 auto;
-      line-height: 1.7;
+      line-height: 1.6;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: dot-pulse 2s ease-in-out infinite;
+      vertical-align: middle;
+    }
+    @keyframes dot-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
     .config-error {
       display: none;
@@ -318,12 +330,13 @@
     <div class="video-card">
       <div class="video-container" id="videoContainer">
         <div class="idle-state" id="idleState">
-          <div class="idle-avatar">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20v-1a6 6 0 0112 0v1"/></svg>
+          <video class="idle-video" autoplay loop muted playsinline src="https://cdn.replica.tavus.io/39359/cd603e65.mp4"></video>
+          <div class="idle-overlay"></div>
+          <div class="idle-label">
+            <h3><span class="live-dot"></span>AI Concierge</h3>
+            <p id="idleMessage">Checking connection...</p>
+            <div class="config-error" id="configError"></div>
           </div>
-          <h3>AI Concierge</h3>
-          <p id="idleMessage">Checking connection...</p>
-          <div class="config-error" id="configError"></div>
         </div>
       </div>
       <div class="controls">
