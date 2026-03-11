@@ -15,6 +15,7 @@ const {
   INBOUND_RECEPTIONIST_TOOLS,
   INBOUND_QUALIFIER_TOOLS,
   INBOUND_EMERGENCY_TOOLS,
+  INBOUND_SCHEDULER_TOOLS,
 } = require("../../lib/tools");
 
 // ─── Load prompts from disk ───
@@ -129,10 +130,7 @@ function getGeneralSchedulerConfig(serverUrl) {
       ],
       temperature: 0.4,
       maxTokens: 200,
-      tools: [
-        require("../../lib/tools").TOOL_REQUEST_APPOINTMENT,
-        require("../../lib/tools").TOOL_TRANSFER_TO_HUMAN,
-      ],
+      tools: INBOUND_SCHEDULER_TOOLS,
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,
