@@ -1,0 +1,12 @@
+{
+  "name": "voxaris-family-orlando-dentistry",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:vapi": "cd vapi && node server.js",
+    "dev:vface": "cd vface/server && node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}

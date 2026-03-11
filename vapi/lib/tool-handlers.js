@@ -13,7 +13,9 @@ const path = require("path");
 
 // ─── Persistence Layer ───
 
-const DATA_DIR = path.join(__dirname, "..", "data");
+const DATA_DIR = process.env.VERCEL
+  ? path.join("/tmp", "vapi-data")
+  : path.join(__dirname, "..", "data");
 
 /**
  * Append a record to a JSON-lines file.
