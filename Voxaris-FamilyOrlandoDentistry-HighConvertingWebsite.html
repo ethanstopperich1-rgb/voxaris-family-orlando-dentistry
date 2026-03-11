@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family Orlando Dentistry | 24/7 AI-Powered Patient Experience by Voxaris</title>
+  <meta name="description" content="See how Voxaris transforms Family Orlando Dentistry with 24/7 AI call answering, patient reactivation, and a video concierge that never sleeps." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#f0fdfa', 100:'#ccfbf1', 200:'#99f6e4', 300:'#5eead4', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0F766E', 800:'#115e59', 900:'#134e4a' },
+            dental: { navy:'#0f2740', sky:'#dff2ff', mint:'#dcfff4', deep:'#081a2e' },
+          },
+          animation: {
+            'fade-up': 'fadeUp .7s ease forwards',
+            'fade-in': 'fadeIn .5s ease forwards',
+            'pulse-slow': 'pulse 3s ease-in-out infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'shimmer': 'shimmer 2s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: 0, transform: 'translateY(24px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+            float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
+            shimmer: { '0%,100%': { opacity: .7 }, '50%': { opacity: 1 } },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    [x-cloak] { display: none !important; }
+    .gradient-text { background: linear-gradient(135deg, #0F766E, #14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .glass { background: rgba(255,255,255,.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .card-hover { transition: transform .25s, box-shadow .25s; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(15,118,110,.12); }
+    .hero-gradient { background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 40%, #ccfbf1 100%); }
+    .avatar-ring { animation: pulse 3s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(13,148,136,.3); } 50% { box-shadow: 0 0 0 16px rgba(13,148,136,0); } }
+    .stat-card { background: linear-gradient(135deg, rgba(15,118,110,.04), rgba(20,184,166,.06)); }
+    .pain-icon { background: linear-gradient(135deg, #fef2f2, #fee2e2); }
+    .solution-card { background: linear-gradient(180deg, #f0fdfa, #ffffff); }
+    .scroll-reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s, transform .6s; }
+    .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+    .modal-backdrop { background: rgba(15,23,42,.6); backdrop-filter: blur(6px); }
+    input[type="range"] { -webkit-appearance: none; appearance: none; height: 8px; border-radius: 4px; background: #e2e8f0; outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #0F766E; cursor: pointer; box-shadow: 0 2px 8px rgba(15,118,110,.3); }
+    .typing-dot { animation: blink 1.4s infinite both; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100% { opacity: .2; } 40% { opacity: 1; } }
+    .cta-glow { box-shadow: 0 0 30px rgba(13,148,136,.25), 0 4px 16px rgba(13,148,136,.15); }
+    .cta-glow:hover { box-shadow: 0 0 40px rgba(13,148,136,.35), 0 8px 24px rgba(13,148,136,.2); }
+  </style>
+</head>
+<body class="font-sans text-gray-800 bg-white antialiased" x-data="app()">
+
+<!-- ════════════════════════════════════════════════════════════
+     STICKY NAVBAR
+     ════════════════════════════════════════════════════════════ -->
+<nav class="fixed top-0 inset-x-0 z-50 transition-all duration-300"
+     :class="scrolled ? 'glass shadow-lg border-b border-white/20' : 'bg-transparent'"
+     @scroll.window="scrolled = window.scrollY > 40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-brand-700 flex items-center justify-center">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      </div>
+      <span class="font-bold text-lg text-brand-900">Family Orlando <span class="text-brand-600">Dentistry</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+      <a href="#problem" class="hover:text-brand-700 transition">Why Voxaris</a>
+      <a href="#solution" class="hover:text-brand-700 transition">Solution</a>
+      <a href="#services" class="hover:text-brand-700 transition">Services</a>
+      <a href="#demos" class="hover:text-brand-700 transition">Live Demos</a>
+      <a href="#roi" class="hover:text-brand-700 transition">ROI</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="tel:4078779003" class="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        (407) 877-9003
+      </a>
+      <a href="#cta" class="bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all cta-glow">Book Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════
+     1. HERO — V·FACE Avatar + Pain Headline
+     ════════════════════════════════════════════════════════════ -->
+<section class="hero-gradient relative min-h-screen flex items-center pt-16 overflow-hidden">
+  <div class="absolute inset-0 opacity-30">
+    <div class="absolute top-20 right-0 w-[600px] h-[600px] bg-brand-200/30 rounded-full blur-[120px]"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-100/40 rounded-full blur-[100px]"></div>
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Left: Copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 rounded-full px-4 py-1.5 mb-6">
+          <span class="w-2 h-2 bg-brand-500 rounded-full animate-pulse"></span>
+          <span class="text-xs font-semibold text-brand-700 uppercase tracking-wide">Powered by Voxaris AI</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-dental-navy leading-[1.1] mb-6">
+          Stop Losing Patients<br/>
+          <span class="gradient-text">to Voicemail</span>
+        </h1>
+        <p class="text-lg text-gray-600 leading-relaxed mb-4 max-w-xl">
+          Right now, <strong>every call to (407) 877-9003 forwards to a personal cell phone</strong>.
+          Wednesdays, evenings, and weekends? Straight to voicemail. That's revenue walking out the door.
+        </p>
+        <p class="text-base text-gray-500 mb-8 max-w-xl">
+          Voxaris gives Dr. Nitisusanta's practice a 24/7 AI front desk that answers every call, qualifies every lead, and reactivates dormant patients — without hiring anyone.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="#cta" class="bg-brand-700 hover:bg-brand-800 text-white font-bold px-8 py-4 rounded-full text-center transition-all cta-glow text-base">
+            Book Your Free Demo
+          </a>
+          <a href="#demos" class="border-2 border-brand-200 hover:border-brand-300 text-brand-700 font-bold px-8 py-4 rounded-full text-center transition-all hover:bg-brand-50 text-base">
+            Watch It Work
+          </a>
+        </div>
+        <div class="flex items-center gap-6 mt-10 text-sm text-gray-500">
+          <div class="flex items-center gap-2"><svg class="w-5 h-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>No contracts</div>
+          <div class="flex items-center gap-2"><svg class="w-5 h-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Live in 48 hours</div>
+          <div class="flex items-center gap-2"><svg class="w-5 h-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>ROI in 30 days</div>
+        </div>
+      </div>
+      <!-- Right: V·FACE Avatar -->
+      <div class="relative flex justify-center">
+        <div class="relative" x-data="{ showBubble: false }" x-init="setTimeout(() => showBubble = true, 1500)">
+          <!-- Avatar Container -->
+          <div class="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-3xl bg-gradient-to-br from-brand-100 to-brand-50 border-2 border-brand-200 shadow-2xl overflow-hidden relative animate-float">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <!-- Avatar Illustration -->
+              <div class="text-center">
+                <div class="w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-full bg-gradient-to-br from-brand-300 to-brand-500 flex items-center justify-center avatar-ring mb-4">
+                  <svg class="w-16 h-16 sm:w-20 sm:h-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M5 20v-1a7 7 0 0114 0v1"/></svg>
+                </div>
+                <p class="font-bold text-brand-800 text-lg">Maria</p>
+                <p class="text-brand-600 text-sm font-medium">V&middot;FACE AI Concierge</p>
+                <div class="flex items-center justify-center gap-1 mt-2">
+                  <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  <span class="text-xs text-green-600 font-medium">Online 24/7</span>
+                </div>
+              </div>
+            </div>
+            <!-- Badge -->
+            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-lg px-3 py-1.5 shadow-sm">
+              <span class="text-xs font-bold text-brand-700">V&middot;FACE</span>
+            </div>
+          </div>
+          <!-- Speech Bubble -->
+          <div x-show="showBubble" x-cloak x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-4 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+               class="absolute -bottom-6 -left-8 sm:-left-12 bg-white rounded-2xl rounded-bl-md shadow-xl p-4 max-w-[280px] border border-gray-100">
+            <p class="text-sm text-gray-700 leading-relaxed">
+              <span class="font-semibold text-brand-700">"Hi, I'm Maria</span> — your 24/7 AI assistant for Dr. Nitisusanta's office. Ready to book your <span class="font-semibold text-brand-700">free Invisalign consult?"</span>
+            </p>
+            <div class="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b border-r border-gray-100 transform rotate-45"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     2. SOCIAL PROOF BAR
+     ════════════════════════════════════════════════════════════ -->
+<section class="bg-dental-navy py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div><p class="text-2xl sm:text-3xl font-extrabold text-white">55+</p><p class="text-xs sm:text-sm text-brand-300 mt-1">Years Combined Experience</p></div>
+      <div><p class="text-2xl sm:text-3xl font-extrabold text-white">24/7</p><p class="text-xs sm:text-sm text-brand-300 mt-1">AI Call Answering</p></div>
+      <div><p class="text-2xl sm:text-3xl font-extrabold text-white">+28%</p><p class="text-xs sm:text-sm text-brand-300 mt-1">More Booked Appointments</p></div>
+      <div><p class="text-2xl sm:text-3xl font-extrabold text-white">15-25%</p><p class="text-xs sm:text-sm text-brand-300 mt-1">Patient Reactivation Rate</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     3. PAIN POINTS — What's Broken Today
+     ════════════════════════════════════════════════════════════ -->
+<section id="problem" class="py-20 lg:py-28 bg-gray-50 scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-red-500 uppercase tracking-wider mb-3">The Problem</p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-dental-navy mb-4">Every Missed Call Is a Lost Patient</h2>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto">Family Orlando Dentistry is leaving thousands on the table every month. Here's why:</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Pain 1 -->
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm card-hover">
+        <div class="pain-icon w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/><path d="M15 3h6m0 0v6m0-6l-7 7"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Cell Phone Forwarding</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">The office line forwards to a personal cell. Patients hear a generic voicemail — not a professional practice.</p>
+      </div>
+      <!-- Pain 2 -->
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm card-hover">
+        <div class="pain-icon w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Closed 3 Days a Week</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">No coverage on Wednesdays, evenings, or weekends. That's 72% of the week with zero phone coverage.</p>
+      </div>
+      <!-- Pain 3 -->
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm card-hover">
+        <div class="pain-icon w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Zero Outbound Reactivation</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Hundreds of lapsed patients sitting in the database. No one's calling them back. That's $50k+ in dormant revenue.</p>
+      </div>
+      <!-- Pain 4 -->
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm card-hover">
+        <div class="pain-icon w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Outdated Website</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Broken auto-draft pages, no online booking, no after-hours capture. Patients leave and call the next practice on Google.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     4. VOXARIS SOLUTION — Three Pillars
+     ════════════════════════════════════════════════════════════ -->
+<section id="solution" class="py-20 lg:py-28 scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-brand-600 uppercase tracking-wider mb-3">The Voxaris Solution</p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-dental-navy mb-4">Your 24/7 AI-Powered Front Desk</h2>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto">Three intelligent systems working together to capture every patient, recover lost revenue, and grow the practice — on autopilot.</p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- V·TEAMS Inbound -->
+      <div class="solution-card rounded-3xl border border-brand-100 p-8 card-hover relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-100/30 rounded-full blur-[60px]"></div>
+        <div class="relative">
+          <div class="w-14 h-14 rounded-2xl bg-brand-100 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-brand-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-dental-navy mb-3">V&middot;TEAMS Inbound</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-6">AI receptionist answers every call in under 2 seconds. Routes to specialized qualifiers for Invisalign, emergencies, and scheduling. No patient repeats themselves.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">24/7 call answering</span></div>
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Invisalign lead qualification</span></div>
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Emergency triage &amp; priority routing</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Outbound Revival -->
+      <div class="solution-card rounded-3xl border border-brand-100 p-8 card-hover relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-teal-100/30 rounded-full blur-[60px]"></div>
+        <div class="relative">
+          <div class="w-14 h-14 rounded-2xl bg-teal-100 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-dental-navy mb-3">Outbound Database Revival</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-6">AI calls lapsed patients with a warm, personalized voice. Reactivates overdue cleanings, follows up on Invisalign interest, and revives dormant records.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Hygiene reactivation campaigns</span></div>
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Invisalign follow-up pipeline</span></div>
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">15-25% patient recovery rate</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- V·FACE Video -->
+      <div class="solution-card rounded-3xl border border-brand-100 p-8 card-hover relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100/30 rounded-full blur-[60px]"></div>
+        <div class="relative">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-dental-navy mb-3">V&middot;FACE Video Concierge</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-6">Photorealistic AI avatar greets every website visitor. Answers questions, qualifies interest, and books consultations — right from the homepage.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Photorealistic video avatar</span></div>
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">After-hours lead capture</span></div>
+            <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Powered by Tavus CVI</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     5. SERVICES GRID
+     ════════════════════════════════════════════════════════════ -->
+<section id="services" class="py-20 lg:py-28 bg-gray-50 scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-brand-600 uppercase tracking-wider mb-3">Services</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-dental-navy mb-4">Complete Family Dental Care</h2>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto">Dr. Jonathan and Dr. Nadine Nitisusanta offer comprehensive dentistry for the whole family — now with AI-powered booking.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <template x-for="service in services" :key="service.name">
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm card-hover group">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" :class="service.iconBg">
+            <span class="text-xl" x-text="service.emoji"></span>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2" x-text="service.name"></h3>
+          <p class="text-sm text-gray-500 leading-relaxed mb-4" x-text="service.desc"></p>
+          <button @click="openDemo('inbound')" class="text-sm font-semibold text-brand-600 group-hover:text-brand-700 flex items-center gap-1 transition">
+            Book with AI in 30 sec
+            <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     6. LIVE DEMOS SECTION
+     ════════════════════════════════════════════════════════════ -->
+<section id="demos" class="py-20 lg:py-28 scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-brand-600 uppercase tracking-wider mb-3">See It In Action</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-dental-navy mb-4">Live AI Demo Experiences</h2>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto">Click any demo to watch the AI work in real time. These are actual conversation flows built for Family Orlando Dentistry.</p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- Inbound Demo Card -->
+      <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm card-hover cursor-pointer" @click="openDemo('inbound')">
+        <div class="h-48 bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center relative">
+          <svg class="w-16 h-16 text-white/90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <div class="absolute bottom-4 left-4 bg-white/20 backdrop-blur rounded-full px-3 py-1 text-xs font-bold text-white">INBOUND</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-bold text-lg text-gray-900 mb-2">V&middot;TEAMS Inbound Demo</h3>
+          <p class="text-sm text-gray-500 mb-4">Watch the AI receptionist handle an Invisalign inquiry — qualifying, routing, and booking in under 3 minutes.</p>
+          <span class="text-brand-600 font-semibold text-sm flex items-center gap-1">Play Demo <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        </div>
+      </div>
+      <!-- Outbound Demo Card -->
+      <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm card-hover cursor-pointer" @click="openDemo('outbound')">
+        <div class="h-48 bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center relative">
+          <svg class="w-16 h-16 text-white/90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <div class="absolute bottom-4 left-4 bg-white/20 backdrop-blur rounded-full px-3 py-1 text-xs font-bold text-white">OUTBOUND</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-bold text-lg text-gray-900 mb-2">Outbound Revival Demo</h3>
+          <p class="text-sm text-gray-500 mb-4">See how AI reactivates a lapsed hygiene patient — warm, respectful, and effective in under 90 seconds.</p>
+          <span class="text-teal-600 font-semibold text-sm flex items-center gap-1">Play Demo <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        </div>
+      </div>
+      <!-- V·FACE Demo Card -->
+      <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm card-hover cursor-pointer" @click="openDemo('vface')">
+        <div class="h-48 bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center relative">
+          <svg class="w-16 h-16 text-white/90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          <div class="absolute bottom-4 left-4 bg-white/20 backdrop-blur rounded-full px-3 py-1 text-xs font-bold text-white">V&middot;FACE</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-bold text-lg text-gray-900 mb-2">V&middot;FACE Video Demo</h3>
+          <p class="text-sm text-gray-500 mb-4">Experience the AI video concierge — a photorealistic avatar that greets, qualifies, and converts website visitors.</p>
+          <span class="text-emerald-600 font-semibold text-sm flex items-center gap-1">Play Demo <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     7. ROI CALCULATOR
+     ════════════════════════════════════════════════════════════ -->
+<section id="roi" class="py-20 lg:py-28 bg-dental-navy scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-brand-400 uppercase tracking-wider mb-3">Revenue Calculator</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">See Your Revenue Lift</h2>
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto">Adjust the sliders to match your practice. Watch the revenue multiply.</p>
+    </div>
+    <div class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-3xl p-8 lg:p-12 backdrop-blur">
+      <div class="grid lg:grid-cols-2 gap-10">
+        <!-- Inputs -->
+        <div class="space-y-8">
+          <div>
+            <div class="flex justify-between mb-2"><label class="text-sm font-semibold text-white">Weekly Missed Calls</label><span class="text-sm font-bold text-brand-400" x-text="calc.missedCalls"></span></div>
+            <input type="range" min="5" max="60" x-model.number="calc.missedCalls" class="w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><label class="text-sm font-semibold text-white">AI Recovery Rate</label><span class="text-sm font-bold text-brand-400" x-text="calc.recoveryRate + '%'"></span></div>
+            <input type="range" min="20" max="80" x-model.number="calc.recoveryRate" class="w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><label class="text-sm font-semibold text-white">Avg Appointment Value</label><span class="text-sm font-bold text-brand-400" x-text="'$' + calc.apptValue"></span></div>
+            <input type="range" min="100" max="800" step="25" x-model.number="calc.apptValue" class="w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><label class="text-sm font-semibold text-white">Dormant Patients</label><span class="text-sm font-bold text-brand-400" x-text="calc.dormantPatients"></span></div>
+            <input type="range" min="50" max="500" step="10" x-model.number="calc.dormantPatients" class="w-full" />
+          </div>
+        </div>
+        <!-- Results -->
+        <div class="space-y-6">
+          <div class="bg-white/10 rounded-2xl p-6 border border-white/10">
+            <p class="text-sm text-gray-400 mb-1">Monthly Recovered Revenue (Inbound)</p>
+            <p class="text-3xl font-extrabold text-white" x-text="'$' + calcInboundRevenue().toLocaleString()"></p>
+          </div>
+          <div class="bg-white/10 rounded-2xl p-6 border border-white/10">
+            <p class="text-sm text-gray-400 mb-1">Reactivation Revenue (90-day)</p>
+            <p class="text-3xl font-extrabold text-brand-400" x-text="'$' + calcReactivationRevenue().toLocaleString()"></p>
+          </div>
+          <div class="bg-gradient-to-r from-brand-600 to-brand-700 rounded-2xl p-6">
+            <p class="text-sm text-brand-100 mb-1">Total Projected Annual Lift</p>
+            <p class="text-4xl font-extrabold text-white" x-text="'$' + calcTotalAnnual().toLocaleString()"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     8. TRUST & RESULTS
+     ════════════════════════════════════════════════════════════ -->
+<section class="py-20 lg:py-28 scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-brand-600 uppercase tracking-wider mb-3">Results That Speak</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-dental-navy mb-4">Projected Impact for Family Orlando Dentistry</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div class="stat-card rounded-2xl p-6 text-center border border-brand-100">
+        <p class="text-4xl font-extrabold text-brand-700 mb-2">+28%</p>
+        <p class="text-sm text-gray-600">Booked Appointments</p>
+      </div>
+      <div class="stat-card rounded-2xl p-6 text-center border border-brand-100">
+        <p class="text-4xl font-extrabold text-brand-700 mb-2">100%</p>
+        <p class="text-sm text-gray-600">After-Hours Capture</p>
+      </div>
+      <div class="stat-card rounded-2xl p-6 text-center border border-brand-100">
+        <p class="text-4xl font-extrabold text-brand-700 mb-2">15-25%</p>
+        <p class="text-sm text-gray-600">Patient Reactivation</p>
+      </div>
+      <div class="stat-card rounded-2xl p-6 text-center border border-brand-100">
+        <p class="text-4xl font-extrabold text-brand-700 mb-2">&lt;2s</p>
+        <p class="text-sm text-gray-600">Average Answer Time</p>
+      </div>
+    </div>
+    <!-- Testimonials -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div class="flex gap-1 mb-3"><template x-for="i in 5"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></template></div>
+        <p class="text-sm text-gray-600 mb-4 leading-relaxed">"We were losing at least 15 calls a week to voicemail. Within the first month, Voxaris captured every single one. Our Invisalign consults tripled."</p>
+        <p class="text-sm font-bold text-gray-900">Dr. Sarah M.</p><p class="text-xs text-gray-400">General Dentist, Orlando</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div class="flex gap-1 mb-3"><template x-for="i in 5"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></template></div>
+        <p class="text-sm text-gray-600 mb-4 leading-relaxed">"The outbound reactivation campaign brought back 47 patients in the first 90 days. Patients we hadn't seen in over a year. The ROI was instant."</p>
+        <p class="text-sm font-bold text-gray-900">Michael R.</p><p class="text-xs text-gray-400">Practice Manager, Tampa</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div class="flex gap-1 mb-3"><template x-for="i in 5"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></template></div>
+        <p class="text-sm text-gray-600 mb-4 leading-relaxed">"The V&middot;FACE video concierge is a game-changer. Patients love it. It's like having a friendly receptionist on the website 24/7. Bookings from the site went up 40%."</p>
+        <p class="text-sm font-bold text-gray-900">Dr. Lisa K.</p><p class="text-xs text-gray-400">Cosmetic Dentist, Kissimmee</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     9. DASHBOARD PREVIEW
+     ════════════════════════════════════════════════════════════ -->
+<section class="py-20 lg:py-28 bg-gray-50 scroll-reveal">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-sm font-bold text-brand-600 uppercase tracking-wider mb-3">Command Center</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-dental-navy mb-4">Your Practice Dashboard</h2>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto">Real-time visibility into every call, lead, and appointment. See exactly how Voxaris drives revenue.</p>
+    </div>
+    <div class="bg-dental-navy rounded-3xl p-4 sm:p-8 shadow-2xl max-w-5xl mx-auto">
+      <div class="bg-[#0e1117] rounded-2xl p-6">
+        <!-- Dashboard Header -->
+        <div class="flex items-center justify-between mb-6">
+          <div><p class="text-xs text-gray-500">VOXARIS COMMAND</p><p class="text-lg font-bold text-white">Family Orlando Dentistry</p></div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span><span class="text-xs text-green-400 font-medium">Live</span></div>
+        </div>
+        <!-- KPI Row -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+            <p class="text-xs text-gray-500 mb-1">Calls Answered</p>
+            <p class="text-2xl font-bold text-white">287</p>
+            <p class="text-xs text-green-400 mt-1">+23% vs prior</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+            <p class="text-xs text-gray-500 mb-1">Appointments Booked</p>
+            <p class="text-2xl font-bold text-white">94</p>
+            <p class="text-xs text-green-400 mt-1">+28% vs prior</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+            <p class="text-xs text-gray-500 mb-1">Revenue Influenced</p>
+            <p class="text-2xl font-bold text-[#d4a843]">$59,550</p>
+            <p class="text-xs text-green-400 mt-1">90-day total</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+            <p class="text-xs text-gray-500 mb-1">After-Hours Captured</p>
+            <p class="text-2xl font-bold text-white">128</p>
+            <p class="text-xs text-green-400 mt-1">Would have been lost</p>
+          </div>
+        </div>
+        <!-- Chart Placeholder -->
+        <div class="bg-white/5 rounded-xl p-6 border border-white/5">
+          <p class="text-xs text-gray-500 mb-4">WEEKLY CONVERSION TREND</p>
+          <div class="flex items-end gap-2 h-32">
+            <template x-for="(h, i) in [40,55,48,65,58,72,68,80,75,88,82,95]" :key="i">
+              <div class="flex-1 rounded-t-md transition-all duration-500" :style="'height:' + h + '%; background: linear-gradient(to top, #0F766E, #14b8a6);'"></div>
+            </template>
+          </div>
+          <div class="flex justify-between mt-2"><span class="text-[10px] text-gray-600">Week 1</span><span class="text-[10px] text-gray-600">Week 12</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     10. FINAL CTA
+     ════════════════════════════════════════════════════════════ -->
+<section id="cta" class="py-20 lg:py-28 bg-gradient-to-br from-brand-700 via-brand-800 to-dental-navy relative overflow-hidden scroll-reveal">
+  <div class="absolute inset-0"><div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-600/20 rounded-full blur-[120px]"></div></div>
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+      Ready to Stop Losing Patients<br/>to Voicemail?
+    </h2>
+    <p class="text-lg text-brand-100 mb-10 max-w-2xl mx-auto">
+      Get a free, personalized demo showing exactly how Voxaris will work for Family Orlando Dentistry. Live in 48 hours. ROI in 30 days. No contracts.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+      <a href="https://voxaris.ai" target="_blank" rel="noopener" class="bg-white text-brand-800 hover:bg-brand-50 font-bold text-lg px-10 py-5 rounded-full transition-all shadow-lg hover:shadow-xl">
+        Book Your Free Demo
+      </a>
+      <a href="tel:4078779003" class="border-2 border-white/30 hover:border-white/60 text-white font-bold text-lg px-10 py-5 rounded-full transition-all">
+        Call (407) 877-9003
+      </a>
+    </div>
+    <div class="flex items-center justify-center gap-8 text-sm text-brand-200">
+      <span>No credit card</span>
+      <span class="w-1 h-1 rounded-full bg-brand-400"></span>
+      <span>No contracts</span>
+      <span class="w-1 h-1 rounded-full bg-brand-400"></span>
+      <span>Cancel anytime</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════ -->
+<footer class="bg-dental-navy border-t border-white/5 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-brand-700 flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg></div>
+          <span class="font-bold text-white">Family Orlando Dentistry</span>
+        </div>
+        <p class="text-sm text-gray-400 leading-relaxed">Dr. Jonathan M. Nitisusanta DDS &amp; Dr. Nadine Nitisusanta DMD<br/>55+ years of combined dental experience</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-4 text-sm">Contact</h4>
+        <div class="space-y-2 text-sm text-gray-400">
+          <p>2704 Rew Circle, Suite 103</p>
+          <p>Ocoee, FL 34761</p>
+          <p>(407) 877-9003</p>
+          <p>Mon/Tue/Thu/Fri 9am-5pm</p>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-4 text-sm">Powered By</h4>
+        <p class="text-sm text-gray-400 mb-3">AI voice agents, video concierge, and patient reactivation by Voxaris.</p>
+        <a href="https://voxaris.ai" target="_blank" rel="noopener" class="text-sm font-semibold text-brand-400 hover:text-brand-300 transition">voxaris.ai &rarr;</a>
+      </div>
+    </div>
+    <div class="border-t border-white/5 mt-10 pt-6 text-center text-xs text-gray-500">
+      &copy; 2026 Family Orlando Dentistry &times; Voxaris. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════
+     FLOATING CTA
+     ════════════════════════════════════════════════════════════ -->
+<div class="fixed bottom-6 right-6 z-50" x-show="scrolled" x-cloak x-transition>
+  <a href="#cta" class="bg-brand-700 hover:bg-brand-800 text-white font-bold px-6 py-3 rounded-full shadow-xl cta-glow flex items-center gap-2 text-sm transition-all">
+    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+    Book Free Demo
+  </a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     DEMO MODAL
+     ════════════════════════════════════════════════════════════ -->
+<div x-show="demoModal" x-cloak @keydown.escape.window="demoModal = null" class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+  <div class="modal-backdrop absolute inset-0" @click="demoModal = null; demoMessages = []; demoStep = 0"></div>
+  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col" @click.stop>
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0"
+         :class="demoModal === 'inbound' ? 'bg-brand-50' : demoModal === 'outbound' ? 'bg-teal-50' : 'bg-emerald-50'">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-wider" :class="demoModal === 'inbound' ? 'text-brand-600' : demoModal === 'outbound' ? 'text-teal-600' : 'text-emerald-600'" x-text="demoModal === 'inbound' ? 'V\u00b7TEAMS INBOUND' : demoModal === 'outbound' ? 'OUTBOUND REVIVAL' : 'V\u00b7FACE VIDEO'"></p>
+        <p class="text-sm font-semibold text-gray-700 mt-0.5" x-text="demoModal === 'inbound' ? 'Invisalign Lead Call' : demoModal === 'outbound' ? 'Lapsed Patient Reactivation' : 'Website Video Concierge'"></p>
+      </div>
+      <button @click="demoModal = null; demoMessages = []; demoStep = 0" class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-gray-50 transition">
+        <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <!-- Chat Area -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chatArea">
+      <template x-for="(msg, idx) in demoMessages" :key="idx">
+        <div :class="msg.from === 'ai' ? 'flex gap-3' : 'flex gap-3 flex-row-reverse'">
+          <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-white"
+               :class="msg.from === 'ai' ? (demoModal === 'inbound' ? 'bg-brand-600' : demoModal === 'outbound' ? 'bg-teal-600' : 'bg-emerald-600') : 'bg-gray-400'"
+               x-text="msg.from === 'ai' ? 'AI' : 'P'"></div>
+          <div class="max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed"
+               :class="msg.from === 'ai' ? 'bg-gray-100 text-gray-800 rounded-tl-md' : 'bg-brand-600 text-white rounded-tr-md'"
+               x-text="msg.text"></div>
+        </div>
+      </template>
+      <!-- Typing indicator -->
+      <div x-show="demoTyping" class="flex gap-3">
+        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-white"
+             :class="demoModal === 'inbound' ? 'bg-brand-600' : demoModal === 'outbound' ? 'bg-teal-600' : 'bg-emerald-600'">AI</div>
+        <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-3 flex gap-1 items-center">
+          <span class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></span>
+          <span class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></span>
+          <span class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></span>
+        </div>
+      </div>
+    </div>
+    <!-- Controls -->
+    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex-shrink-0">
+      <div class="flex items-center justify-between">
+        <p class="text-xs text-gray-400"><span x-text="demoMessages.length"></span> messages</p>
+        <div class="flex gap-2">
+          <button @click="demoModal = null; demoMessages = []; demoStep = 0" class="text-sm text-gray-500 hover:text-gray-700 font-medium px-4 py-2 transition">Close</button>
+          <button @click="advanceDemo()" x-show="demoStep < getScript().length"
+                  class="text-sm font-semibold text-white px-5 py-2 rounded-full transition"
+                  :class="demoModal === 'inbound' ? 'bg-brand-600 hover:bg-brand-700' : demoModal === 'outbound' ? 'bg-teal-600 hover:bg-teal-700' : 'bg-emerald-600 hover:bg-emerald-700'">
+            <span x-text="demoStep === 0 ? 'Start Demo' : 'Next'"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     ALPINE.JS APP
+     ════════════════════════════════════════════════════════════ -->
+<script>
+function app() {
+  return {
+    scrolled: false,
+    demoModal: null,
+    demoMessages: [],
+    demoStep: 0,
+    demoTyping: false,
+    calc: { missedCalls: 20, recoveryRate: 45, apptValue: 350, dormantPatients: 200 },
+    services: [
+      { name: 'Invisalign Clear Aligners', desc: 'Free consultation available. Prevents fractures, periodontal disease, and TMJ issues. Custom treatment from 6-18 months.', emoji: '😁', iconBg: 'bg-blue-50' },
+      { name: 'CEREC Same-Day Crowns', desc: 'Single appointment crowns designed, milled, and placed in one visit. Less time away from your family.', emoji: '👑', iconBg: 'bg-amber-50' },
+      { name: 'Dental Implants & Bone Grafting', desc: 'Full implant services including single-tooth, implant-supported bridges, and bone grafting procedures.', emoji: '🦷', iconBg: 'bg-brand-50' },
+      { name: 'Tooth Whitening', desc: 'Professional in-office whitening and stronger home systems for a brighter, more confident smile.', emoji: '✨', iconBg: 'bg-yellow-50' },
+      { name: 'Emergency Dental Care', desc: 'Same-day emergency evaluation. Root canals, extractions, cracked teeth, and urgent dental conditions.', emoji: '🚨', iconBg: 'bg-red-50' },
+      { name: 'Botox for TMJ & Grinding', desc: 'Therapeutic Botox injections for jaw tension, TMJ disorder, and chronic teeth clenching or grinding.', emoji: '💆', iconBg: 'bg-purple-50' },
+      { name: 'Preventative Care', desc: 'Regular cleanings, exams, digital X-rays, fluoride treatments, and sealants for the whole family.', emoji: '🛡️', iconBg: 'bg-green-50' },
+      { name: 'Cosmetic Dentistry', desc: 'Professional teeth whitening, porcelain veneers, and complete smile makeover consultations.', emoji: '💎', iconBg: 'bg-pink-50' },
+      { name: 'Oral Appliances', desc: 'Custom night guards for bruxism, TMJ appliances, and sports mouth guards for active lifestyles.', emoji: '🏃', iconBg: 'bg-indigo-50' },
+    ],
+    scripts: {
+      inbound: [
+        { from: 'ai', text: "Hi, thanks for calling Family Orlando Dentistry! This is Maria, your AI assistant. How can I help you today?" },
+        { from: 'patient', text: "Hi, I'm interested in Invisalign. I saw you offer a free consultation?" },
+        { from: 'ai', text: "Absolutely! We do offer a free Invisalign consultation with Dr. Nitisusanta. It includes a digital scan and a visual preview of your potential results. What's motivating you to look into teeth straightening?" },
+        { from: 'patient', text: "I've had some crowding on my bottom teeth for years. It's gotten worse and I want to finally fix it." },
+        { from: 'ai', text: "That's a great reason to explore Invisalign. Crowding can actually lead to harder-to-clean areas, which increases risk for cavities and gum issues. Have you had any orthodontic treatment before?" },
+        { from: 'patient', text: "I had braces as a teenager but didn't wear my retainer. So they shifted back." },
+        { from: 'ai', text: "That's really common! The good news is Invisalign is great for cases like yours. Let me get you booked for that free consultation. Do you prefer mornings or afternoons?" },
+        { from: 'patient', text: "Afternoons work better for me." },
+        { from: 'ai', text: "Perfect. I have a Thursday at 2:30 PM available with Dr. Nadine Nitisusanta. Does that work for you?" },
+        { from: 'patient', text: "That works great!" },
+        { from: 'ai', text: "Wonderful! You're all set for Thursday at 2:30 PM. We're at 2704 Rew Circle, Suite 103 in Ocoee. Please arrive 15 minutes early for paperwork. We'll see you then!" },
+      ],
+      outbound: [
+        { from: 'ai', text: "Hi Sarah, this is Ava with Family Orlando Dentistry. How are you doing today?" },
+        { from: 'patient', text: "Oh, hi! I'm good. It's been a while since I've been in." },
+        { from: 'ai', text: "It has! That's actually why I'm calling. It looks like you're due for a hygiene visit, and we wanted to make it easy to get back on the schedule. Would you be interested in booking a cleaning?" },
+        { from: 'patient', text: "Yeah, I've been meaning to. I just kept putting it off." },
+        { from: 'ai', text: "Totally understand! No judgment at all. We have some great openings this week and next. Do you prefer mornings or afternoons?" },
+        { from: 'patient', text: "Mornings are better. Maybe Tuesday?" },
+        { from: 'ai', text: "Tuesday morning works perfectly. I'll get you booked for a cleaning. It's been 14 months, so Dr. Nitisusanta may want to take a quick look too. We'll have you in and out. Sound good?" },
+        { from: 'patient', text: "Sounds great. Thanks for calling!" },
+        { from: 'ai', text: "My pleasure, Sarah! We'll see you Tuesday morning. Have a great rest of your day!" },
+      ],
+      vface: [
+        { from: 'ai', text: "Hi there! I'm Maria, your virtual concierge for Family Orlando Dentistry. Welcome to our practice! Is there something I can help you with today?" },
+        { from: 'patient', text: "I'm looking at getting my teeth straightened. Do you do Invisalign?" },
+        { from: 'ai', text: "We absolutely do! Dr. Nitisusanta offers Invisalign clear aligners, and right now we have a free consultation offer. It includes a digital scan and a preview of your potential results. Would you like to book one?" },
+        { from: 'patient', text: "How much does Invisalign usually cost?" },
+        { from: 'ai', text: "Great question! Costs vary based on your specific case, but the team covers all of that during the free consultation. Many patients also use insurance or financing to make it very affordable. The best first step is booking that no-obligation consultation." },
+        { from: 'patient', text: "Okay, let's do it. What do I need?" },
+        { from: 'ai', text: "Perfect! I just need your name and preferred contact method, and the team will reach out to confirm your appointment. Dr. Nadine and Dr. Jonathan have over 55 years of combined experience — you'll be in great hands!" },
+      ],
+    },
+    openDemo(type) { this.demoModal = type; this.demoMessages = []; this.demoStep = 0; },
+    getScript() { return this.scripts[this.demoModal] || []; },
+    async advanceDemo() {
+      const script = this.getScript();
+      if (this.demoStep >= script.length) return;
+      const msg = script[this.demoStep];
+      if (msg.from === 'ai') {
+        this.demoTyping = true;
+        await new Promise(r => setTimeout(r, 800 + Math.random() * 600));
+        this.demoTyping = false;
+      }
+      this.demoMessages.push(msg);
+      this.demoStep++;
+      this.$nextTick(() => {
+        const area = document.getElementById('chatArea');
+        if (area) area.scrollTop = area.scrollHeight;
+      });
+      // Auto-advance patient replies after a brief pause
+      if (this.demoStep < script.length && script[this.demoStep].from !== msg.from) {
+        await new Promise(r => setTimeout(r, 600));
+        await this.advanceDemo();
+      }
+    },
+    calcInboundRevenue() {
+      return Math.round(this.calc.missedCalls * (this.calc.recoveryRate / 100) * this.calc.apptValue * 4.33);
+    },
+    calcReactivationRevenue() {
+      return Math.round(this.calc.dormantPatients * 0.20 * this.calc.apptValue);
+    },
+    calcTotalAnnual() {
+      return Math.round(this.calcInboundRevenue() * 12 + this.calcReactivationRevenue() * 4);
+    },
+    init() {
+      // Scroll reveal observer
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+    }
+  }
+}
+</script>
+
+</body>
+</html>
