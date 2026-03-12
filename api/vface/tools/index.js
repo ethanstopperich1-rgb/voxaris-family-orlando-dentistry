@@ -612,7 +612,7 @@ async function handleBookAppointment(params, res) {
             notes: serviceNote,
           },
           metadata: {
-            source: "tavus_vface_maria",
+            source: "virtual_concierge",
             appointment_type,
             provider_key,
             event_id: eventId,
@@ -717,7 +717,7 @@ async function handleBookAppointment(params, res) {
       request_id: request_id || eventId,
       status: "confirmed",
       booked_at: new Date().toISOString(),
-      source: "tavus_vface_maria",
+      source: "virtual_concierge",
     };
 
     try {

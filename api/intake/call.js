@@ -31,9 +31,10 @@ const TRANSCRIBER_CONFIG = {
 function buildIntakeAssistantConfig(params) {
   const { patient_name, service_type, email } = params;
 
-  const serverUrl =
+  const serverUrl = (
     process.env.VAPI_WEBHOOK_URL ||
-    `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "https://localhost:3000"}/api/vapi/webhook`;
+    `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "https://localhost:3000"}/api/vapi/webhook`
+  ).trim();
 
   const systemPrompt = `You are Ava, the AI dental concierge for Family Orlando Dentistry in Ocoee, Florida.
 
@@ -117,7 +118,7 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const phoneNumberId = process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID;
+  const phoneNumberId = (process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID || "").trim();
   if (!phoneNumberId) {
     console.error("[api/intake/call] VAPI_OUTBOUND_PHONE_NUMBER_ID not set");
     return res.status(500).json({
