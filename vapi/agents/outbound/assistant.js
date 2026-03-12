@@ -12,7 +12,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { OUTBOUND_TOOLS } = require("../../lib/tools");
+// Tool calling disabled for demo stability.
+// const { OUTBOUND_TOOLS } = require("../../lib/tools");
 
 function loadPrompt(filename) {
   return fs.readFileSync(
@@ -43,12 +44,12 @@ function baseOutbound(serverUrl) {
       model: "gpt-4o-mini",
       temperature: 0.4,
       maxTokens: 200,
-      tools: OUTBOUND_TOOLS,
+      // tools: OUTBOUND_TOOLS, // Disabled for demo
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,
     serverUrl,
-    serverMessages: ["tool-calls", "status-update", "end-of-call-report"],
+    serverMessages: ["status-update", "end-of-call-report"],
     maxDurationSeconds: 300, // 5 min cap for outbound
     silenceTimeoutSeconds: 15,
     endCallMessage: "Thanks for your time. Have a great day.",

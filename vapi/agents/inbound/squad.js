@@ -11,12 +11,13 @@
 
 const fs = require("fs");
 const path = require("path");
-const {
-  INBOUND_RECEPTIONIST_TOOLS,
-  INBOUND_QUALIFIER_TOOLS,
-  INBOUND_EMERGENCY_TOOLS,
-  INBOUND_SCHEDULER_TOOLS,
-} = require("../../lib/tools");
+// Tool calling disabled for demo stability.
+// const {
+//   INBOUND_RECEPTIONIST_TOOLS,
+//   INBOUND_QUALIFIER_TOOLS,
+//   INBOUND_EMERGENCY_TOOLS,
+//   INBOUND_SCHEDULER_TOOLS,
+// } = require("../../lib/tools");
 
 // ─── Load prompts from disk ───
 
@@ -55,12 +56,12 @@ function getReceptionistConfig(serverUrl) {
       messages: [{ role: "system", content: loadPrompt("receptionist.txt") }],
       temperature: 0.4,
       maxTokens: 200,
-      tools: INBOUND_RECEPTIONIST_TOOLS,
+      // tools: INBOUND_RECEPTIONIST_TOOLS, // Disabled for demo
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,
     serverUrl,
-    serverMessages: ["tool-calls", "status-update", "end-of-call-report"],
+    serverMessages: ["status-update", "end-of-call-report"],
     maxDurationSeconds: 600,
     silenceTimeoutSeconds: 30,
     backgroundSound: "office",
@@ -81,12 +82,12 @@ function getInvisalignQualifierConfig(serverUrl) {
       ],
       temperature: 0.4,
       maxTokens: 200,
-      tools: INBOUND_QUALIFIER_TOOLS,
+      // tools: INBOUND_QUALIFIER_TOOLS, // Disabled for demo
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,
     serverUrl,
-    serverMessages: ["tool-calls", "status-update", "end-of-call-report"],
+    serverMessages: ["status-update", "end-of-call-report"],
     maxDurationSeconds: 600,
     silenceTimeoutSeconds: 30,
   };
@@ -106,12 +107,12 @@ function getEmergencyQualifierConfig(serverUrl) {
       ],
       temperature: 0.3,
       maxTokens: 200,
-      tools: INBOUND_EMERGENCY_TOOLS,
+      // tools: INBOUND_EMERGENCY_TOOLS, // Disabled for demo
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,
     serverUrl,
-    serverMessages: ["tool-calls", "status-update", "end-of-call-report"],
+    serverMessages: ["status-update", "end-of-call-report"],
     maxDurationSeconds: 600,
     silenceTimeoutSeconds: 30,
   };
@@ -130,12 +131,12 @@ function getGeneralSchedulerConfig(serverUrl) {
       ],
       temperature: 0.4,
       maxTokens: 200,
-      tools: INBOUND_SCHEDULER_TOOLS,
+      // tools: INBOUND_SCHEDULER_TOOLS, // Disabled for demo
     },
     voice: VOICE_CONFIG,
     transcriber: TRANSCRIBER_CONFIG,
     serverUrl,
-    serverMessages: ["tool-calls", "status-update", "end-of-call-report"],
+    serverMessages: ["status-update", "end-of-call-report"],
     maxDurationSeconds: 600,
     silenceTimeoutSeconds: 30,
   };
