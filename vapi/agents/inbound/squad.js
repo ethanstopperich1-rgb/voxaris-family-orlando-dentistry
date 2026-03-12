@@ -31,8 +31,8 @@ function loadPrompt(filename) {
 
 const VOICE_CONFIG = {
   provider: "rime",
-  voiceId: "cove", // calm, warm female — good for dental
-  model: "arcana",
+  voiceId: "moraine",
+  model: "mistv2",
 };
 
 const TRANSCRIBER_CONFIG = {

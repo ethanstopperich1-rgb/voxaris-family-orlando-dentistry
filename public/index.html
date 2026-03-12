@@ -104,7 +104,7 @@
     /* ─── Grid ─── */
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
       margin-bottom: 48px;
     }
@@ -135,9 +135,6 @@
     .card-icon.inbound  { background: rgba(22, 120, 212, .12); color: var(--dental-blue); }
     .card-icon.outbound { background: rgba(14, 165, 164, .12); color: var(--dental-teal); }
     .card-icon.vface    { background: var(--gold-dim); color: var(--gold); }
-    .card-icon.dash     { background: rgba(99, 102, 241, .12); color: #818cf8; }
-    .card-icon.landing  { background: rgba(52, 211, 153, .12); color: #34d399; }
-    .card-icon.pitch    { background: rgba(251, 113, 133, .12); color: #fb7185; }
 
     .card-label {
       font-size: 10px;
@@ -170,39 +167,6 @@
     }
     .hub-card:hover .card-arrow { opacity: 1; }
 
-    /* ─── Section: Agent Architecture ─── */
-    .section-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--white-muted);
-      margin-bottom: 16px;
-    }
-    .arch-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin-bottom: 48px;
-    }
-    .arch-card {
-      background: var(--void-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 20px;
-    }
-    .arch-card h4 {
-      font-family: var(--font-heading);
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .arch-card p {
-      color: var(--white-muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
     /* ─── Footer ─── */
     .hub-footer {
       text-align: center;
@@ -217,6 +181,10 @@
       text-decoration: none;
     }
     .hub-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .hub-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -227,7 +195,7 @@
     <header class="hub-header">
       <div class="hub-badge"><span class="dot"></span> Voxaris Demo Suite</div>
       <h1>Family Orlando Dentistry <em>&times; Voxaris</em></h1>
-      <p>Complete AI agent system for a phone-first family dental practice. Inbound capture, outbound reactivation, conversational video concierge, and real-time analytics.</p>
+      <p>Complete AI agent system for a phone-first family dental practice. Inbound capture, outbound reactivation, and conversational video concierge.</p>
     </header>
 
     <!-- Demo Surfaces -->
@@ -253,7 +221,7 @@
         <div class="card-arrow">Open Demo &rarr;</div>
       </a>
 
-      <a href="vface/public/index.html" class="hub-card">
+      <a href="concierge/" class="hub-card">
         <div class="card-icon vface">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="6.75" r="3" transform="scale(.75)"/><path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2" transform="scale(.75)"/></svg>
         </div>
@@ -263,57 +231,6 @@
         <div class="card-arrow">Open Demo &rarr;</div>
       </a>
 
-      <a href="dashboard/index.html" class="hub-card">
-        <div class="card-icon dash">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.25" y="2.25" width="13.5" height="13.5" rx="1.5" transform="scale(.75)"/><path d="M12 2v20M2 12h20" transform="scale(.75)"/></svg>
-        </div>
-        <div class="card-label">Voxaris Command</div>
-        <h3>Practice Dashboard</h3>
-        <p>Real-time KPIs, call analytics, pipeline visualization, and ROI calculator. The owner's command center for monitoring agent performance.</p>
-        <div class="card-arrow">Open Demo &rarr;</div>
-      </a>
-
-      <a href="landing-page/index.html" class="hub-card">
-        <div class="card-icon landing">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" transform="scale(.75)"/><polyline points="9 22 9 12 15 12 15 22" transform="scale(.75)"/></svg>
-        </div>
-        <div class="card-label">Landing Page</div>
-        <h3>Practice Landing Page</h3>
-        <p>Patient-facing website with V&middot;FACE hero, service sections, trust signals, ROI calculator, and after-hours capture. Built with Tailwind CSS.</p>
-        <div class="card-arrow">Open Demo &rarr;</div>
-      </a>
-
-      <a href="pitch-deck/" class="hub-card">
-        <div class="card-icon pitch">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3" width="15" height="12" rx="1.5" transform="scale(.75)"/><path d="M8 21h8M12 17v4" transform="scale(.75)"/></svg>
-        </div>
-        <div class="card-label">Pitch Deck</div>
-        <h3>Sales Presentation</h3>
-        <p>16-slide .pptx deck with speaker notes, stat cards, KPI tiles, and benchmark bars. Generated with Python — ready to present.</p>
-        <div class="card-arrow">View Files &rarr;</div>
-      </a>
-
-    </div>
-
-    <!-- Agent Architecture -->
-    <div class="section-label">Agent Architecture</div>
-    <div class="arch-grid">
-      <div class="arch-card">
-        <h4>Vapi Inbound Squad</h4>
-        <p>Receptionist &rarr; Qualifier &rarr; Specialist routing with context handoff. Emergency triage, Invisalign qualification, general scheduling.</p>
-      </div>
-      <div class="arch-card">
-        <h4>Vapi Outbound Campaign</h4>
-        <p>Three campaign types: hygiene reactivation, Invisalign follow-up, and dormant patient revival. Each with persona-driven prompts.</p>
-      </div>
-      <div class="arch-card">
-        <h4>Tavus V&middot;FACE</h4>
-        <p>Conversational video concierge powered by Tavus CVI. Session creation, persona config, replica selection, and webhook handling.</p>
-      </div>
-      <div class="arch-card">
-        <h4>Tool Layer</h4>
-        <p>Five mock tools: capture_lead, request_appointment, mark_emergency, log_reactivation, transfer_to_human. Ready for DB integration.</p>
-      </div>
     </div>
 
     <!-- Footer -->

@@ -6,13 +6,14 @@
  * Routes tool calls from the concierge frontend.
  * Body: { action: "check_availability" | "book_appointment" | "webhook", ...params }
  *
- * Accepts v2 Raven-1 tool schemas (appointment_type, service_line, provider_preference, etc.)
+ * Uses Google Calendar FreeBusy + Events API for real availability/booking.
  * Falls back to static slot generation when Google Calendar env vars are not set.
  */
 
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const { google } = require("googleapis");
 
 // ── Constants ─────────────────────────────────────────────────────────
 
@@ -62,6 +63,29 @@ const APPOINTMENT_LABELS = {
   botox_tmj_eval: "TMJ / Botox evaluation",
 };
 
+// ── Google Calendar Auth ──────────────────────────────────────────────
+
+function getCalendarClient() {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+
+  if (!clientId || !clientSecret || !refreshToken) return null;
+
+  const oauth2 = new google.auth.OAuth2(clientId, clientSecret);
+  oauth2.setCredentials({ refresh_token: refreshToken });
+  return google.calendar({ version: "v3", auth: oauth2 });
+}
+
+function getCalendarId(providerKey) {
+  const map = {
+    jonathan: process.env.GCAL_DR_JONATHAN_ID,
+    nadine: process.env.GCAL_DR_NADINE_ID,
+    main: process.env.GCAL_MAIN_ID,
+  };
+  return map[providerKey] || null;
+}
+
 // ── Handler ───────────────────────────────────────────────────────────
 
 module.exports = async function handler(req, res) {
@@ -85,9 +109,9 @@ module.exports = async function handler(req, res) {
   }
 };
 
-// ── Check Availability (v2) ───────────────────────────────────────────
+// ── Check Availability (v2 — Google Calendar FreeBusy) ───────────────
 
-function handleCheckAvailability(params, res) {
+async function handleCheckAvailability(params, res) {
   try {
     const {
       appointment_type = "general_new_patient",
@@ -128,90 +152,137 @@ function handleCheckAvailability(params, res) {
       (preferred_days || []).map((d) => dayMap[d]).filter(Boolean)
     );
 
-    // Generate slots for each candidate provider
-    const providerResults = [];
+    const calendar = getCalendarClient();
 
-    for (const providerKey of candidateProviders) {
-      const slots = [];
-      const cursor = new Date(searchStart);
+    // Try Google Calendar FreeBusy API
+    if (calendar) {
+      const providerResults = [];
 
-      while (cursor <= searchEnd && slots.length < 6) {
-        const dayOfWeek = cursor.getDay(); // JS: Sun=0, Mon=1 ... Sat=6
-        const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek; // Convert to ISO
+      for (const providerKey of candidateProviders) {
+        const calId = getCalendarId(providerKey);
+        if (!calId) {
+          providerResults.push({ provider_key: providerKey, slots: [], errors: ["Calendar not configured"] });
+          continue;
+        }
 
-        if (OFFICE_OPEN_DAYS.has(isoDay)) {
-          const dayMatch = preferredDayNums.size === 0 || preferredDayNums.has(isoDay);
+        // Fetch busy intervals
+        let busyIntervals = [];
+        try {
+          const freeBusyRes = await calendar.freebusy.query({
+            requestBody: {
+              timeMin: searchStart.toISOString(),
+              timeMax: searchEnd.toISOString(),
+              timeZone: OFFICE_TIMEZONE,
+              items: [{ id: calId }],
+            },
+          });
+          busyIntervals = (freeBusyRes.data.calendars[calId] || {}).busy || [];
+        } catch (fbErr) {
+          console.error(`[tools/check-availability] FreeBusy error for ${providerKey}:`, fbErr.message);
+          providerResults.push({ provider_key: providerKey, slots: [], errors: [fbErr.message] });
+          continue;
+        }
 
-          if (dayMatch) {
-            for (let hour = OFFICE_START_HOUR; hour < OFFICE_END_HOUR; hour++) {
-              for (let min = 0; min < 60; min += 15) {
-                if (slots.length >= 6) break;
+        // Build set of busy windows (as epoch ranges)
+        const busyRanges = busyIntervals.map((b) => ({
+          start: new Date(b.start).getTime(),
+          end: new Date(b.end).getTime(),
+        }));
 
-                const endHour = hour + Math.floor((min + duration) / 60);
-                const endMin = (min + duration) % 60;
-                if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
+        // Scan office hours for open slots
+        const slots = [];
+        const cursor = new Date(searchStart);
 
-                // Time-of-day filter
-                if (preferred_time_of_day === "morning" && hour >= 12) continue;
-                if (preferred_time_of_day === "afternoon" && hour < 12) continue;
+        while (cursor <= searchEnd && slots.length < 6) {
+          const dayOfWeek = cursor.getDay();
+          const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
 
-                // Skip past times
-                const slotDate = new Date(cursor);
-                slotDate.setHours(hour, min, 0, 0);
-                if (slotDate <= now) continue;
+          if (OFFICE_OPEN_DAYS.has(isoDay)) {
+            const dayMatch = preferredDayNums.size === 0 || preferredDayNums.has(isoDay);
 
-                const yyyy = cursor.getFullYear();
-                const mm = String(cursor.getMonth() + 1).padStart(2, "0");
-                const dd = String(cursor.getDate()).padStart(2, "0");
-                const startIso = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}:00-04:00`;
-                const endIso = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00-04:00`;
+            if (dayMatch) {
+              for (let hour = OFFICE_START_HOUR; hour < OFFICE_END_HOUR; hour++) {
+                for (let min = 0; min < 60; min += 15) {
+                  if (slots.length >= 6) break;
 
-                const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-                const ampm = hour >= 12 ? "PM" : "AM";
-                const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                  const endHour = hour + Math.floor((min + duration) / 60);
+                  const endMin = (min + duration) % 60;
+                  if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
 
-                slots.push({
-                  start_iso: startIso,
-                  end_iso: endIso,
-                  human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:${String(min).padStart(2, "0")} ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
-                });
+                  if (preferred_time_of_day === "morning" && hour >= 12) continue;
+                  if (preferred_time_of_day === "afternoon" && hour < 12) continue;
+
+                  // Build slot start/end in ET
+                  const yyyy = cursor.getFullYear();
+                  const mm = String(cursor.getMonth() + 1).padStart(2, "0");
+                  const dd = String(cursor.getDate()).padStart(2, "0");
+                  const startStr = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}:00`;
+                  const endStr = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00`;
+
+                  // Parse as ET for comparison
+                  const slotStartMs = new Date(startStr + "-04:00").getTime();
+                  const slotEndMs = new Date(endStr + "-04:00").getTime();
+
+                  // Skip past slots
+                  if (slotStartMs <= now.getTime()) continue;
+
+                  // Check against busy ranges
+                  const overlaps = busyRanges.some(
+                    (b) => slotStartMs < b.end && slotEndMs > b.start
+                  );
+                  if (overlaps) continue;
+
+                  const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                  const ampm = hour >= 12 ? "PM" : "AM";
+                  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                  slots.push({
+                    start_iso: startStr + "-04:00",
+                    end_iso: endStr + "-04:00",
+                    human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:${String(min).padStart(2, "0")} ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
+                  });
+                }
               }
             }
           }
+
+          cursor.setDate(cursor.getDate() + 1);
+          cursor.setHours(0, 0, 0, 0);
         }
 
-        cursor.setDate(cursor.getDate() + 1);
-        cursor.setHours(0, 0, 0, 0);
+        providerResults.push({
+          provider_key: providerKey,
+          slots: slots.slice(0, 6),
+          errors: [],
+        });
       }
 
-      providerResults.push({
-        provider_key: providerKey,
-        slots: slots.slice(0, 6),
-        errors: [],
+      // Flatten and limit to best 8 slots
+      const flattened = providerResults
+        .flatMap((p) => p.slots.map((s) => ({ provider_key: p.provider_key, ...s })))
+        .slice(0, 8);
+
+      return res.status(200).json({
+        ok: true,
+        source: "google_calendar",
+        appointment_type,
+        service_line,
+        duration_minutes: duration,
+        search_window: {
+          start_iso: searchStart.toISOString(),
+          end_iso: searchEnd.toISOString(),
+        },
+        slots: flattened,
+        provider_results: providerResults,
+        guidance: flattened.length > 0
+          ? "Offer the patient the returned slots only. Confirm one choice before calling book_appointment."
+          : "No live openings found in the current search window. Ask the patient if they want a broader search or a callback preference.",
       });
     }
 
-    // Flatten and limit to best 8 slots across providers
-    const flattened = providerResults
-      .flatMap((p) => p.slots.map((s) => ({ provider_key: p.provider_key, ...s })))
-      .slice(0, 8);
-
-    return res.status(200).json({
-      ok: true,
-      appointment_type,
-      service_line,
-      duration_minutes: duration,
-      search_window: {
-        start_iso: searchStart.toISOString(),
-        end_iso: searchEnd.toISOString(),
-      },
-      slots: flattened,
-      provider_results: providerResults,
-      guidance: flattened.length > 0
-        ? "Offer the patient the returned slots only. Confirm one choice before calling book_appointment."
-        : "No live openings found in the current search window. Ask the patient if they want a broader search or a callback preference.",
-    });
+    // ── Fallback: static slot generation ──────────────────────────────
+    return handleCheckAvailabilityStatic(params, res);
   } catch (err) {
     console.error("[tools/check-availability] Error:", err.message);
     return res.status(500).json({
@@ -221,9 +292,115 @@ function handleCheckAvailability(params, res) {
   }
 }
 
-// ── Book Appointment (v2) ─────────────────────────────────────────────
+// ── Static Fallback ──────────────────────────────────────────────────
 
-function handleBookAppointment(params, res) {
+function handleCheckAvailabilityStatic(params, res) {
+  const {
+    appointment_type = "general_new_patient",
+    service_line = "general",
+    urgency = "low",
+    provider_preference = "no_preference",
+    preferred_days = [],
+    preferred_time_of_day = "no_preference",
+    start_date,
+    end_date,
+    duration_minutes,
+  } = params;
+
+  const duration = duration_minutes || DEFAULT_DURATION[appointment_type] || 45;
+
+  let candidateProviders;
+  if (provider_preference === "jonathan") candidateProviders = ["jonathan"];
+  else if (provider_preference === "nadine") candidateProviders = ["nadine"];
+  else candidateProviders = SERVICE_CALENDAR_ORDER[service_line] || ["main"];
+
+  const now = new Date();
+  const searchStart = start_date ? new Date(start_date + "T00:00:00") : now;
+  const defaultDays = urgency === "high" ? 3 : 14;
+  const searchEnd = end_date
+    ? new Date(end_date + "T23:59:59")
+    : new Date(searchStart.getTime() + defaultDays * 86400000);
+
+  const dayMap = { monday: 1, tuesday: 2, thursday: 4, friday: 5 };
+  const preferredDayNums = new Set(
+    (preferred_days || []).map((d) => dayMap[d]).filter(Boolean)
+  );
+
+  const providerResults = [];
+
+  for (const providerKey of candidateProviders) {
+    const slots = [];
+    const cursor = new Date(searchStart);
+
+    while (cursor <= searchEnd && slots.length < 6) {
+      const dayOfWeek = cursor.getDay();
+      const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
+
+      if (OFFICE_OPEN_DAYS.has(isoDay)) {
+        const dayMatch = preferredDayNums.size === 0 || preferredDayNums.has(isoDay);
+        if (dayMatch) {
+          for (let hour = OFFICE_START_HOUR; hour < OFFICE_END_HOUR; hour++) {
+            for (let min = 0; min < 60; min += 15) {
+              if (slots.length >= 6) break;
+              const endHour = hour + Math.floor((min + duration) / 60);
+              const endMin = (min + duration) % 60;
+              if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
+              if (preferred_time_of_day === "morning" && hour >= 12) continue;
+              if (preferred_time_of_day === "afternoon" && hour < 12) continue;
+
+              const slotDate = new Date(cursor);
+              slotDate.setHours(hour, min, 0, 0);
+              if (slotDate <= now) continue;
+
+              const yyyy = cursor.getFullYear();
+              const mm = String(cursor.getMonth() + 1).padStart(2, "0");
+              const dd = String(cursor.getDate()).padStart(2, "0");
+              const startIso = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}:00-04:00`;
+              const endIso = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00-04:00`;
+
+              const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+              const ampm = hour >= 12 ? "PM" : "AM";
+              const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+              const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+              slots.push({
+                start_iso: startIso,
+                end_iso: endIso,
+                human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:${String(min).padStart(2, "0")} ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
+              });
+            }
+          }
+        }
+      }
+      cursor.setDate(cursor.getDate() + 1);
+      cursor.setHours(0, 0, 0, 0);
+    }
+
+    providerResults.push({ provider_key: providerKey, slots: slots.slice(0, 6), errors: [] });
+  }
+
+  const flattened = providerResults
+    .flatMap((p) => p.slots.map((s) => ({ provider_key: p.provider_key, ...s })))
+    .slice(0, 8);
+
+  return res.status(200).json({
+    ok: true,
+    source: "static_fallback",
+    appointment_type,
+    service_line,
+    duration_minutes: duration,
+    search_window: { start_iso: searchStart.toISOString(), end_iso: searchEnd.toISOString() },
+    slots: flattened,
+    provider_results: providerResults,
+    guidance: flattened.length > 0
+      ? "Offer the patient the returned slots only. Confirm one choice before calling book_appointment."
+      : "No live openings found in the current search window. Ask the patient if they want a broader search or a callback preference.",
+  });
+}
+
+// ── Book Appointment (v2 — Google Calendar Events) ───────────────────
+
+async function handleBookAppointment(params, res) {
   const {
     appointment_type,
     service_line,
@@ -239,7 +416,6 @@ function handleBookAppointment(params, res) {
     request_id = "",
   } = params;
 
-  // Validate required fields
   if (!appointment_type || !service_line || !slot_start_iso || !slot_end_iso || !patient_first_name || !patient_last_name || !patient_phone) {
     return res.status(400).json({
       ok: false,
@@ -248,7 +424,6 @@ function handleBookAppointment(params, res) {
   }
 
   try {
-    // Parse slot time
     const slotStart = new Date(slot_start_iso);
     const slotEnd = new Date(slot_end_iso);
 
@@ -256,7 +431,6 @@ function handleBookAppointment(params, res) {
       return res.status(400).json({ ok: false, error: "Invalid slot time format." });
     }
 
-    // Validate office hours
     const dayOfWeek = slotStart.getDay();
     const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
     if (!OFFICE_OPEN_DAYS.has(isoDay)) {
@@ -266,19 +440,78 @@ function handleBookAppointment(params, res) {
       });
     }
 
-    // Build HIPAA-safe summary (first name + last initial)
     const lastInitial = patient_last_name.trim().charAt(0).toUpperCase();
     const safeName = `${patient_first_name.trim()} ${lastInitial}.`;
     const appointmentLabel = APPOINTMENT_LABELS[appointment_type] || appointment_type;
     const summary = `${appointmentLabel} — ${safeName}`;
 
-    // Build deterministic event ID for idempotency
     const eventIdSeed = request_id || `${provider_key}|${slot_start_iso}|${patient_first_name}|${patient_last_name}|${patient_phone}`;
     const eventId = `vx${crypto.createHash("sha256").update(eventIdSeed).digest("hex").slice(0, 24)}`;
 
-    // Build appointment record
+    const description = [
+      `Service: ${appointmentLabel}`,
+      `Patient: ${patient_first_name} ${patient_last_name}`,
+      `Phone: ${patient_phone}`,
+      patient_email ? `Email: ${patient_email}` : null,
+      `Type: ${patient_type}`,
+      notes ? `Notes: ${notes}` : null,
+      `---`,
+      `Booked via V·FACE Maria | ID: ${eventId}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const calendar = getCalendarClient();
+    const calId = getCalendarId(provider_key);
+    let googleEventId = null;
+    let mirrorEvents = [];
+
+    // Create event on Google Calendar if available
+    if (calendar && calId) {
+      try {
+        const gcalEvent = await calendar.events.insert({
+          calendarId: calId,
+          requestBody: {
+            summary,
+            description,
+            start: { dateTime: slot_start_iso, timeZone: OFFICE_TIMEZONE },
+            end: { dateTime: slot_end_iso, timeZone: OFFICE_TIMEZONE },
+            colorId: "9", // Blueberry
+          },
+        });
+        googleEventId = gcalEvent.data.id;
+        console.log(`[tools/book-appointment] Google Calendar event created: ${googleEventId}`);
+
+        // Mirror to Main calendar if booking was on a provider calendar
+        const mainCalId = process.env.GCAL_MAIN_ID;
+        if (provider_key !== "main" && mainCalId) {
+          try {
+            const mirrorEvent = await calendar.events.insert({
+              calendarId: mainCalId,
+              requestBody: {
+                summary: `[Mirror] ${summary}`,
+                description: `Mirrored from ${PROVIDER_LABELS[provider_key] || provider_key}\n${description}`,
+                start: { dateTime: slot_start_iso, timeZone: OFFICE_TIMEZONE },
+                end: { dateTime: slot_end_iso, timeZone: OFFICE_TIMEZONE },
+                colorId: "8", // Graphite
+                transparency: "transparent",
+              },
+            });
+            mirrorEvents.push({ calendar: "main", event_id: mirrorEvent.data.id });
+          } catch (mirrorErr) {
+            console.error("[tools/book-appointment] Mirror failed:", mirrorErr.message);
+          }
+        }
+      } catch (gcalErr) {
+        console.error("[tools/book-appointment] Google Calendar insert failed:", gcalErr.message);
+        // Continue with local booking even if GCal fails
+      }
+    }
+
+    // Log appointment locally
     const appointment = {
       id: eventId,
+      google_event_id: googleEventId,
       summary,
       appointment_type,
       service_line,
@@ -297,11 +530,9 @@ function handleBookAppointment(params, res) {
       source: "tavus_vface_maria",
     };
 
-    // Log appointment
     const logFile = path.join("/tmp", "appointments.jsonl");
     fs.appendFileSync(logFile, JSON.stringify(appointment) + "\n");
 
-    // Format human-readable confirmation
     const providerLabel = PROVIDER_LABELS[provider_key] || provider_key;
     const startDate = slotStart.toLocaleDateString("en-US", {
       weekday: "long",
@@ -316,17 +547,18 @@ function handleBookAppointment(params, res) {
     });
     const humanReadable = `${startDate} at ${startTime} ET with ${providerLabel}`;
 
-    console.log(`[tools/book-appointment] Booked: ${eventId} — ${summary} on ${humanReadable}`);
+    console.log(`[tools/book-appointment] Booked: ${eventId} — ${summary} on ${humanReadable} (gcal: ${googleEventId || "none"})`);
 
     return res.status(200).json({
       ok: true,
+      source: googleEventId ? "google_calendar" : "local_only",
       appointment: {
         provider_key,
         human_readable: humanReadable,
         start_iso: slot_start_iso,
         end_iso: slot_end_iso,
-        primary_event_id: eventId,
-        mirror_events: [],
+        primary_event_id: googleEventId || eventId,
+        mirror_events: mirrorEvents,
       },
       confirmation_text: `Booked for ${humanReadable}.`,
     });
