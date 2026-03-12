@@ -19,5 +19,8 @@
   ],
   "rewrites": [
     { "source": "/health", "destination": "/api/health" }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/landing-page/index.html", "statusCode": 302 }
   ]
 }
