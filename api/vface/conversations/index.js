@@ -45,17 +45,18 @@ module.exports = async function handler(req, res) {
       context += "The visitor has flagged this as urgent. Prioritize triage questions. ";
     }
 
-    const baseUrl = (
-      process.env.VFACE_BASE_URL
-      || process.env.NEXT_PUBLIC_BASE_URL
-      || "https://voxaris-family-orlando-dentistry.vercel.app"
-    ).trim();
-    const callbackUrl = `${baseUrl}/api/vface/tools`;
+    // Tool calling disabled for now to prevent hangs during demos.
+    // To re-enable, uncomment callbackUrl and pass it to createConversation.
+    // const baseUrl = (
+    //   process.env.VFACE_BASE_URL
+    //   || process.env.NEXT_PUBLIC_BASE_URL
+    //   || "https://voxaris-family-orlando-dentistry.vercel.app"
+    // ).trim();
+    // const callbackUrl = `${baseUrl}/api/vface/tools`;
 
     const result = await createConversation({
       greeting,
       context: context || undefined,
-      callbackUrl,
     });
 
     return res.status(200).json({
