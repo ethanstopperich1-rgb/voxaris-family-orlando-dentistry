@@ -156,7 +156,7 @@ async function handleCheckAvailability(params, res) {
 
     // Try Google Calendar FreeBusy API
     if (calendar) {
-      const providerResults = [];
+      const allSlots = [];
 
       for (const providerKey of candidateProviders) {
         const calId = getCalendarId(providerKey);
@@ -189,11 +189,12 @@ async function handleCheckAvailability(params, res) {
           end: new Date(b.end).getTime(),
         }));
 
-        // Scan office hours for open slots
+        // Scan office hours for open slots (one per hour to keep voice-friendly)
         const slots = [];
         const cursor = new Date(searchStart);
+        const usedHours = new Set(); // track hours already offered
 
-        while (cursor <= searchEnd && slots.length < 6) {
+        while (cursor <= searchEnd && slots.length < 3) {
           const dayOfWeek = cursor.getDay();
           const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
 
@@ -202,47 +203,54 @@ async function handleCheckAvailability(params, res) {
 
             if (dayMatch) {
               for (let hour = OFFICE_START_HOUR; hour < OFFICE_END_HOUR; hour++) {
-                for (let min = 0; min < 60; min += 15) {
-                  if (slots.length >= 6) break;
+                if (slots.length >= 3) break;
 
-                  const endHour = hour + Math.floor((min + duration) / 60);
-                  const endMin = (min + duration) % 60;
-                  if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
+                // One slot per hour per day to keep results spread out
+                const dayHourKey = `${cursor.toDateString()}-${hour}`;
+                if (usedHours.has(dayHourKey)) continue;
 
-                  if (preferred_time_of_day === "morning" && hour >= 12) continue;
-                  if (preferred_time_of_day === "afternoon" && hour < 12) continue;
+                const min = 0; // top of hour only
+                const endHour = hour + Math.floor((min + duration) / 60);
+                const endMin = (min + duration) % 60;
+                if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
 
-                  // Build slot start/end in ET
-                  const yyyy = cursor.getFullYear();
-                  const mm = String(cursor.getMonth() + 1).padStart(2, "0");
-                  const dd = String(cursor.getDate()).padStart(2, "0");
-                  const startStr = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}:00`;
-                  const endStr = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00`;
+                if (preferred_time_of_day === "morning" && hour >= 12) continue;
+                if (preferred_time_of_day === "afternoon" && hour < 12) continue;
 
-                  // Parse as ET for comparison
-                  const slotStartMs = new Date(startStr + "-04:00").getTime();
-                  const slotEndMs = new Date(endStr + "-04:00").getTime();
+                // Build slot start/end in ET
+                const yyyy = cursor.getFullYear();
+                const mm = String(cursor.getMonth() + 1).padStart(2, "0");
+                const dd = String(cursor.getDate()).padStart(2, "0");
+                const startStr = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}:00`;
+                const endStr = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00`;
 
-                  // Skip past slots
-                  if (slotStartMs <= now.getTime()) continue;
+                // Parse as ET for comparison
+                const slotStartMs = new Date(startStr + "-04:00").getTime();
+                const slotEndMs = new Date(endStr + "-04:00").getTime();
 
-                  // Check against busy ranges
-                  const overlaps = busyRanges.some(
-                    (b) => slotStartMs < b.end && slotEndMs > b.start
-                  );
-                  if (overlaps) continue;
+                // Skip past slots
+                if (slotStartMs <= now.getTime()) continue;
 
-                  const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-                  const ampm = hour >= 12 ? "PM" : "AM";
-                  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                // Check against busy ranges
+                const overlaps = busyRanges.some(
+                  (b) => slotStartMs < b.end && slotEndMs > b.start
+                );
+                if (overlaps) continue;
 
-                  slots.push({
-                    start_iso: startStr + "-04:00",
-                    end_iso: endStr + "-04:00",
-                    human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:${String(min).padStart(2, "0")} ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
-                  });
-                }
+                usedHours.add(dayHourKey);
+
+                const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                const ampm = hour >= 12 ? "PM" : "AM";
+                const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                slots.push({
+                  provider_key: providerKey,
+                  start_iso: startStr + "-04:00",
+                  end_iso: endStr + "-04:00",
+                  provider: PROVIDER_LABELS[providerKey] || providerKey,
+                  human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:${String(min).padStart(2, "0")} ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
+                });
               }
             }
           }
@@ -251,33 +259,20 @@ async function handleCheckAvailability(params, res) {
           cursor.setHours(0, 0, 0, 0);
         }
 
-        providerResults.push({
-          provider_key: providerKey,
-          slots: slots.slice(0, 6),
-          errors: [],
-        });
+        allSlots.push(...slots);
       }
 
-      // Flatten and limit to best 8 slots
-      const flattened = providerResults
-        .flatMap((p) => p.slots.map((s) => ({ provider_key: p.provider_key, ...s })))
-        .slice(0, 8);
+      // Limit to 4 well-spaced slots for voice-friendly output
+      const finalSlots = allSlots.slice(0, 4);
 
       return res.status(200).json({
         ok: true,
-        source: "google_calendar",
         appointment_type,
-        service_line,
         duration_minutes: duration,
-        search_window: {
-          start_iso: searchStart.toISOString(),
-          end_iso: searchEnd.toISOString(),
-        },
-        slots: flattened,
-        provider_results: providerResults,
-        guidance: flattened.length > 0
-          ? "Offer the patient the returned slots only. Confirm one choice before calling book_appointment."
-          : "No live openings found in the current search window. Ask the patient if they want a broader search or a callback preference.",
+        slots: finalSlots,
+        guidance: finalSlots.length > 0
+          ? "Present these options to the patient. Once they pick one, call book_appointment with the slot details."
+          : "No openings found. Ask the patient if they'd like to try different days or a callback.",
       });
     }
 
@@ -326,13 +321,14 @@ function handleCheckAvailabilityStatic(params, res) {
     (preferred_days || []).map((d) => dayMap[d]).filter(Boolean)
   );
 
-  const providerResults = [];
+  const allSlots = [];
 
   for (const providerKey of candidateProviders) {
     const slots = [];
     const cursor = new Date(searchStart);
+    const usedHours = new Set();
 
-    while (cursor <= searchEnd && slots.length < 6) {
+    while (cursor <= searchEnd && slots.length < 3) {
       const dayOfWeek = cursor.getDay();
       const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
 
@@ -340,35 +336,42 @@ function handleCheckAvailabilityStatic(params, res) {
         const dayMatch = preferredDayNums.size === 0 || preferredDayNums.has(isoDay);
         if (dayMatch) {
           for (let hour = OFFICE_START_HOUR; hour < OFFICE_END_HOUR; hour++) {
-            for (let min = 0; min < 60; min += 15) {
-              if (slots.length >= 6) break;
-              const endHour = hour + Math.floor((min + duration) / 60);
-              const endMin = (min + duration) % 60;
-              if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
-              if (preferred_time_of_day === "morning" && hour >= 12) continue;
-              if (preferred_time_of_day === "afternoon" && hour < 12) continue;
+            if (slots.length >= 3) break;
 
-              const slotDate = new Date(cursor);
-              slotDate.setHours(hour, min, 0, 0);
-              if (slotDate <= now) continue;
+            const dayHourKey = `${cursor.toDateString()}-${hour}`;
+            if (usedHours.has(dayHourKey)) continue;
 
-              const yyyy = cursor.getFullYear();
-              const mm = String(cursor.getMonth() + 1).padStart(2, "0");
-              const dd = String(cursor.getDate()).padStart(2, "0");
-              const startIso = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}:00-04:00`;
-              const endIso = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00-04:00`;
+            const min = 0;
+            const endHour = hour + Math.floor((min + duration) / 60);
+            const endMin = (min + duration) % 60;
+            if (endHour > OFFICE_END_HOUR || (endHour === OFFICE_END_HOUR && endMin > 0)) continue;
+            if (preferred_time_of_day === "morning" && hour >= 12) continue;
+            if (preferred_time_of_day === "afternoon" && hour < 12) continue;
 
-              const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-              const ampm = hour >= 12 ? "PM" : "AM";
-              const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-              const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const slotDate = new Date(cursor);
+            slotDate.setHours(hour, min, 0, 0);
+            if (slotDate <= now) continue;
 
-              slots.push({
-                start_iso: startIso,
-                end_iso: endIso,
-                human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:${String(min).padStart(2, "0")} ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
-              });
-            }
+            usedHours.add(dayHourKey);
+
+            const yyyy = cursor.getFullYear();
+            const mm = String(cursor.getMonth() + 1).padStart(2, "0");
+            const dd = String(cursor.getDate()).padStart(2, "0");
+            const startIso = `${yyyy}-${mm}-${dd}T${String(hour).padStart(2, "0")}:00:00-04:00`;
+            const endIso = `${yyyy}-${mm}-${dd}T${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}:00-04:00`;
+
+            const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+            const ampm = hour >= 12 ? "PM" : "AM";
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            slots.push({
+              provider_key: providerKey,
+              start_iso: startIso,
+              end_iso: endIso,
+              provider: PROVIDER_LABELS[providerKey] || providerKey,
+              human_readable: `${dayNames[dayOfWeek]}, ${months[cursor.getMonth()]} ${cursor.getDate()} at ${displayHour}:00 ${ampm} ET with ${PROVIDER_LABELS[providerKey] || providerKey}`,
+            });
           }
         }
       }
@@ -376,25 +379,19 @@ function handleCheckAvailabilityStatic(params, res) {
       cursor.setHours(0, 0, 0, 0);
     }
 
-    providerResults.push({ provider_key: providerKey, slots: slots.slice(0, 6), errors: [] });
+    allSlots.push(...slots);
   }
 
-  const flattened = providerResults
-    .flatMap((p) => p.slots.map((s) => ({ provider_key: p.provider_key, ...s })))
-    .slice(0, 8);
+  const finalSlots = allSlots.slice(0, 4);
 
   return res.status(200).json({
     ok: true,
-    source: "static_fallback",
     appointment_type,
-    service_line,
     duration_minutes: duration,
-    search_window: { start_iso: searchStart.toISOString(), end_iso: searchEnd.toISOString() },
-    slots: flattened,
-    provider_results: providerResults,
-    guidance: flattened.length > 0
-      ? "Offer the patient the returned slots only. Confirm one choice before calling book_appointment."
-      : "No live openings found in the current search window. Ask the patient if they want a broader search or a callback preference.",
+    slots: finalSlots,
+    guidance: finalSlots.length > 0
+      ? "Present these options to the patient. Once they pick one, call book_appointment with the slot details."
+      : "No openings found. Ask the patient if they'd like to try different days or a callback.",
   });
 }
 
