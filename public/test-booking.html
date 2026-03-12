@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Test — Family Orlando Dentistry</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e4e4e7; min-height: 100vh; padding: 2rem; }
+    .container { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; color: #fff; }
+    .subtitle { color: #71717a; font-size: 0.875rem; margin-bottom: 1.5rem; }
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid #27272a; margin-bottom: 1.5rem; }
+    .tab { padding: 0.75rem 1.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; color: #71717a; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .tab:hover { color: #a1a1aa; }
+    .tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: 0.75rem; font-weight: 500; color: #a1a1aa; margin-bottom: 0.375rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    select, input, textarea { width: 100%; padding: 0.625rem 0.75rem; background: #18181b; border: 1px solid #27272a; border-radius: 0.5rem; color: #e4e4e7; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
+    select:focus, input:focus, textarea:focus { border-color: #3b82f6; }
+    select { cursor: pointer; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    button { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #3b82f6; color: #fff; width: 100%; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-primary:disabled { background: #1e3a5f; color: #64748b; cursor: not-allowed; }
+    .btn-book { background: #10b981; color: #fff; padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 0.375rem; }
+    .btn-book:hover { background: #059669; }
+    .result-box { margin-top: 1.5rem; background: #18181b; border: 1px solid #27272a; border-radius: 0.75rem; overflow: hidden; }
+    .result-header { padding: 0.75rem 1rem; background: #1c1c21; border-bottom: 1px solid #27272a; display: flex; justify-content: space-between; align-items: center; }
+    .result-header span { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; }
+    .status-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 600; }
+    .status-ok { background: #052e16; color: #4ade80; }
+    .status-err { background: #450a0a; color: #f87171; }
+    .status-loading { background: #172554; color: #60a5fa; }
+    .result-body { padding: 1rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; line-height: 1.6; white-space: pre-wrap; color: #a1a1aa; max-height: 500px; overflow-y: auto; }
+    .slots-grid { display: flex; flex-direction: column; gap: 0.75rem; padding: 1rem; }
+    .slot-card { background: #1c1c21; border: 1px solid #27272a; border-radius: 0.5rem; padding: 0.875rem 1rem; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s; }
+    .slot-card:hover { border-color: #3b82f6; }
+    .slot-info { flex: 1; }
+    .slot-time { font-size: 0.9rem; font-weight: 600; color: #e4e4e7; }
+    .slot-provider { font-size: 0.75rem; color: #71717a; margin-top: 0.125rem; }
+    .slot-iso { font-size: 0.65rem; color: #3f3f46; font-family: monospace; margin-top: 0.25rem; }
+    .divider { border: none; border-top: 1px solid #27272a; margin: 1.5rem 0; }
+    .section-label { font-size: 0.8rem; font-weight: 600; color: #3b82f6; margin-bottom: 1rem; }
+
+    /* Booking form within check_availability */
+    .book-form { margin-top: 1.5rem; background: #1c1c21; border: 1px solid #27272a; border-radius: 0.75rem; padding: 1.25rem; }
+    .book-form h3 { font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 0.25rem; }
+    .book-form .selected-slot { font-size: 0.8rem; color: #3b82f6; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Booking API Test</h1>
+    <p class="subtitle">Family Orlando Dentistry — Cal.com + GCal Integration</p>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="availability">Check Availability</div>
+      <div class="tab" data-tab="booking">Book Appointment</div>
+    </div>
+
+    <!-- ── CHECK AVAILABILITY ── -->
+    <div class="panel active" id="panel-availability">
+      <div class="row">
+        <div class="form-group">
+          <label>Appointment Type</label>
+          <select id="avail-type">
+            <option value="general_new_patient">New Patient Visit (60 min)</option>
+            <option value="general_existing_patient">Existing Patient (45 min)</option>
+            <option value="invisalign_consult">Invisalign Consult (45 min)</option>
+            <option value="cosmetic_consult">Cosmetic Consult (45 min)</option>
+            <option value="whitening">Whitening (30 min)</option>
+            <option value="implant_consult">Implant Consult (60 min)</option>
+            <option value="same_day_crown_consult">Same-Day Crown (60 min)</option>
+            <option value="emergency_exam">Emergency Exam (45 min)</option>
+            <option value="botox_tmj_eval">TMJ / Botox (45 min)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Service Line</label>
+          <select id="avail-service">
+            <option value="general">General</option>
+            <option value="invisalign">Invisalign</option>
+            <option value="cosmetic">Cosmetic</option>
+            <option value="whitening">Whitening</option>
+            <option value="implants">Implants</option>
+            <option value="same_day_crowns">Same-Day Crowns</option>
+            <option value="emergency">Emergency</option>
+            <option value="botox_tmj">TMJ / Botox</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-3">
+        <div class="form-group">
+          <label>Provider Preference</label>
+          <select id="avail-provider">
+            <option value="no_preference">No Preference</option>
+            <option value="jonathan">Dr. Jonathan</option>
+            <option value="nadine">Dr. Nadine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Urgency</label>
+          <select id="avail-urgency">
+            <option value="low">Low (14 days)</option>
+            <option value="high">High (3 days)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Time of Day</label>
+          <select id="avail-time">
+            <option value="no_preference">Any</option>
+            <option value="morning">Morning</option>
+            <option value="afternoon">Afternoon</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-check" onclick="checkAvailability()">Check Availability</button>
+
+      <div class="result-box" id="avail-result" style="display:none;">
+        <div class="result-header">
+          <span>Response</span>
+          <span class="status-badge" id="avail-status"></span>
+        </div>
+        <div id="avail-slots"></div>
+        <div class="result-body" id="avail-raw" style="display:none;"></div>
+      </div>
+
+      <!-- Inline booking form after selecting a slot -->
+      <div class="book-form" id="inline-book-form" style="display:none;">
+        <h3>Book This Slot</h3>
+        <p class="selected-slot" id="inline-slot-label"></p>
+        <div class="row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="inline-first" placeholder="John">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="inline-last" placeholder="Smith">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="inline-phone" placeholder="+14075551234">
+          </div>
+          <div class="form-group">
+            <label>Email (optional)</label>
+            <input type="email" id="inline-email" placeholder="john@example.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes (optional)</label>
+          <textarea id="inline-notes" rows="2" placeholder="Any special requests..."></textarea>
+        </div>
+        <button class="btn-primary" id="btn-inline-book" onclick="bookInlineSlot()">Confirm Booking</button>
+        <div class="result-box" id="inline-book-result" style="display:none; margin-top:1rem;">
+          <div class="result-header">
+            <span>Booking Result</span>
+            <span class="status-badge" id="inline-book-status"></span>
+          </div>
+          <div class="result-body" id="inline-book-raw"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BOOK APPOINTMENT ── -->
+    <div class="panel" id="panel-booking">
+      <p class="section-label">Manual Booking (direct API call)</p>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Appointment Type</label>
+          <select id="book-type">
+            <option value="general_new_patient">New Patient Visit</option>
+            <option value="general_existing_patient">Existing Patient</option>
+            <option value="invisalign_consult">Invisalign Consult</option>
+            <option value="cosmetic_consult">Cosmetic Consult</option>
+            <option value="whitening">Whitening</option>
+            <option value="implant_consult">Implant Consult</option>
+            <option value="same_day_crown_consult">Same-Day Crown</option>
+            <option value="emergency_exam">Emergency Exam</option>
+            <option value="botox_tmj_eval">TMJ / Botox</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Service Line</label>
+          <select id="book-service">
+            <option value="general">General</option>
+            <option value="invisalign">Invisalign</option>
+            <option value="cosmetic">Cosmetic</option>
+            <option value="whitening">Whitening</option>
+            <option value="implants">Implants</option>
+            <option value="same_day_crowns">Same-Day Crowns</option>
+            <option value="emergency">Emergency</option>
+            <option value="botox_tmj">TMJ / Botox</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Provider</label>
+          <select id="book-provider">
+            <option value="main">Main Schedule</option>
+            <option value="jonathan">Dr. Jonathan</option>
+            <option value="nadine">Dr. Nadine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Patient Type</label>
+          <select id="book-patient-type">
+            <option value="new">New Patient</option>
+            <option value="existing">Existing Patient</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="row">
+        <div class="form-group">
+          <label>Slot Start (ISO)</label>
+          <input type="text" id="book-start" placeholder="2026-03-14T14:00:00.000Z">
+        </div>
+        <div class="form-group">
+          <label>Slot End (ISO)</label>
+          <input type="text" id="book-end" placeholder="2026-03-14T15:00:00.000Z">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="book-first" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="book-last" placeholder="Smith">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>Phone *</label>
+          <input type="tel" id="book-phone" placeholder="+14075551234">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="book-email" placeholder="john@example.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="book-notes" rows="2" placeholder="Any special requests..."></textarea>
+      </div>
+
+      <button class="btn-primary" id="btn-book" onclick="bookAppointment()">Book Appointment</button>
+
+      <div class="result-box" id="book-result" style="display:none;">
+        <div class="result-header">
+          <span>Response</span>
+          <span class="status-badge" id="book-status"></span>
+        </div>
+        <div class="result-body" id="book-raw"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = window.location.origin + "/api/vface/tools";
+    let selectedSlotData = null;
+
+    // ── Tabs ──
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+      });
+    });
+
+    // ── Check Availability ──
+    async function checkAvailability() {
+      const btn = document.getElementById("btn-check");
+      const resultBox = document.getElementById("avail-result");
+      const statusBadge = document.getElementById("avail-status");
+      const slotsDiv = document.getElementById("avail-slots");
+      const rawDiv = document.getElementById("avail-raw");
+
+      btn.disabled = true;
+      btn.textContent = "Checking...";
+      resultBox.style.display = "block";
+      statusBadge.className = "status-badge status-loading";
+      statusBadge.textContent = "LOADING";
+      slotsDiv.innerHTML = "";
+      rawDiv.style.display = "none";
+      document.getElementById("inline-book-form").style.display = "none";
+
+      try {
+        const body = {
+          action: "check_availability",
+          appointment_type: document.getElementById("avail-type").value,
+          service_line: document.getElementById("avail-service").value,
+          provider_preference: document.getElementById("avail-provider").value,
+          urgency: document.getElementById("avail-urgency").value,
+          preferred_time_of_day: document.getElementById("avail-time").value,
+        };
+
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+
+        if (data.ok && data.slots && data.slots.length > 0) {
+          statusBadge.className = "status-badge status-ok";
+          statusBadge.textContent = `${data.source.toUpperCase()} · ${data.slots.length} SLOTS`;
+
+          let html = '<div class="slots-grid">';
+          data.slots.forEach((slot, i) => {
+            html += `
+              <div class="slot-card">
+                <div class="slot-info">
+                  <div class="slot-time">${slot.human_readable}</div>
+                  <div class="slot-provider">${slot.provider} · ${data.appointment_type} · ${data.duration_minutes} min</div>
+                  <div class="slot-iso">${slot.start_iso} → ${slot.end_iso}</div>
+                </div>
+                <button class="btn-book" onclick="selectSlot(${i})">Book</button>
+              </div>`;
+          });
+          html += "</div>";
+          slotsDiv.innerHTML = html;
+
+          // Store slots for booking
+          window._availSlots = data.slots;
+          window._availType = body.appointment_type;
+          window._availService = body.service_line;
+        } else {
+          statusBadge.className = "status-badge status-err";
+          statusBadge.textContent = data.ok ? "NO SLOTS" : "ERROR";
+          rawDiv.textContent = JSON.stringify(data, null, 2);
+          rawDiv.style.display = "block";
+        }
+      } catch (err) {
+        statusBadge.className = "status-badge status-err";
+        statusBadge.textContent = "ERROR";
+        rawDiv.textContent = err.message;
+        rawDiv.style.display = "block";
+      }
+
+      btn.disabled = false;
+      btn.textContent = "Check Availability";
+    }
+
+    // ── Select a Slot → Show Inline Booking Form ──
+    function selectSlot(index) {
+      const slot = window._availSlots[index];
+      selectedSlotData = {
+        ...slot,
+        appointment_type: window._availType,
+        service_line: window._availService,
+      };
+
+      document.getElementById("inline-slot-label").textContent = slot.human_readable;
+      document.getElementById("inline-book-form").style.display = "block";
+      document.getElementById("inline-book-result").style.display = "none";
+      document.getElementById("inline-book-form").scrollIntoView({ behavior: "smooth" });
+    }
+
+    // ── Book from Inline Form ──
+    async function bookInlineSlot() {
+      if (!selectedSlotData) return;
+
+      const btn = document.getElementById("btn-inline-book");
+      const resultBox = document.getElementById("inline-book-result");
+      const statusBadge = document.getElementById("inline-book-status");
+      const rawDiv = document.getElementById("inline-book-raw");
+
+      const firstName = document.getElementById("inline-first").value.trim();
+      const lastName = document.getElementById("inline-last").value.trim();
+      const phone = document.getElementById("inline-phone").value.trim();
+
+      if (!firstName || !lastName || !phone) {
+        alert("First name, last name, and phone are required.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Booking...";
+      resultBox.style.display = "block";
+      statusBadge.className = "status-badge status-loading";
+      statusBadge.textContent = "LOADING";
+
+      try {
+        const body = {
+          action: "book_appointment",
+          appointment_type: selectedSlotData.appointment_type,
+          service_line: selectedSlotData.service_line,
+          provider_key: selectedSlotData.provider_key,
+          slot_start_iso: selectedSlotData.start_iso,
+          slot_end_iso: selectedSlotData.end_iso,
+          patient_first_name: firstName,
+          patient_last_name: lastName,
+          patient_phone: phone,
+          patient_email: document.getElementById("inline-email").value.trim(),
+          notes: document.getElementById("inline-notes").value.trim(),
+        };
+
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          statusBadge.className = "status-badge status-ok";
+          statusBadge.textContent = `BOOKED · ${data.source.toUpperCase()}`;
+        } else {
+          statusBadge.className = "status-badge status-err";
+          statusBadge.textContent = "FAILED";
+        }
+        rawDiv.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        statusBadge.className = "status-badge status-err";
+        statusBadge.textContent = "ERROR";
+        rawDiv.textContent = err.message;
+      }
+
+      btn.disabled = false;
+      btn.textContent = "Confirm Booking";
+    }
+
+    // ── Book Appointment (Manual Tab) ──
+    async function bookAppointment() {
+      const btn = document.getElementById("btn-book");
+      const resultBox = document.getElementById("book-result");
+      const statusBadge = document.getElementById("book-status");
+      const rawDiv = document.getElementById("book-raw");
+
+      const firstName = document.getElementById("book-first").value.trim();
+      const lastName = document.getElementById("book-last").value.trim();
+      const phone = document.getElementById("book-phone").value.trim();
+      const startIso = document.getElementById("book-start").value.trim();
+      const endIso = document.getElementById("book-end").value.trim();
+
+      if (!firstName || !lastName || !phone || !startIso || !endIso) {
+        alert("First name, last name, phone, and slot times are required.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Booking...";
+      resultBox.style.display = "block";
+      statusBadge.className = "status-badge status-loading";
+      statusBadge.textContent = "LOADING";
+
+      try {
+        const body = {
+          action: "book_appointment",
+          appointment_type: document.getElementById("book-type").value,
+          service_line: document.getElementById("book-service").value,
+          provider_key: document.getElementById("book-provider").value,
+          slot_start_iso: startIso,
+          slot_end_iso: endIso,
+          patient_first_name: firstName,
+          patient_last_name: lastName,
+          patient_phone: phone,
+          patient_email: document.getElementById("book-email").value.trim(),
+          patient_type: document.getElementById("book-patient-type").value,
+          notes: document.getElementById("book-notes").value.trim(),
+        };
+
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          statusBadge.className = "status-badge status-ok";
+          statusBadge.textContent = `BOOKED · ${data.source.toUpperCase()}`;
+        } else {
+          statusBadge.className = "status-badge status-err";
+          statusBadge.textContent = "FAILED";
+        }
+        rawDiv.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        statusBadge.className = "status-badge status-err";
+        statusBadge.textContent = "ERROR";
+        rawDiv.textContent = err.message;
+      }
+
+      btn.disabled = false;
+      btn.textContent = "Book Appointment";
+    }
+  </script>
+</body>
+</html>

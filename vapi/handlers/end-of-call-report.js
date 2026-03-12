@@ -8,9 +8,59 @@
  *   - Cost
  *   - Duration
  *   - Ended reason
+ *   - Summary (if available)
  *
- * We log and store this data. In production, write to voiceCalls + voiceUtterances.
+ * Logs call data to Google Sheets "Call Log" tab.
  */
+
+const { google } = require("googleapis");
+
+function getSheetsClient() {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+  if (!clientId || !clientSecret || !refreshToken) return null;
+  const oauth2 = new google.auth.OAuth2(clientId, clientSecret);
+  oauth2.setCredentials({ refresh_token: refreshToken });
+  return google.sheets({ version: "v4", auth: oauth2 });
+}
+
+async function logCallToSheet(report) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  if (!sheetId) return;
+
+  const sheets = getSheetsClient();
+  if (!sheets) return;
+
+  try {
+    const row = [
+      report.completedAt,
+      report.callId,
+      report.callType || "",
+      report.assistantName || "",
+      report.customerNumber || "",
+      report.customerName || "",
+      report.endedReason,
+      report.duration,
+      `$${(report.cost || 0).toFixed(4)}`,
+      report.summary || "",
+      report.transcript || "",
+      report.recordingUrl || "",
+      report.messageCount || 0,
+    ];
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "Call Log!A:M",
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [row] },
+    });
+
+    console.log(`[sheets] Logged call ${report.callId} to Call Log`);
+  } catch (err) {
+    console.error("[sheets] Failed to log call:", err.message);
+  }
+}
 
 function handleEndOfCallReport(body) {
   const call = body.message?.call || {};
@@ -18,11 +68,20 @@ function handleEndOfCallReport(body) {
   const endedReason = body.message?.endedReason || "unknown";
   const artifact = body.message?.artifact || {};
 
+  // Extract summary from analysis if available
+  const analysis = body.message?.analysis || {};
+  const summary = analysis.summary || "";
+
   const report = {
     callId,
+    callType: call.type || "",
+    assistantName: call.assistant?.name || call.assistantId || "",
+    customerNumber: call.customer?.number || "",
+    customerName: call.customer?.name || "",
     endedReason,
     cost: call.cost || 0,
     duration: call.duration || 0,
+    summary,
     transcript: artifact.transcript || "",
     recordingUrl: artifact.recordingUrl || null,
     messageCount: (artifact.messages || []).length,
@@ -35,26 +94,8 @@ function handleEndOfCallReport(body) {
       `messages=${report.messageCount}`
   );
 
-  // TODO: Update voiceCalls row with final data
-  // await db.update(voiceCalls).set({
-  //   status: "completed",
-  //   endedReason,
-  //   transcript: report.transcript,
-  //   recordingUrl: report.recordingUrl,
-  //   costUsd: report.cost,
-  //   durationSeconds: report.duration,
-  //   completedAt: new Date(),
-  // }).where(eq(voiceCalls.callId, callId));
-
-  // TODO: Insert individual utterances
-  // for (const [i, msg] of (artifact.messages || []).entries()) {
-  //   await db.insert(voiceUtterances).values({
-  //     callId,
-  //     role: msg.role,
-  //     text: msg.message,
-  //     sequence: i,
-  //   });
-  // }
+  // Log to Google Sheets (fire and forget)
+  logCallToSheet(report).catch(() => {});
 
   return { ok: true };
 }

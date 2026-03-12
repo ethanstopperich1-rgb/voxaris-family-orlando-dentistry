@@ -17,9 +17,9 @@
 const { getVapiClient } = require("../../vapi/lib/vapi-client");
 
 const VOICE_CONFIG = {
-  provider: "rime",
-  voiceId: "cove",
-  model: "arcana",
+  provider: "rime-ai",
+  voiceId: "moraine",
+  model: "mistv2",
 };
 
 const TRANSCRIBER_CONFIG = {

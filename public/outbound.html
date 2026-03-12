@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FOD Outbound Campaigns</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; }
+    .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+    h1 { font-size: 1.5rem; font-weight: 600; color: #fff; margin-bottom: 0.25rem; }
+    .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+    .card { background: #151520; border: 1px solid #252535; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.1rem; color: #fff; margin-bottom: 1rem; }
+    label { display: block; font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+    select, input[type="text"], input[type="tel"] {
+      width: 100%; padding: 0.7rem 0.9rem; background: #0d0d14; border: 1px solid #2a2a3a;
+      border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 1rem; outline: none;
+    }
+    select:focus, input:focus { border-color: #6366f1; }
+    .row { display: flex; gap: 1rem; }
+    .row > div { flex: 1; }
+    button.primary {
+      width: 100%; padding: 0.85rem; background: #6366f1; color: #fff; font-size: 1rem;
+      font-weight: 600; border: none; border-radius: 10px; cursor: pointer; transition: background 0.2s;
+    }
+    button.primary:hover { background: #5254cc; }
+    button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .result { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-size: 0.9rem; display: none; }
+    .result.success { background: #0d2818; border: 1px solid #1a4d2e; color: #4ade80; display: block; }
+    .result.error { background: #2a0f0f; border: 1px solid #4d1a1a; color: #f87171; display: block; }
+    .result.loading { background: #1a1a2e; border: 1px solid #2a2a4e; color: #a5b4fc; display: block; }
+    .history { margin-top: 0.5rem; }
+    .history-item { background: #0d0d14; border: 1px solid #1e1e2e; border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+    .history-item .campaign { color: #a5b4fc; font-weight: 500; }
+    .history-item .phone { color: #ccc; }
+    .history-item .status { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 20px; }
+    .status-queued { background: #1e3a5f; color: #60a5fa; }
+    .status-error { background: #3f1a1a; color: #f87171; }
+    .empty { color: #555; font-size: 0.85rem; text-align: center; padding: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Outbound Campaign Launcher</h1>
+    <p class="subtitle">Family Orlando Dentistry — Trigger outbound calls via Ava</p>
+
+    <div class="card">
+      <h2>Launch Call</h2>
+      <label>Campaign Type</label>
+      <select id="campaign">
+        <option value="hygiene_reactivation">Hygiene Reactivation</option>
+        <option value="invisalign_followup">Invisalign Follow-up</option>
+        <option value="dormant_revival">Dormant Revival</option>
+        <option value="appointment_reminder">Appointment Reminder</option>
+      </select>
+
+      <label>Phone Number</label>
+      <input type="tel" id="phone" placeholder="+14075551234" />
+
+      <div class="row">
+        <div>
+          <label>Patient Name (optional)</label>
+          <input type="text" id="name" placeholder="Sarah" />
+        </div>
+        <div>
+          <label>Months Overdue (optional)</label>
+          <input type="text" id="months" placeholder="8" />
+        </div>
+      </div>
+
+      <label>Original Interest Date (optional)</label>
+      <input type="text" id="interestDate" placeholder="Jan 2026" />
+
+      <button class="primary" id="launchBtn" onclick="launchCall()">Launch Outbound Call</button>
+      <div id="result" class="result"></div>
+    </div>
+
+    <div class="card">
+      <h2>Call History</h2>
+      <div id="history" class="history">
+        <div class="empty">No calls launched yet this session.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const history = [];
+
+    async function launchCall() {
+      const btn = document.getElementById('launchBtn');
+      const resultEl = document.getElementById('result');
+      const phone = document.getElementById('phone').value.trim();
+      const campaign = document.getElementById('campaign').value;
+      const name = document.getElementById('name').value.trim();
+      const months = document.getElementById('months').value.trim();
+      const interestDate = document.getElementById('interestDate').value.trim();
+
+      if (!phone) {
+        resultEl.className = 'result error';
+        resultEl.textContent = 'Phone number is required.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Launching...';
+      resultEl.className = 'result loading';
+      resultEl.textContent = 'Triggering outbound call...';
+
+      const body = { campaign, phone_number: phone };
+      if (name) body.patient_name = name;
+      if (months) body.months_overdue = months;
+      if (interestDate) body.original_interest_date = interestDate;
+
+      try {
+        const res = await fetch('/api/vapi/outbound', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          resultEl.className = 'result success';
+          resultEl.textContent = `Call queued! ID: ${data.call_id}`;
+          addHistory(campaign, phone, 'queued', data.call_id);
+          document.getElementById('phone').value = '';
+          document.getElementById('name').value = '';
+          document.getElementById('months').value = '';
+          document.getElementById('interestDate').value = '';
+        } else {
+          resultEl.className = 'result error';
+          resultEl.textContent = `Error: ${data.error}`;
+          addHistory(campaign, phone, 'error');
+        }
+      } catch (err) {
+        resultEl.className = 'result error';
+        resultEl.textContent = `Network error: ${err.message}`;
+        addHistory(campaign, phone, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Launch Outbound Call';
+      }
+    }
+
+    function addHistory(campaign, phone, status, callId) {
+      history.unshift({ campaign, phone, status, callId, time: new Date() });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const el = document.getElementById('history');
+      if (history.length === 0) {
+        el.innerHTML = '<div class="empty">No calls launched yet this session.</div>';
+        return;
+      }
+      const labels = {
+        hygiene_reactivation: 'Hygiene',
+        invisalign_followup: 'Invisalign',
+        dormant_revival: 'Dormant',
+        appointment_reminder: 'Reminder',
+      };
+      el.innerHTML = history.map(h => `
+        <div class="history-item">
+          <span class="campaign">${labels[h.campaign] || h.campaign}</span>
+          <span class="phone">${h.phone}</span>
+          <span class="status status-${h.status}">${h.status}</span>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

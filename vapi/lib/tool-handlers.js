@@ -85,6 +85,119 @@ function getCalendarId(providerKey) {
   return map[providerKey] || null;
 }
 
+// ─── Google Sheets Logging ───────────────────────────────────────────
+
+function getSheetsClient() {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+  if (!clientId || !clientSecret || !refreshToken) return null;
+  const oauth2 = new google.auth.OAuth2(clientId, clientSecret);
+  oauth2.setCredentials({ refresh_token: refreshToken });
+  return google.sheets({ version: "v4", auth: oauth2 });
+}
+
+async function logToSheet(appointment) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  if (!sheetId) return;
+
+  const sheets = getSheetsClient();
+  if (!sheets) return;
+
+  try {
+    const row = [
+      appointment.booked_at || new Date().toISOString(),
+      appointment.patient_first_name || "",
+      appointment.patient_last_name || "",
+      appointment.patient_phone || "",
+      appointment.patient_email || "",
+      appointment.appointment_type || "",
+      appointment.provider_key || "",
+      appointment.slot_start_iso || "",
+      appointment.slot_end_iso || "",
+      appointment.patient_type || "",
+      appointment.source || "vapi_voice_agent",
+      appointment.status || "confirmed",
+      appointment.call_id || "",
+      appointment.notes || "",
+    ];
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "Appointments!A:N",
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [row] },
+    });
+
+    console.log(`[sheets] Logged appointment for ${appointment.patient_first_name} ${appointment.patient_last_name}`);
+  } catch (err) {
+    console.error("[sheets] Failed to log appointment:", err.message);
+  }
+}
+
+async function logLeadToSheet(lead) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  if (!sheetId) return;
+
+  const sheets = getSheetsClient();
+  if (!sheets) return;
+
+  try {
+    const row = [
+      lead.captured_at || new Date().toISOString(),
+      lead.call_id || "",
+      lead.interest_type || "",
+      lead.motivation || "",
+      lead.timeline || "",
+      lead.prior_history || "",
+      lead.notes || "",
+      "voice_agent",
+    ];
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "Leads!A:H",
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [row] },
+    });
+
+    console.log(`[sheets] Logged lead: ${lead.interest_type}`);
+  } catch (err) {
+    console.error("[sheets] Failed to log lead:", err.message);
+  }
+}
+
+async function logEmergencyToSheet(emergency) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  if (!sheetId) return;
+
+  const sheets = getSheetsClient();
+  if (!sheets) return;
+
+  try {
+    const row = [
+      emergency.flagged_at || new Date().toISOString(),
+      emergency.call_id || "",
+      emergency.issue_type || "",
+      emergency.pain_level || "",
+      emergency.symptoms || "",
+      emergency.onset || "",
+      "voice_agent",
+    ];
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "Emergencies!A:G",
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [row] },
+    });
+
+    console.log(`[sheets] Logged emergency: ${emergency.issue_type}`);
+  } catch (err) {
+    console.error("[sheets] Failed to log emergency:", err.message);
+  }
+}
+
 // ─── Persistence Layer ───────────────────────────────────────────────
 
 const DATA_DIR = process.env.VERCEL
@@ -432,6 +545,9 @@ async function handleBookAppointment(callId, params) {
 
     appendToStore("appointments", appointment);
 
+    // Log to Google Sheet for visibility
+    logToSheet(appointment).catch(() => {});
+
     // Build human-readable confirmation
     const providerLabel = PROVIDER_LABELS[provider_key] || provider_key;
     const startDate = slotStart.toLocaleDateString("en-US", {
@@ -484,6 +600,7 @@ async function handleCaptureLead(callId, params) {
   };
 
   const persisted = appendToStore("leads", lead);
+  logLeadToSheet(lead).catch(() => {});
 
   return {
     success: persisted,
@@ -528,6 +645,7 @@ async function handleMarkEmergency(callId, params) {
   };
 
   const persisted = appendToStore("emergencies", emergency);
+  logEmergencyToSheet(emergency).catch(() => {});
 
   return {
     success: persisted,

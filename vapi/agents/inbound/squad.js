@@ -30,7 +30,7 @@ function loadPrompt(filename) {
 // ─── Shared voice/transcriber config ───
 
 const VOICE_CONFIG = {
-  provider: "rime",
+  provider: "rime-ai",
   voiceId: "moraine",
   model: "mistv2",
 };

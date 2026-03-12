@@ -24,6 +24,7 @@ const {
   getHygieneReactivationConfig,
   getInvisalignFollowupConfig,
   getDormantRevivalConfig,
+  getAppointmentReminderConfig,
   getCallOverrides,
 } = require("../agents/outbound/assistant");
 
@@ -31,6 +32,7 @@ const CAMPAIGN_CONFIGS = {
   hygiene_reactivation: getHygieneReactivationConfig,
   invisalign_followup: getInvisalignFollowupConfig,
   dormant_revival: getDormantRevivalConfig,
+  appointment_reminder: getAppointmentReminderConfig,
 };
 
 async function triggerOutboundCall(params) {
@@ -53,7 +55,7 @@ async function triggerOutboundCall(params) {
     return { success: false, error: "phone_number is required." };
   }
 
-  const phoneNumberId = process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID;
+  const phoneNumberId = (process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID || "").trim();
   if (!phoneNumberId) {
     return {
       success: false,
@@ -61,9 +63,10 @@ async function triggerOutboundCall(params) {
     };
   }
 
-  const serverUrl =
+  const serverUrl = (
     process.env.VAPI_WEBHOOK_URL ||
-    `${process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"}/api/vapi/webhook`;
+    `${process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"}/api/vapi/webhook`
+  ).trim();
 
   // Get assistant config for this campaign
   const getConfig = CAMPAIGN_CONFIGS[campaign];

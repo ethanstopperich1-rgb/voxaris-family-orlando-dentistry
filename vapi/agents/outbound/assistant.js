@@ -22,9 +22,9 @@ function loadPrompt(filename) {
 }
 
 const VOICE_CONFIG = {
-  provider: "rime",
-  voiceId: "cove",
-  model: "arcana",
+  provider: "rime-ai",
+  voiceId: "moraine",
+  model: "mistv2",
 };
 
 const TRANSCRIBER_CONFIG = {
@@ -105,6 +105,23 @@ function getDormantRevivalConfig(serverUrl) {
   };
 }
 
+function getAppointmentReminderConfig(serverUrl) {
+  const base = baseOutbound(serverUrl);
+  return {
+    ...base,
+    name: "FOD Appointment Reminder",
+    firstMessage:
+      "Hi, this is Ava with Family Orlando Dentistry. I'm calling to confirm your appointment today. Will you be able to make it?",
+    model: {
+      ...base.model,
+      messages: [
+        { role: "system", content: loadPrompt("appointment-reminder.txt") },
+      ],
+    },
+    maxDurationSeconds: 180,
+  };
+}
+
 /**
  * Build per-call overrides for outbound personalization.
  *
@@ -114,21 +131,10 @@ function getDormantRevivalConfig(serverUrl) {
 function getCallOverrides(dynamicVars = {}) {
   const overrides = {};
 
-  // Inject dynamic variables as additional system context.
-  // This is appended to (not replacing) the base prompt via assistantOverrides.
+  // Inject dynamic variables via variableValues (VAPI's built-in mechanism).
+  // This avoids needing to pass a full model override.
   if (Object.keys(dynamicVars).length > 0) {
-    const contextBlock = Object.entries(dynamicVars)
-      .map(([k, v]) => `- {{${k}}}: ${v}`)
-      .join("\n");
-
-    overrides.model = {
-      messages: [
-        {
-          role: "system",
-          content: `[Patient Context]\n${contextBlock}`,
-        },
-      ],
-    };
+    overrides.variableValues = dynamicVars;
   }
 
   return overrides;
@@ -138,5 +144,6 @@ module.exports = {
   getHygieneReactivationConfig,
   getInvisalignFollowupConfig,
   getDormantRevivalConfig,
+  getAppointmentReminderConfig,
   getCallOverrides,
 };
