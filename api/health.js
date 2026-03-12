@@ -15,6 +15,7 @@ module.exports = function handler(req, res) {
       "POST /api/vapi/setup",
       "GET  /api/vface/status",
       "POST /api/vface/conversations",
+      "POST /api/vface/tools",
       "GET  /api/health",
     ],
   });
